@@ -1,0 +1,13 @@
+AC_INIT(rvle, 0.5.0, quesnel@users.sourceforge.net)
+AC_CONFIG_HEADERS([src/rvle.h])
+
+AC_PROG_CXX
+AC_PROG_CC
+
+PKG_CHECK_MODULES(VLE, vle >= 0.5.0)
+VLE_CFLAGS="${PKG_CPPFLAGS} ${VLE_CFLAGS}"
+VLE_LIBS="${PKG_LIBS} ${VLE_LIBS}"
+AC_SUBST(VLE_CFLAGS)
+AC_SUBST(VLE_LIBS)
+
+AC_OUTPUT([src/Makevars])
