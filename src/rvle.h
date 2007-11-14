@@ -46,20 +46,23 @@ RVLE rvle_open(const char* filename);
 /** 
  * @brief Run a simulation using the RVLE object.
  * @param handle The reference to the Vpz file.
+ * @return 0 if failed, -1 otherwise.
  */
-void rvle_run(RVLE handle);
+int rvle_run(RVLE handle);
 
 /** 
  * @brief Flush data.
  * @param handle The reference to the Vpz file.
+ * @return 0 if failed, -1 otherwise.
  */
-void rvle_close(RVLE handle);
+int rvle_close(RVLE handle);
 
 /**
  * @brief Destruction of the RVLE object.
  * @param handle The reference to the Vpz file.
+ * @return 0 if failed, -1 otherwise.
  */
-void rvle_delete(RVLE handle);
+int rvle_delete(RVLE handle);
 
 
 #ifdef __cplusplus

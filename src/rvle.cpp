@@ -44,7 +44,7 @@ RVLE rvle_open(const char* filename)
     }
 }
 
-void rvle_run(RVLE handle)
+int rvle_run(RVLE handle)
 {
 #ifndef NDEBUG
     std::cerr << "rvle_run(" << handle << ")\n";
@@ -56,23 +56,30 @@ void rvle_run(RVLE handle)
 #ifndef NDEBUG
         std::cerr << "run error: " << e.what() << "\n";
 #endif
+        return 0;
     }
+#ifndef NDEBUG
+    std::cerr << "end rvle_run(" << handle << ")\n";
+#endif
+    return -1;
 }
 
-void rvle_close(RVLE handle)
+int rvle_close(RVLE handle)
 {
 #ifndef NDEBUG
     std::cerr << "rvle_close(" << handle << ")\n";
 #endif
     vle::vpz::Vpz*  file(reinterpret_cast < vle::vpz::Vpz* >(handle));
     file->clear();
+    return -1;
 }
 
-void rvle_delete(RVLE handle)
+int rvle_delete(RVLE handle)
 {
 #ifndef NDEBUG
     std::cerr << "rvle_delete(" << handle << ")\n";
 #endif
     vle::vpz::Vpz*  file(reinterpret_cast < vle::vpz::Vpz* >(handle));
     delete file;
+    return -1;
 }

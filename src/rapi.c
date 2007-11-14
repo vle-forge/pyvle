@@ -33,9 +33,9 @@
  */
 
 static SEXP r_rvle_open(SEXP name);
-static void r_rvle_run(SEXP rvle);
-static void r_rvle_close(SEXP rvle);
-static void r_rvle_delete(SEXP rvle);
+static SEXP r_rvle_run(SEXP rvle);
+static SEXP r_rvle_close(SEXP rvle);
+static SEXP r_rvle_delete(SEXP rvle);
 
 /*
  *
@@ -88,17 +88,41 @@ SEXP r_rvle_open(SEXP name)
         return r;
 }
 
-void r_rvle_run(SEXP rvle)
+SEXP r_rvle_run(SEXP rvle)
 {
-        rvle_run(R_ExternalPtrAddr(rvle));
+        SEXP r;
+        int result;
+
+        PROTECT(r = allocVector(INTSXP, 1));
+        result = rvle_run(R_ExternalPtrAddr(rvle));
+        INTEGER(r)[0] = result;
+        UNPROTECT(1);
+
+        return r;
 }
 
-void r_rvle_close(SEXP rvle)
+SEXP r_rvle_close(SEXP rvle)
 {
-        rvle_close(R_ExternalPtrAddr(rvle));
+        SEXP r;
+        int result;
+
+        PROTECT(r = allocVector(INTSXP, 1));
+        result = rvle_close(R_ExternalPtrAddr(rvle));
+        INTEGER(r)[0] = result;
+        UNPROTECT(1);
+
+        return r;
 }
 
-void r_rvle_delete(SEXP rvle)
+SEXP r_rvle_delete(SEXP rvle)
 {
-        rvle_delete(R_ExternalPtrAddr(rvle));
+        SEXP r;
+        int result;
+
+        PROTECT(r = allocVector(INTSXP, 1));
+        result = rvle_delete(R_ExternalPtrAddr(rvle));
+        INTEGER(r)[0] = result;
+        UNPROTECT(1);
+
+        return r;
 }
