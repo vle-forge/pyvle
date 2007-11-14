@@ -14,10 +14,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+.First.lib <- function(lib, pkg) {
+	library.dynam("rvle", pkg, lib)
+}
 
-rvle.new <- function(file)
+rvle.open <- function(file)
 {
-        .Call("new", as.character(file), PACKAGE="rvle")
+        .Call("open", as.character(file), PACKAGE="rvle")
 }
 
 rvle.run <- function(x)

@@ -32,10 +32,10 @@
  *
  */
 
-SEXP r_rvle_new(SEXP name);
-void r_rvle_run(SEXP rvle);
-void r_rvle_close(SEXP rvle);
-void r_rvle_delete(SEXP rvle);
+static SEXP r_rvle_open(SEXP name);
+static void r_rvle_run(SEXP rvle);
+static void r_rvle_close(SEXP rvle);
+static void r_rvle_delete(SEXP rvle);
 
 /*
  *
@@ -45,19 +45,25 @@ void r_rvle_delete(SEXP rvle);
 
 R_CallMethodDef callMethods[] =
 {
-        { "new", (DL_FUNC) &r_rvle_new, 1},
-        { "run", (DL_FUNC) &r_rvle_run, 1},
-        { "close", (DL_FUNC) &r_rvle_close, 1},
+        { "open", r_rvle_open, 1},
+        { "run", r_rvle_run, 1},
+        { "close", r_rvle_close, 1},
         { NULL, NULL, 0}
 };
 
 void R_init_rvle(DllInfo* info)
 {
+#ifndef NDEBUG
+        printf("RVLE: R_init_rvle\n");
+#endif
         R_registerRoutines(info, NULL, callMethods, NULL, NULL);
 }
 
 void R_unload_rvle(DllInfo* info)
 {
+#ifndef NDEBUG
+        printf("RVLE: R_unload_rvle\n");
+#endif
 }
 
 /*
@@ -68,11 +74,11 @@ void R_unload_rvle(DllInfo* info)
 
 #include "rvle.h"
 
-SEXP r_rvle_new(SEXP name)
+SEXP r_rvle_open(SEXP name)
 {
         SEXP r = R_NilValue;
 
-        void* p = (void*) rvle_new(CHAR(STRING_ELT(name, 0)));
+        void* p = (void*) rvle_open(CHAR(STRING_ELT(name, 0)));
         if (p) {
                 PROTECT(r = R_MakeExternalPtr(p, R_NilValue, R_NilValue));
                 R_RegisterCFinalizer(r, r_rvle_delete);

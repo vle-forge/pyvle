@@ -1,8 +1,8 @@
 \name{rvle}
-\alias{rvle.new}
+\alias{rvle.open}
 \title{Load a new Vpz}
 \description{Load a new Vpz file.}
-\usage{new(file)}
+\usage{open(file)}
 \arguments{
 \item{file}{character string giving the name of a file to load or create.}
 }

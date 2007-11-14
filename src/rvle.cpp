@@ -26,33 +26,53 @@
 #include <vle/vpz.hpp>
 #include <vle/manager.hpp>
 
-RVLE rvle_new(const char* filename)
+RVLE rvle_open(const char* filename)
 {
-    vle::vpz::Vpz*  file;
+#ifndef NDEBUG
+    std::cerr << "rvle_open(" << filename << ")\n";
+#endif
+    vle::vpz::Vpz*  file = 0;
 
     try {
-        new vle::vpz::Vpz(filename);
+        file = new vle::vpz::Vpz(filename);
         return file;
     } catch(const std::exception& e) {
-        std::cerr << "error: " << e.what() << "\n";
+#ifndef NDEBUG
+        std::cerr << "open error: " << e.what() << "\n";
+#endif
         return 0;
     }
 }
 
 void rvle_run(RVLE handle)
 {
+#ifndef NDEBUG
+    std::cerr << "rvle_run(" << handle << ")\n";
+#endif
     vle::vpz::Vpz*  file(reinterpret_cast < vle::vpz::Vpz* >(handle));
-    vle::manager::Simulator::run(*file);
+    try {
+        vle::manager::Simulator::run(*file);
+    } catch(const std::exception& e) {
+#ifndef NDEBUG
+        std::cerr << "run error: " << e.what() << "\n";
+#endif
+    }
 }
 
 void rvle_close(RVLE handle)
 {
+#ifndef NDEBUG
+    std::cerr << "rvle_close(" << handle << ")\n";
+#endif
     vle::vpz::Vpz*  file(reinterpret_cast < vle::vpz::Vpz* >(handle));
     file->clear();
 }
 
 void rvle_delete(RVLE handle)
 {
+#ifndef NDEBUG
+    std::cerr << "rvle_delete(" << handle << ")\n";
+#endif
     vle::vpz::Vpz*  file(reinterpret_cast < vle::vpz::Vpz* >(handle));
     delete file;
 }

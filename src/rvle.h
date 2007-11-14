@@ -41,7 +41,7 @@ typedef void* RVLE;
  * @param filename The vpz file to laod with his path.
  * @return A RVLE object or NULL on error.
  */
-RVLE rvle_new(const char* filename);
+RVLE rvle_open(const char* filename);
 
 /** 
  * @brief Run a simulation using the RVLE object.
