@@ -4,8 +4,8 @@ Date: 2007-11-13
 Title: VLE R package
 Author: Gauthier Quesnel <quesnel@users.sourceforge.net>.
 Maintainer: Gauthier Quesnel <quesnel@users.sourceforge.net>
-Depends: R (>= 1.7.0)
-Description: VLE R package
-LazyLoad: true
+Depends: R (>= 2.1.0)
+Description: To perform analysis using the VLE framework.
+LazyLoad: yes
 License: GPL (>= 2)
 URL: http://vle.univ-littoral.fr

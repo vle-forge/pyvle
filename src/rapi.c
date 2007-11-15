@@ -53,17 +53,11 @@ R_CallMethodDef callMethods[] =
 
 void R_init_rvle(DllInfo* info)
 {
-#ifndef NDEBUG
-        printf("RVLE: R_init_rvle\n");
-#endif
         R_registerRoutines(info, NULL, callMethods, NULL, NULL);
 }
 
 void R_unload_rvle(DllInfo* info)
 {
-#ifndef NDEBUG
-        printf("RVLE: R_unload_rvle\n");
-#endif
 }
 
 /*
