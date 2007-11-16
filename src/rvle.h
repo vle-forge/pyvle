@@ -85,13 +85,20 @@ int rvle_condition_size(RVLE handle);
  * @param conditionname The name of the condition.
  * @param portname The name of the condition's port.
  * @param value The value to push.
- * @return 0 if failed,, -1 otherwise.
+ * @return 0 if failed, -1 otherwise.
  */
-
 int rvle_condition_set_real(RVLE handle,
                             const char* conditionname,
                             const char* portname,
                             double value);
+
+/** 
+ * @brief Save the current file under the specified filename.
+ * @param handle The reference to the Vpz file.
+ * @param filename The filename where store file.
+ * @return 0 if failed, -1 otherwise.
+ */
+int rvle_save(RVLE handle, const char* filename);
 
 #ifdef __cplusplus
 }

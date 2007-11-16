@@ -155,3 +155,17 @@ int rvle_condition_set_real(RVLE handle,
 
     return -1;
 }
+
+int rvle_save(RVLE handle, const char* filename)
+{
+    assert(handle and filename);
+
+    try {
+        vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
+        file->write(filename);
+    } catch(const std::exception& e) {
+        return 0;
+    }
+
+    return -1;
+}

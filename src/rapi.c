@@ -39,6 +39,7 @@ static SEXP r_rvle_delete(SEXP rvle);
 static SEXP r_rvle_condition_list(SEXP rvle);
 static SEXP r_rvle_condition_size(SEXP rvle);
 static SEXP r_rvle_condition_set_real(SEXP rvle, SEXP cnd, SEXP prt, SEXP val);
+static SEXP r_rvle_save(SEXP rvle, SEXP file);
 
 /*
  *
@@ -54,6 +55,7 @@ R_CallMethodDef callMethods[] =
         { "condition_list", (DL_FUNC) r_rvle_condition_list, 1},
         { "condition_size", (DL_FUNC) r_rvle_condition_size, 1},
         { "condition_set_real", (DL_FUNC) r_rvle_condition_set_real, 4},
+        { "save", (DL_FUNC) r_rvle_save, 2},
         { NULL, NULL, 0}
 };
 
@@ -179,6 +181,19 @@ SEXP r_rvle_condition_set_real(SEXP rvle, SEXP cnd, SEXP prt, SEXP val)
                         CHAR(STRING_ELT(cnd, 0)),
                         CHAR(STRING_ELT(prt, 0)),
                         REAL(val)[0]);
+        INTEGER(r)[0] = result;
+        UNPROTECT(1);
+
+        return r;
+}
+
+SEXP r_rvle_save(SEXP rvle, SEXP file)
+{
+        SEXP r;
+        int result;
+
+        PROTECT(r = allocVector(INTSXP, 1));
+        result = rvle_save(R_ExternalPtrAddr(rvle), CHAR(STRING_ELT(file, 0)));
         INTEGER(r)[0] = result;
         UNPROTECT(1);
 

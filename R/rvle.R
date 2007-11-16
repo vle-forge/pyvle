@@ -61,3 +61,11 @@ rvle.condition_set_real <- function(x, condition, port, value)
 
     .Call("condition_set_real", x, condition, port, value, PACKAGE="rvle")
 }
+
+rvle.save <- function(x, file)
+{
+    is.rvle(x)
+    as.character(file)
+
+    .Call("save", x, file, PACKAGE="rvle")
+}
