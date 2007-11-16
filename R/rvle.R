@@ -51,3 +51,13 @@ rvle.condition_size <- function(x)
         is.rvle(x)
         .Call("condition_size", x, PACKAGE="rvle")
 }
+
+rvle.condition_set_real <- function(x, condition, port, value)
+{
+    is.rvle(x)
+    as.character(condition)
+    as.character(port)
+    is.real(value)
+
+    .Call("condition_set_real", x, condition, port, value, PACKAGE="rvle")
+}

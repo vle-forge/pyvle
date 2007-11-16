@@ -79,6 +79,19 @@ char** rvle_condition_list(RVLE handle);
  */
 int rvle_condition_size(RVLE handle);
 
+/** 
+ * @brief Set the initial condition of the specified condition and portname.
+ * @param handle The reference to the Vpz file.
+ * @param conditionname The name of the condition.
+ * @param portname The name of the condition's port.
+ * @param value The value to push.
+ * @return 0 if failed,, -1 otherwise.
+ */
+
+int rvle_condition_set_real(RVLE handle,
+                            const char* conditionname,
+                            const char* portname,
+                            double value);
 
 #ifdef __cplusplus
 }

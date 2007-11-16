@@ -25,11 +25,15 @@
 #include "rvle.h"
 #include <vle/vpz.hpp>
 #include <vle/manager.hpp>
+#include <vle/value.hpp>
 #include <cassert>
+
+using namespace vle;
 
 //
 // C++ utilities
 //
+
 
 int max_string_size(const std::list < std::string >& lst)
 {
@@ -54,72 +58,61 @@ int max_string_size(const std::list < std::string >& lst)
 
 RVLE rvle_open(const char* filename)
 {
-#ifndef NDEBUG
-    std::cerr << "rvle_open(" << filename << ")\n";
-#endif
-    vle::vpz::Vpz*  file = 0;
+    assert(filename);
+
+    vpz::Vpz*  file = 0;
 
     try {
-        file = new vle::vpz::Vpz(filename);
+        file = new vpz::Vpz(filename);
         return file;
     } catch(const std::exception& e) {
-#ifndef NDEBUG
-        std::cerr << "open error: " << e.what() << "\n";
-#endif
         return 0;
     }
 }
 
 int rvle_run(RVLE handle)
 {
-#ifndef NDEBUG
-    std::cerr << "rvle_run(" << handle << ")\n";
-#endif
-    vle::vpz::Vpz*  file(reinterpret_cast < vle::vpz::Vpz* >(handle));
+    assert(handle);
+
+    vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
     try {
-        vle::manager::Simulator::run(*file);
+        manager::Simulator::run(*file);
     } catch(const std::exception& e) {
-#ifndef NDEBUG
-        std::cerr << "run error: " << e.what() << "\n";
-#endif
         return 0;
     }
-#ifndef NDEBUG
-    std::cerr << "end rvle_run(" << handle << ")\n";
-#endif
     return -1;
 }
 
 int rvle_close(RVLE handle)
 {
-#ifndef NDEBUG
-    std::cerr << "rvle_close(" << handle << ")\n";
-#endif
-    vle::vpz::Vpz*  file(reinterpret_cast < vle::vpz::Vpz* >(handle));
+    assert(handle);
+
+    vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
     file->clear();
     return -1;
 }
 
 int rvle_delete(RVLE handle)
 {
-#ifndef NDEBUG
-    std::cerr << "rvle_delete(" << handle << ")\n";
-#endif
-    vle::vpz::Vpz*  file(reinterpret_cast < vle::vpz::Vpz* >(handle));
+    assert(handle);
+
+    vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
     delete file;
     return -1;
 }
 
 char** rvle_condition_list(RVLE handle)
 {
-#ifndef NDEBUG
-    std::cerr << "rvle_condition_list(" << handle << ")\n";
-#endif
-    vle::vpz::Vpz*  file(reinterpret_cast < vle::vpz::Vpz* >(handle));
+    assert(handle);
+
+    vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
     std::list < std::string > lst;
 
     file->project().experiment().conditions().conditionnames(lst);
+    assert(lst.size() > 0);
+
     int maxsize = max_string_size(lst);
+    assert(maxsize > 0);
 
     char** result;
 
@@ -137,6 +130,28 @@ char** rvle_condition_list(RVLE handle)
 
 int rvle_condition_size(RVLE handle)
 {
-    vle::vpz::Vpz*  file(reinterpret_cast < vle::vpz::Vpz* >(handle));
+    assert(handle);
+
+    vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
     return file->project().experiment().conditions().conditionlist().size();
+}
+
+int rvle_condition_set_real(RVLE handle,
+                            const char* conditionname,
+                            const char* portname,
+                            double value)
+{
+    assert(handle && conditionname && portname);
+
+    try {
+        vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
+        vpz::Condition& cnd(file->project().experiment().
+                            conditions().get(conditionname));
+
+        cnd.setValueToPort(portname, value::DoubleFactory::create(value));
+    } catch(const std::exception& e) {
+        return 0;
+    }
+
+    return -1;
 }
