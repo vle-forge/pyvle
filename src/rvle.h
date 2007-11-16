@@ -64,6 +64,21 @@ int rvle_close(RVLE handle);
  */
 int rvle_delete(RVLE handle);
 
+/**
+ * @brief Get the list of conditions lists.
+ * @param handle The reference to the Vpz file.
+ * @return The reference to a char**. Memory use malloc, don't forget to use
+ * free function.
+ */
+char** rvle_condition_list(RVLE handle);
+
+/** 
+ * @brief Get the number of conditions in conditions lists.
+ * @param handle The reference to the Vpz file.
+ * @return The number of conditions.
+ */
+int rvle_condition_size(RVLE handle);
+
 
 #ifdef __cplusplus
 }

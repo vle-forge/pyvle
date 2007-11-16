@@ -39,3 +39,15 @@ is.rvle <- function(x)
 {
         inherits(x, "rvle")
 }
+
+rvle.condition_list <- function(x)
+{
+        is.rvle(x)
+        .Call("condition_list", x, PACKAGE="rvle")
+}
+
+rvle.condition_size <- function(x)
+{
+        is.rvle(x)
+        .Call("condition_size", x, PACKAGE="rvle")
+}

@@ -36,6 +36,8 @@ static SEXP r_rvle_open(SEXP name);
 static SEXP r_rvle_run(SEXP rvle);
 static SEXP r_rvle_close(SEXP rvle);
 static SEXP r_rvle_delete(SEXP rvle);
+static SEXP r_rvle_condition_list(SEXP rvle);
+static SEXP r_rvle_condition_size(SEXP rvle);
 
 /*
  *
@@ -45,9 +47,11 @@ static SEXP r_rvle_delete(SEXP rvle);
 
 R_CallMethodDef callMethods[] =
 {
-        { "open", r_rvle_open, 1},
-        { "run", r_rvle_run, 1},
-        { "close", r_rvle_close, 1},
+        { "open", (DL_FUNC) r_rvle_open, 1},
+        { "run", (DL_FUNC) r_rvle_run, 1},
+        { "close", (DL_FUNC) r_rvle_close, 1},
+        { "condition_list", (DL_FUNC) r_rvle_condition_list, 1},
+        { "condition_size", (DL_FUNC) r_rvle_condition_size, 1},
         { NULL, NULL, 0}
 };
 
@@ -120,3 +124,46 @@ SEXP r_rvle_delete(SEXP rvle)
 
         return r;
 }
+
+SEXP r_rvle_condition_list(SEXP rvle)
+{
+        SEXP r;         /* condition list result */
+        SEXP current;   /* condition name */
+        char** result;  /* string list from the vle api */
+        int size;       /* size of the condition list from the vle api */
+        int i;
+
+        size = rvle_condition_size(R_ExternalPtrAddr(rvle));
+        result = rvle_condition_list(R_ExternalPtrAddr(rvle));
+
+        PROTECT(r = allocVector(VECSXP, size));
+        for (i = 0; i < size; ++i) {
+                PROTECT(current = allocVector(STRSXP, 1));
+                SET_STRING_ELT(current, 0, mkChar(result[i]));
+                SET_VECTOR_ELT(r, i, current);
+                UNPROTECT(1);
+        }
+
+        for (i = 0; i < size; ++i) {
+                free(result[i]);
+        }
+        free(result);
+
+        UNPROTECT(1);
+
+        return r;
+}
+
+SEXP r_rvle_condition_size(SEXP rvle)
+{
+        SEXP r;
+        int result;
+
+        PROTECT(r = allocVector(INTSXP, 1));
+        result = rvle_condition_size(R_ExternalPtrAddr(rvle));
+        INTEGER(r)[0] = result;
+        UNPROTECT(1);
+
+        return r;
+}
+
