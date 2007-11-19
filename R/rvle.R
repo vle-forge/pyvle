@@ -57,9 +57,9 @@ rvle.condition_set_real <- function(x, condition, port, value)
     is.rvle(x)
     as.character(condition)
     as.character(port)
-    is.real(value)
 
-    .Call("condition_set_real", x, condition, port, value, PACKAGE="rvle")
+    .Call("condition_set_real", x, condition, port, as.real(value),
+          PACKAGE="rvle")
 }
 
 rvle.condition_set_integer <- function(x, condition, port, value)
@@ -67,9 +67,9 @@ rvle.condition_set_integer <- function(x, condition, port, value)
     is.rvle(x)
     as.character(condition)
     as.character(port)
-    is.integer(value)
 
-    .Call("condition_set_real", x, condition, port, value, PACKAGE="rvle")
+    .Call("condition_set_integer", x, condition, port, as.integer(value),
+          PACKAGE="rvle")
 }
 
 rvle.save <- function(x, file)
