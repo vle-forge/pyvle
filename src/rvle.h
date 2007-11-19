@@ -93,6 +93,19 @@ int rvle_condition_set_real(RVLE handle,
                             double value);
 
 /** 
+ * @brief Set the initial condition of the specified condition and portname.
+ * @param handle The reference to the Vpz file.
+ * @param conditionname The name of the condition.
+ * @param portname The name of the condition's port.
+ * @param value The value to push.
+ * @return 0 if failed, -1 otherwise.
+ */
+int rvle_condition_set_integer(RVLE handle,
+                               const char* conditionname,
+                               const char* portname,
+                               long value);
+
+/** 
  * @brief Save the current file under the specified filename.
  * @param handle The reference to the Vpz file.
  * @param filename The filename where store file.

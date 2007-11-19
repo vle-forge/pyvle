@@ -156,6 +156,27 @@ int rvle_condition_set_real(RVLE handle,
     return -1;
 }
 
+int rvle_condition_set_real(RVLE handle,
+                            const char* conditionname,
+                            const char* portname,
+                            long value)
+{
+    assert(handle && conditionname && portname);
+
+    try {
+        vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
+        vpz::Condition& cnd(file->project().experiment().
+                            conditions().get(conditionname));
+
+        cnd.setValueToPort(portname, value::IntegerFactory::create(value));
+    } catch(const std::exception& e) {
+        return 0;
+    }
+
+    return -1;
+}
+
+
 int rvle_save(RVLE handle, const char* filename)
 {
     assert(handle and filename);
