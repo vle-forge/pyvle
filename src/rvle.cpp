@@ -156,7 +156,7 @@ int rvle_condition_set_real(RVLE handle,
     return -1;
 }
 
-int rvle_condition_set_real(RVLE handle,
+int rvle_condition_set_integer(RVLE handle,
                             const char* conditionname,
                             const char* portname,
                             long value)

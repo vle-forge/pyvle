@@ -195,7 +195,7 @@ SEXP r_rvle_condition_set_integer(SEXP rvle, SEXP cnd, SEXP prt, SEXP val)
         int result;
 
         PROTECT(r = allocVector(INTSXP, 1));
-        result = rvle_condition_set_real(R_ExternalPtrAddr(rvle),
+        result = rvle_condition_set_integer(R_ExternalPtrAddr(rvle),
                         CHAR(STRING_ELT(cnd, 0)),
                         CHAR(STRING_ELT(prt, 0)),
                         INTEGER(val)[0]);
