@@ -142,19 +142,15 @@ SEXP r_rvle_condition_list(SEXP rvle)
         size = rvle_condition_size(R_ExternalPtrAddr(rvle));
         result = rvle_condition_list(R_ExternalPtrAddr(rvle));
 
-        PROTECT(r = allocVector(VECSXP, size));
+        PROTECT(r = allocVector(STRSXP, size));
         for (i = 0; i < size; ++i) {
-                PROTECT(current = allocVector(STRSXP, 1));
-                SET_STRING_ELT(current, 0, mkChar(result[i]));
-                SET_VECTOR_ELT(r, i, current);
-                UNPROTECT(1);
+		SET_STRING_ELT(r, i, mkChar(result[i]));
         }
 
         for (i = 0; i < size; ++i) {
                 free(result[i]);
         }
         free(result);
-
         UNPROTECT(1);
 
         return r;
