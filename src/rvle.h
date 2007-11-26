@@ -50,13 +50,6 @@ RVLE rvle_open(const char* filename);
  */
 int rvle_run(RVLE handle);
 
-/** 
- * @brief Flush data.
- * @param handle The reference to the Vpz file.
- * @return 0 if failed, -1 otherwise.
- */
-int rvle_close(RVLE handle);
-
 /**
  * @brief Destruction of the RVLE object.
  * @param handle The reference to the Vpz file.

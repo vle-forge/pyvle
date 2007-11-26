@@ -83,15 +83,6 @@ int rvle_run(RVLE handle)
     return -1;
 }
 
-int rvle_close(RVLE handle)
-{
-    assert(handle);
-
-    vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
-    file->clear();
-    return -1;
-}
-
 int rvle_delete(RVLE handle)
 {
     assert(handle);

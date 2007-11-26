@@ -29,12 +29,6 @@ rvle.run <- function(x)
         .Call("run", x, PACKAGE="rvle")
 }
 
-rvle.close <- function(x)
-{
-        is.rvle(x)
-        .Call("close", x, PACKAGE="rvle")
-}
-
 is.rvle <- function(x)
 {
         inherits(x, "rvle")

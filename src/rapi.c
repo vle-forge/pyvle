@@ -34,7 +34,6 @@
 
 static SEXP r_rvle_open(SEXP name);
 static SEXP r_rvle_run(SEXP rvle);
-static SEXP r_rvle_close(SEXP rvle);
 static SEXP r_rvle_delete(SEXP rvle);
 static SEXP r_rvle_condition_list(SEXP rvle);
 static SEXP r_rvle_condition_size(SEXP rvle);
@@ -52,7 +51,6 @@ R_CallMethodDef callMethods[] =
 {
         { "open", (DL_FUNC) r_rvle_open, 1},
         { "run", (DL_FUNC) r_rvle_run, 1},
-        { "close", (DL_FUNC) r_rvle_close, 1},
         { "condition_list", (DL_FUNC) r_rvle_condition_list, 1},
         { "condition_size", (DL_FUNC) r_rvle_condition_size, 1},
         { "condition_set_real", (DL_FUNC) r_rvle_condition_set_real, 4},
@@ -99,19 +97,6 @@ SEXP r_rvle_run(SEXP rvle)
 
         PROTECT(r = allocVector(INTSXP, 1));
         result = rvle_run(R_ExternalPtrAddr(rvle));
-        INTEGER(r)[0] = result;
-        UNPROTECT(1);
-
-        return r;
-}
-
-SEXP r_rvle_close(SEXP rvle)
-{
-        SEXP r;
-        int result;
-
-        PROTECT(r = allocVector(INTSXP, 1));
-        result = rvle_close(R_ExternalPtrAddr(rvle));
         INTEGER(r)[0] = result;
         UNPROTECT(1);
 
