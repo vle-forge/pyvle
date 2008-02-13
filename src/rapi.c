@@ -83,7 +83,7 @@ SEXP r_rvle_open(SEXP name)
         void* p = (void*) rvle_open(CHAR(STRING_ELT(name, 0)));
         if (p) {
                 PROTECT(r = R_MakeExternalPtr(p, R_NilValue, R_NilValue));
-                R_RegisterCFinalizer(r, r_rvle_delete);
+                R_RegisterCFinalizer(r, (R_CFinalizer_t) r_rvle_delete);
                 UNPROTECT(1);
         }
 
