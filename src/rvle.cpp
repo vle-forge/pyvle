@@ -103,18 +103,62 @@ char** rvle_condition_list(RVLE handle)
     file->project().experiment().conditions().conditionnames(lst);
     assert(lst.size() > 0);
 
-    int maxsize = max_string_size(lst);
-    assert(maxsize > 0);
-
     char** result;
 
     result = (char**)malloc(lst.size() * sizeof(char*));
     std::list < std::string >::iterator it = lst.begin();
 
     for (size_t i = 0; i < lst.size(); ++i) {
-        result[i] = (char*)malloc(maxsize * sizeof(char));
+        result[i] = (char*)malloc((*it).size() + 1);
         strcpy(result[i], (*it).c_str());
         it++;
+    }
+
+    return result;
+}
+
+char** rvle_condition_port_list(RVLE handle, const char* conditionname)
+{
+    assert(handle);
+
+    vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
+    std::list < std::string > lst;
+    char** result;
+
+    try {
+        const vpz::Condition& cnd(
+            file->project().experiment().conditions().get(conditionname));
+
+        cnd.portnames(lst);
+
+        result = (char**)malloc(lst.size() * sizeof(char*));
+        std::list < std::string >::iterator it = lst.begin();
+
+        for (size_t i = 0; i < lst.size(); ++i) {
+            result[i] = (char*)malloc((*it).size() + 1);
+            strcpy(result[i], (*it).c_str());
+            it++;
+        }
+    } catch(const std::exception& e) {
+        return 0;
+    }
+
+    return result;
+}
+
+int rvle_condition_port_list_size(RVLE handle, const char* conditionname)
+{
+    assert(handle);
+
+    int result;
+
+    vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
+    try {
+        vpz::Condition& cnd(
+            file->project().experiment().conditions().get(conditionname));
+        result = cnd.conditionvalues().size();
+    } catch(const std::exception& e) {
+        result = 0;
     }
 
     return result;

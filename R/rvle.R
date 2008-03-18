@@ -40,10 +40,24 @@ rvle.condition_list <- function(x)
         .Call("condition_list", x, PACKAGE="rvle")
 }
 
+rvle.condition_port_list <- function(x, condition)
+{
+        is.rvle(x)
+        as.character(condition)
+        .Call("condition_port_list", x, condition, PACKAGE="rvle")
+}
+
 rvle.condition_size <- function(x)
 {
         is.rvle(x)
         .Call("condition_size", x, PACKAGE="rvle")
+}
+
+rvle.condition_port_list_size <- function(x, condition)
+{
+        is.rvle(x)
+        as.character(condition)
+        .Call("condition_port_list_size", x, condition, PACKAGE="rvle")
 }
 
 rvle.condition_set_real <- function(x, condition, port, value)

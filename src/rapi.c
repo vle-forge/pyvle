@@ -37,6 +37,8 @@ static SEXP r_rvle_run(SEXP rvle);
 static SEXP r_rvle_delete(SEXP rvle);
 static SEXP r_rvle_condition_list(SEXP rvle);
 static SEXP r_rvle_condition_size(SEXP rvle);
+static SEXP r_rvle_condition_port_list(SEXP rvle, SEXP cnd);
+static SEXP r_rvle_condition_port_list_size(SEXP rvle, SEXP cnd);
 static SEXP r_rvle_condition_set_real(SEXP rvle, SEXP cnd, SEXP prt, SEXP val);
 static SEXP r_rvle_condition_set_integer(SEXP rvle, SEXP cnd, SEXP prt, SEXP val);
 static SEXP r_rvle_save(SEXP rvle, SEXP file);
@@ -53,6 +55,8 @@ R_CallMethodDef callMethods[] =
         { "run", (DL_FUNC) r_rvle_run, 1},
         { "condition_list", (DL_FUNC) r_rvle_condition_list, 1},
         { "condition_size", (DL_FUNC) r_rvle_condition_size, 1},
+        { "condition_port_list", (DL_FUNC) r_rvle_condition_port_list, 2},
+        { "condition_port_list_size", (DL_FUNC) r_rvle_condition_port_list_size, 2},
         { "condition_set_real", (DL_FUNC) r_rvle_condition_set_real, 4},
         { "condition_set_integer", (DL_FUNC) r_rvle_condition_set_integer, 4},
         { "save", (DL_FUNC) r_rvle_save, 2},
@@ -119,7 +123,6 @@ SEXP r_rvle_delete(SEXP rvle)
 SEXP r_rvle_condition_list(SEXP rvle)
 {
         SEXP r;         /* condition list result */
-        SEXP current;   /* condition name */
         char** result;  /* string list from the vle api */
         int size;       /* size of the condition list from the vle api */
         int i;
@@ -149,6 +152,47 @@ SEXP r_rvle_condition_size(SEXP rvle)
         PROTECT(r = allocVector(INTSXP, 1));
         result = rvle_condition_size(R_ExternalPtrAddr(rvle));
         INTEGER(r)[0] = result;
+        UNPROTECT(1);
+
+        return r;
+}
+
+SEXP r_rvle_condition_port_list_size(SEXP rvle, SEXP cnd)
+{
+        SEXP r;
+        int result;
+
+        PROTECT(r = allocVector(INTSXP, 1));
+        result = rvle_condition_port_list_size(R_ExternalPtrAddr(rvle),
+                        CHAR(STRING_ELT(cnd, 0)));
+        INTEGER(r)[0] = result;
+        UNPROTECT(1);
+
+        return r;
+}
+
+SEXP r_rvle_condition_port_list(SEXP rvle, SEXP cnd)
+{
+        SEXP r;         /* condition list result */
+        char** result;  /* string list from the vle api */
+        int size;       /* size of the condition list from the vle api */
+        int i;
+
+        size = rvle_condition_port_list_size(R_ExternalPtrAddr(rvle),
+                        CHAR(STRING_ELT(cnd, 0)));
+
+        result = rvle_condition_port_list(R_ExternalPtrAddr(rvle),
+                        CHAR(STRING_ELT(cnd, 0)));
+
+        PROTECT(r = allocVector(STRSXP, size));
+        for (i = 0; i < size; ++i) {
+		SET_STRING_ELT(r, i, mkChar(result[i]));
+        }
+
+        for (i = 0; i < size; ++i) {
+                free(result[i]);
+        }
+        free(result);
         UNPROTECT(1);
 
         return r;

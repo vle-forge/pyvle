@@ -66,11 +66,28 @@ int rvle_delete(RVLE handle);
 char** rvle_condition_list(RVLE handle);
 
 /** 
+ * @brief Get the list of port in the specified condition list.
+ * @param handle The reference to the Vpz file.
+ * @param conditionname the name of the condition.
+ * @return The reference to a char**. Memory use malloc, don't forget to use
+ * free function.
+ */
+char** rvle_condition_port_list(RVLE handle, const char* conditionname);
+
+/** 
  * @brief Get the number of conditions in conditions lists.
  * @param handle The reference to the Vpz file.
  * @return The number of conditions.
  */
 int rvle_condition_size(RVLE handle);
+
+/** 
+ * @brief Get the number of portname for the specified condition.
+ * @param handle The reference to the Vpz file.
+ * @param conditionname The name of the condition to get port list.
+ * @return The number of conditions.
+ */
+int rvle_condition_port_list_size(RVLE handle, const char* conditionname);
 
 /** 
  * @brief Set the initial condition of the specified condition and portname.
