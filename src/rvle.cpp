@@ -76,9 +76,8 @@ int rvle_run(RVLE handle)
 
     vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
     try {
-        manager::RunVerbose r(std::cerr);
-        vpz::Vpz* copyfile = new vpz::Vpz(*file);
-        r.start(copyfile);
+        manager::RunVerbose jrm(std::cerr);
+        jrm.start(*file);
     } catch(const std::exception& e) {
         return 0;
     }
