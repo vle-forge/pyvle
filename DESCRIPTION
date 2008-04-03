@@ -1,5 +1,5 @@
 Package: rvle
-Version: 0.5.0
+Version: 0.5.0-1
 Date: 2007-11-13
 Title: VLE R package
 Author: Gauthier Quesnel <quesnel@users.sourceforge.net>.
@@ -7,5 +7,5 @@ Maintainer: Gauthier Quesnel <quesnel@users.sourceforge.net>
 Depends: R (>= 2.1.0)
 Description: To perform analysis using the VLE framework.
 LazyLoad: yes
-License: GPL (>= 2)
+License: GPL (>= 3)
 URL: http://vle.univ-littoral.fr
