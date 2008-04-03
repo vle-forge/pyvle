@@ -81,6 +81,7 @@ void R_unload_rvle(DllInfo* info)
  */
 
 #include "rvle.h"
+#include "convert.h"
 
 SEXP r_rvle_open(SEXP name)
 {
@@ -98,13 +99,13 @@ SEXP r_rvle_open(SEXP name)
 
 SEXP r_rvle_run(SEXP rvle)
 {
-        SEXP r;
-        int result;
-
-        PROTECT(r = allocVector(INTSXP, 1));
+        SEXP r = R_NilValue;
+        rvle_output_t result;
+       
         result = rvle_run(R_ExternalPtrAddr(rvle));
-        INTEGER(r)[0] = result;
-        UNPROTECT(1);
+        if (result) {
+                r = rvle_convert_simulation_matrix(result);
+        }
 
         return r;
 }

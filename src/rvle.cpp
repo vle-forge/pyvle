@@ -28,6 +28,7 @@
 #include <vle/vpz.hpp>
 #include <vle/manager.hpp>
 #include <vle/value.hpp>
+#include <vle/oov.hpp>
 #include <cassert>
 
 using namespace vle;
@@ -36,29 +37,19 @@ using namespace vle;
 // C++ utilities
 //
 
-
-int max_string_size(const std::list < std::string >& lst)
+static void rvle_build_matrix(const oov::OutputMatrixViewList& view,
+                              manager::OutputSimulationMatrix& matrix)
 {
-    assert(not lst.empty());
-
-    int r = 0;
-    std::list < std::string >::const_iterator it;
-    for (it = lst.begin(); it != lst.end(); ++it) {
-        if ((*it).size() > r) {
-            r = (*it).size();
-        }
-    }
-
-    assert(r > 0);
-
-    return r;
+    manager::OutputSimulationMatrix::extent_gen extent;
+    matrix.resize(extent[1][1]);
+    matrix[0][0] = view;
 }
 
 //
 // R interface
 //
 
-RVLE rvle_open(const char* filename)
+rvle_t rvle_open(const char* filename)
 {
     assert(filename);
 
@@ -72,7 +63,7 @@ RVLE rvle_open(const char* filename)
     }
 }
 
-int rvle_run(RVLE handle)
+rvle_output_t rvle_run(rvle_t handle)
 {
     assert(handle);
 
@@ -80,13 +71,18 @@ int rvle_run(RVLE handle)
     try {
         manager::RunVerbose jrm(std::cerr);
         jrm.start(*file);
+        const oov::OutputMatrixViewList& result(jrm.outputs());
+        manager::OutputSimulationMatrix* matrix;
+        matrix = new manager::OutputSimulationMatrix;
+        rvle_build_matrix(result, *matrix);
+        return matrix;
     } catch(const std::exception& e) {
         return 0;
     }
-    return -1;
+    return NULL;
 }
 
-int rvle_delete(RVLE handle)
+int rvle_delete(rvle_t handle)
 {
     assert(handle);
 
@@ -95,7 +91,7 @@ int rvle_delete(RVLE handle)
     return -1;
 }
 
-char** rvle_condition_list(RVLE handle)
+char** rvle_condition_list(rvle_t handle)
 {
     assert(handle);
 
@@ -119,7 +115,7 @@ char** rvle_condition_list(RVLE handle)
     return result;
 }
 
-char** rvle_condition_port_list(RVLE handle, const char* conditionname)
+char** rvle_condition_port_list(rvle_t handle, const char* conditionname)
 {
     assert(handle);
 
@@ -148,7 +144,7 @@ char** rvle_condition_port_list(RVLE handle, const char* conditionname)
     return result;
 }
 
-int rvle_condition_port_list_size(RVLE handle, const char* conditionname)
+int rvle_condition_port_list_size(rvle_t handle, const char* conditionname)
 {
     assert(handle);
 
@@ -166,7 +162,7 @@ int rvle_condition_port_list_size(RVLE handle, const char* conditionname)
     return result;
 }
 
-int rvle_condition_size(RVLE handle)
+int rvle_condition_size(rvle_t handle)
 {
     assert(handle);
 
@@ -174,7 +170,7 @@ int rvle_condition_size(RVLE handle)
     return file->project().experiment().conditions().conditionlist().size();
 }
 
-int rvle_condition_set_real(RVLE handle,
+int rvle_condition_set_real(rvle_t handle,
                             const char* conditionname,
                             const char* portname,
                             double value)
@@ -194,10 +190,10 @@ int rvle_condition_set_real(RVLE handle,
     return -1;
 }
 
-int rvle_condition_set_integer(RVLE handle,
-                            const char* conditionname,
-                            const char* portname,
-                            long value)
+int rvle_condition_set_integer(rvle_t handle,
+                               const char* conditionname,
+                               const char* portname,
+                               long value)
 {
     assert(handle && conditionname && portname);
 
@@ -215,7 +211,7 @@ int rvle_condition_set_integer(RVLE handle,
 }
 
 
-int rvle_save(RVLE handle, const char* filename)
+int rvle_save(rvle_t handle, const char* filename)
 {
     assert(handle and filename);
 

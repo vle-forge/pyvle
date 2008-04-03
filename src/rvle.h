@@ -33,31 +33,36 @@ extern "C" {
 
 
 /** 
- * @brief An hande to an obscure structure.
+ * @brief An hande to an obscure structure. A vpz::Vpz::Vpz class in fact.
  */
-typedef void* RVLE;
+typedef void* rvle_t;
 
+/**
+ * @brief An handle to an obscure structure. A vle::manager::OutputMatrix in
+ * fact.
+ */
+typedef void* rvle_output_t;
 
 /** 
  * @brief Open the file vpz filename using vpz library.
  * @param filename The vpz file to laod with his path.
- * @return A RVLE object or NULL on error.
+ * @return A rvle_t object or NULL if error.
  */
-RVLE rvle_open(const char* filename);
+rvle_t rvle_open(const char* filename);
 
 /** 
- * @brief Run a simulation using the RVLE object.
+ * @brief Run a simulation using the rvle_t object.
  * @param handle The reference to the Vpz file.
- * @return 0 if failed, -1 otherwise.
+ * @return A rvle_output_t object or NULL if error.
  */
-int rvle_run(RVLE handle);
+rvle_output_t rvle_run(rvle_t handle);
 
 /**
- * @brief Destruction of the RVLE object.
+ * @brief Destruction of the rvle_t object.
  * @param handle The reference to the Vpz file.
  * @return 0 if failed, -1 otherwise.
  */
-int rvle_delete(RVLE handle);
+int rvle_delete(rvle_t handle);
 
 /**
  * @brief Get the list of conditions lists.
@@ -65,7 +70,7 @@ int rvle_delete(RVLE handle);
  * @return The reference to a char**. Memory use malloc, don't forget to use
  * free function.
  */
-char** rvle_condition_list(RVLE handle);
+char** rvle_condition_list(rvle_t handle);
 
 /** 
  * @brief Get the list of port in the specified condition list.
@@ -74,14 +79,14 @@ char** rvle_condition_list(RVLE handle);
  * @return The reference to a char**. Memory use malloc, don't forget to use
  * free function.
  */
-char** rvle_condition_port_list(RVLE handle, const char* conditionname);
+char** rvle_condition_port_list(rvle_t handle, const char* conditionname);
 
 /** 
  * @brief Get the number of conditions in conditions lists.
  * @param handle The reference to the Vpz file.
  * @return The number of conditions.
  */
-int rvle_condition_size(RVLE handle);
+int rvle_condition_size(rvle_t handle);
 
 /** 
  * @brief Get the number of portname for the specified condition.
@@ -89,7 +94,7 @@ int rvle_condition_size(RVLE handle);
  * @param conditionname The name of the condition to get port list.
  * @return The number of conditions.
  */
-int rvle_condition_port_list_size(RVLE handle, const char* conditionname);
+int rvle_condition_port_list_size(rvle_t handle, const char* conditionname);
 
 /** 
  * @brief Set the initial condition of the specified condition and portname.
@@ -99,7 +104,7 @@ int rvle_condition_port_list_size(RVLE handle, const char* conditionname);
  * @param value The value to push.
  * @return 0 if failed, -1 otherwise.
  */
-int rvle_condition_set_real(RVLE handle,
+int rvle_condition_set_real(rvle_t handle,
                             const char* conditionname,
                             const char* portname,
                             double value);
@@ -112,7 +117,7 @@ int rvle_condition_set_real(RVLE handle,
  * @param value The value to push.
  * @return 0 if failed, -1 otherwise.
  */
-int rvle_condition_set_integer(RVLE handle,
+int rvle_condition_set_integer(rvle_t handle,
                                const char* conditionname,
                                const char* portname,
                                long value);
@@ -123,7 +128,7 @@ int rvle_condition_set_integer(RVLE handle,
  * @param filename The filename where store file.
  * @return 0 if failed, -1 otherwise.
  */
-int rvle_save(RVLE handle, const char* filename);
+int rvle_save(rvle_t handle, const char* filename);
 
 #ifdef __cplusplus
 }
