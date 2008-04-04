@@ -104,7 +104,8 @@ SEXP r_rvle_run(SEXP rvle)
        
         result = rvle_run(R_ExternalPtrAddr(rvle));
         if (result) {
-                r = rvle_convert_simulation_matrix(result);
+                //r = rvle_convert_simulation_matrix(result);
+                r = rvle_convert_simulation_dataframe(result);
         }
 
         return r;
