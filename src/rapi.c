@@ -36,6 +36,13 @@
 
 static SEXP r_rvle_open(SEXP name);
 static SEXP r_rvle_run(SEXP rvle);
+static SEXP r_rvle_run_matrix(SEXP rvle);
+static SEXP r_rvle_manager(SEXP rvle);
+static SEXP r_rvle_manager_matrix(SEXP rvle);
+static SEXP r_rvle_manager_thread(SEXP rvle, SEXP th);
+static SEXP r_rvle_manager_thread_matrix(SEXP rvle, SEXP th);
+static SEXP r_rvle_manager_cluster(SEXP rvle);
+static SEXP r_rvle_manager_cluster_matrix(SEXP rvle);
 static SEXP r_rvle_delete(SEXP rvle);
 static SEXP r_rvle_condition_list(SEXP rvle);
 static SEXP r_rvle_condition_size(SEXP rvle);
@@ -51,14 +58,21 @@ static SEXP r_rvle_save(SEXP rvle, SEXP file);
  *
  */
 
-R_CallMethodDef callMethods[] =
-{
+R_CallMethodDef callMethods[] = {
         { "open", (DL_FUNC) r_rvle_open, 1},
         { "run", (DL_FUNC) r_rvle_run, 1},
-        { "condition_list", (DL_FUNC) r_rvle_condition_list, 1},
-        { "condition_size", (DL_FUNC) r_rvle_condition_size, 1},
+        { "run_matrix", (DL_FUNC) r_rvle_run_matrix, 1},
+        { "run_manager", (DL_FUNC) r_rvle_manager, 1},
+        { "run_manager_matrix", (DL_FUNC) r_rvle_manager_matrix, 1},
+        { "run_manager_thread", (DL_FUNC) r_rvle_manager_thread, 2},
+        { "run_manager_thread_matrix", (DL_FUNC) r_rvle_manager_thread_matrix,
+                2},
+        { "run_manager_manager", (DL_FUNC) r_rvle_manager_cluster, 1},
+        { "run_manager_cluster_matrix", (DL_FUNC) r_rvle_manager_cluster_matrix,
+                1},
         { "condition_port_list", (DL_FUNC) r_rvle_condition_port_list, 2},
-        { "condition_port_list_size", (DL_FUNC) r_rvle_condition_port_list_size, 2},
+        { "condition_port_list_size", (DL_FUNC) r_rvle_condition_port_list_size,
+                2},
         { "condition_set_real", (DL_FUNC) r_rvle_condition_set_real, 4},
         { "condition_set_integer", (DL_FUNC) r_rvle_condition_set_integer, 4},
         { "save", (DL_FUNC) r_rvle_save, 2},
@@ -101,11 +115,103 @@ SEXP r_rvle_run(SEXP rvle)
 {
         SEXP r = R_NilValue;
         rvle_output_t result;
-       
+
         result = rvle_run(R_ExternalPtrAddr(rvle));
         if (result) {
-                //r = rvle_convert_simulation_matrix(result);
                 r = rvle_convert_simulation_dataframe(result);
+        }
+
+        return r;
+}
+
+SEXP r_rvle_run_matrix(SEXP rvle)
+{
+        SEXP r = R_NilValue;
+        rvle_output_t result;
+
+        result = rvle_run(R_ExternalPtrAddr(rvle));
+        if (result) {
+                r = rvle_convert_simulation_matrix(result);
+        }
+
+        return r;
+}
+
+SEXP r_rvle_manager(SEXP rvle)
+{
+        SEXP r = R_NilValue;
+        rvle_output_t result;
+
+        result = rvle_manager(R_ExternalPtrAddr(rvle));
+        if (result) {
+                r = rvle_convert_simulation_dataframe(result);
+        }
+
+        return r;
+}
+
+SEXP r_rvle_manager_matrix(SEXP rvle)
+{
+        SEXP r = R_NilValue;
+        rvle_output_t result;
+
+        result = rvle_manager(R_ExternalPtrAddr(rvle));
+        if (result) {
+                r = rvle_convert_simulation_matrix(result);
+        }
+
+        return r;
+}
+
+SEXP r_rvle_manager_thread(SEXP rvle, SEXP th)
+{
+        SEXP r = R_NilValue;
+        rvle_output_t result;
+
+        result = rvle_manager_thread(R_ExternalPtrAddr(rvle),
+                        INTEGER(th)[0]);
+        if (result) {
+                r = rvle_convert_simulation_dataframe(result);
+        }
+
+        return r;
+}
+
+SEXP r_rvle_manager_thread_matrix(SEXP rvle, SEXP th)
+{
+        SEXP r = R_NilValue;
+        rvle_output_t result;
+
+        result = rvle_manager_thread(R_ExternalPtrAddr(rvle),
+                        INTEGER(th)[0]);
+        if (result) {
+                r = rvle_convert_simulation_matrix(result);
+        }
+
+        return r;
+}
+
+SEXP r_rvle_manager_cluster(SEXP rvle)
+{
+        SEXP r = R_NilValue;
+        rvle_output_t result;
+
+        result = rvle_manager_cluster(R_ExternalPtrAddr(rvle));
+        if (result) {
+                r = rvle_convert_simulation_dataframe(result);
+        }
+
+        return r;
+}
+
+SEXP r_rvle_manager_cluster_matrix(SEXP rvle)
+{
+        SEXP r = R_NilValue;
+        rvle_output_t result;
+
+        result = rvle_manager_cluster(R_ExternalPtrAddr(rvle));
+        if (result) {
+                r = rvle_convert_simulation_matrix(result);
         }
 
         return r;

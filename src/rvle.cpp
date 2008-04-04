@@ -82,6 +82,58 @@ rvle_output_t rvle_run(rvle_t handle)
     return NULL;
 }
 
+rvle_output_t rvle_manager(rvle_t handle)
+{
+    assert(handle);
+
+    vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
+    try {
+        manager::ManagerRunMono jrm(std::cerr, false);
+        jrm.start(*file);
+        const manager::OutputSimulationMatrix& result(
+            jrm.outputSimulationMatrix());
+        return new manager::OutputSimulationMatrix(result);
+    } catch(const std::exception& e) {
+        return 0;
+    }
+    return NULL;
+}
+
+rvle_output_t rvle_manager_thread(rvle_t handle, int th)
+{
+    assert(handle);
+
+    vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
+    try {
+        manager::ManagerRunThread jrm(std::cerr, false, th);
+        jrm.start(*file);
+        const manager::OutputSimulationMatrix& result(
+            jrm.outputSimulationMatrix());
+        return new manager::OutputSimulationMatrix(result);
+    } catch(const std::exception& e) {
+        return 0;
+    }
+    return NULL;
+}
+
+rvle_output_t rvle_manager_cluster(rvle_t handle)
+{
+    assert(handle);
+
+    vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
+    try {
+        manager::ManagerRunDistant jrm(std::cerr, false);
+        jrm.start(*file);
+        const manager::OutputSimulationMatrix& result(
+            jrm.outputSimulationMatrix());
+        return new manager::OutputSimulationMatrix(result);
+    } catch(const std::exception& e) {
+        return 0;
+    }
+    return NULL;
+}
+
+
 int rvle_delete(rvle_t handle)
 {
     assert(handle);

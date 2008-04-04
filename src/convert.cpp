@@ -141,7 +141,6 @@ static SEXP rvle_build_data_frame(const oov::OutputMatrix& matrix)
     rvle_convert_vector_double(matrix.getValue(0), value);
     SET_VECTOR_ELT(ret, 0, value);
     SET_STRING_ELT(names, 0, mkChar("time"));
-    UNPROTECT(1); // unprotect value
 
     const oov::OutputMatrix::MapPairIndex& index(matrix.index());
     for (oov::OutputMatrix::MapPairIndex::const_iterator it = index.begin();
@@ -177,11 +176,8 @@ static SEXP rvle_build_data_frame(const oov::OutputMatrix& matrix)
                   it->first.first.c_str(), it->first.second.c_str(),
                   it->second);
         }
-
         SET_VECTOR_ELT(ret, it->second, value);
-        UNPROTECT(1); // unprotect value
     }
-
     /* set the first column name's */
     PROTECT(value = NEW_CHARACTER(view.shape()[1]));
     for (int i = 0; i < view.shape()[1]; ++i) {
@@ -189,11 +185,10 @@ static SEXP rvle_build_data_frame(const oov::OutputMatrix& matrix)
                         "%1%") % i ).c_str()));
     }
     setAttrib(ret, R_RowNamesSymbol, value);
-    UNPROTECT(1);
 
     SET_NAMES(ret, names);
     SET_CLASS(ret, mkString("data.frame"));
-    UNPROTECT(1); // unprotect names
+    UNPROTECT(matrix.index().size() + 3);
     return ret;
 }
 
@@ -232,8 +227,8 @@ SEXP rvle_convert_simulation_matrix(rvle_output_t out)
             }
             UNPROTECT(lst.size());
         }
-        UNPROTECT(matrix->shape()[0] * matrix->shape()[1]);
     }
+    UNPROTECT(matrix->shape()[0] * matrix->shape()[1]);
     UNPROTECT(1);
     return r;
 }
@@ -264,8 +259,8 @@ SEXP rvle_convert_simulation_dataframe(rvle_output_t out)
             }
             UNPROTECT(lst.size());
         }
-        UNPROTECT(matrix->shape()[0] * matrix->shape()[1]);
     }
+    UNPROTECT(matrix->shape()[0] * matrix->shape()[1]);
     UNPROTECT(1);
     return r;
 }

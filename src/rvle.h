@@ -57,6 +57,28 @@ rvle_t rvle_open(const char* filename);
  */
 rvle_output_t rvle_run(rvle_t handle);
 
+/** 
+ * @brief Run an experimental frames using the rvle_t object.
+ * @param handle The reference to the Vpz file.
+ * @return A rvle_output_t object or NULL if error.
+ */
+rvle_output_t rvle_manager(rvle_t handle);
+
+/** 
+ * @brief Run an experimental frames int thread using the rvle_t object.
+ * @param handle The reference to the Vpz file.
+ * @param th The number of thread.
+ * @return A rvle_output_t object or NULL if error.
+ */
+rvle_output_t rvle_manager_thread(rvle_t handle, int th);
+
+/** 
+ * @brief Run an experimental frames on cluster using the rvle_t object.
+ * @param handle The reference to the Vpz file.
+ * @return A rvle_output_t object or NULL if error.
+ */
+rvle_output_t rvle_manager_cluster(rvle_t handle);
+
 /**
  * @brief Destruction of the rvle_t object.
  * @param handle The reference to the Vpz file.

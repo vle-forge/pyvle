@@ -39,6 +39,48 @@ rvle.run <- function(x)
         .Call("run", x, PACKAGE="rvle")
 }
 
+rvle.run_matrix <- function(x)
+{
+        is.rvle(x)
+        .Call("run_matrix", x, PACKAGE="rvle")
+}
+
+rvle.run_manager <- function(x)
+{
+        is.rvle(x)
+        .Call("run_manager", x, PACKAGE="rvle")
+}
+
+rvle.run_manager_matrix <- function(x)
+{
+        is.rvle(x)
+        .Call("run_manager_matrix", x, PACKAGE="rvle")
+}
+
+rvle.run_manager_thread <- function(x, th)
+{
+        is.rvle(x)
+        .Call("run_manager_thread", x, as.integer(th), PACKAGE="rvle")
+}
+
+rvle.run_manager_thread_matrix <- function(x, th)
+{
+        is.rvle(x)
+        .Call("run_manager_thread_matrix", x, as.integer(th), PACKAGE="rvle")
+}
+
+rvle.run_manager_cluster <- function(x)
+{
+        is.rvle(x)
+        .Call("run_manager_cluster", x, PACKAGE="rvle")
+}
+
+rvle.run_manager_cluster_matrix <- function(x)
+{
+        is.rvle(x)
+        .Call("run_manager_cluster_matrix", x, PACKAGE="rvle")
+}
+
 is.rvle <- function(x)
 {
         inherits(x, "rvle")
