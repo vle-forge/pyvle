@@ -59,7 +59,7 @@ rvle_t rvle_open(const char* filename)
         file = new vpz::Vpz(filename);
         return file;
     } catch(const std::exception& e) {
-        return 0;
+        return NULL;
     }
 }
 
@@ -77,7 +77,7 @@ rvle_output_t rvle_run(rvle_t handle)
         rvle_build_matrix(result, *matrix);
         return matrix;
     } catch(const std::exception& e) {
-        return 0;
+        return NULL;
     }
     return NULL;
 }
@@ -94,7 +94,7 @@ rvle_output_t rvle_manager(rvle_t handle)
             jrm.outputSimulationMatrix());
         return new manager::OutputSimulationMatrix(result);
     } catch(const std::exception& e) {
-        return 0;
+        return NULL;
     }
     return NULL;
 }
@@ -111,7 +111,7 @@ rvle_output_t rvle_manager_thread(rvle_t handle, int th)
             jrm.outputSimulationMatrix());
         return new manager::OutputSimulationMatrix(result);
     } catch(const std::exception& e) {
-        return 0;
+        return NULL;
     }
     return NULL;
 }
@@ -128,7 +128,7 @@ rvle_output_t rvle_manager_cluster(rvle_t handle)
             jrm.outputSimulationMatrix());
         return new manager::OutputSimulationMatrix(result);
     } catch(const std::exception& e) {
-        return 0;
+        return NULL;
     }
     return NULL;
 }
@@ -150,17 +150,17 @@ char** rvle_condition_list(rvle_t handle)
     std::list < std::string > lst;
 
     file->project().experiment().conditions().conditionnames(lst);
-    assert(lst.size() > 0);
+    char** result = NULL;
 
-    char** result;
+    if (lst.size()) {
+        result = (char**)malloc(lst.size() * sizeof(char*));
+        std::list < std::string >::iterator it = lst.begin();
 
-    result = (char**)malloc(lst.size() * sizeof(char*));
-    std::list < std::string >::iterator it = lst.begin();
-
-    for (size_t i = 0; i < lst.size(); ++i) {
-        result[i] = (char*)malloc((*it).size() + 1);
-        strcpy(result[i], (*it).c_str());
-        it++;
+        for (size_t i = 0; i < lst.size(); ++i) {
+            result[i] = (char*)malloc((*it).size() + 1);
+            strcpy(result[i], (*it).c_str());
+            it++;
+        }
     }
 
     return result;
@@ -172,7 +172,7 @@ char** rvle_condition_port_list(rvle_t handle, const char* conditionname)
 
     vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
     std::list < std::string > lst;
-    char** result;
+    char** result = NULL;
 
     try {
         const vpz::Condition& cnd(
@@ -189,7 +189,7 @@ char** rvle_condition_port_list(rvle_t handle, const char* conditionname)
             it++;
         }
     } catch(const std::exception& e) {
-        return 0;
+        return NULL;
     }
 
     return result;
@@ -207,7 +207,7 @@ int rvle_condition_port_list_size(rvle_t handle, const char* conditionname)
             file->project().experiment().conditions().get(conditionname));
         result = cnd.conditionvalues().size();
     } catch(const std::exception& e) {
-        result = 0;
+        result = -1;
     }
 
     return result;
@@ -221,10 +221,10 @@ int rvle_condition_size(rvle_t handle)
     return file->project().experiment().conditions().conditionlist().size();
 }
 
-void rvle_condition_set_real(rvle_t handle,
-                             const char* conditionname,
-                             const char* portname,
-                             double value)
+int rvle_condition_set_real(rvle_t handle,
+                            const char* conditionname,
+                            const char* portname,
+                            double value)
 {
     assert(handle && conditionname && portname);
 
@@ -234,14 +234,16 @@ void rvle_condition_set_real(rvle_t handle,
                             conditions().get(conditionname));
 
         cnd.setValueToPort(portname, value::DoubleFactory::create(value));
+        return -1;
     } catch(const std::exception& e) {
+        return 0;
     }
 }
 
-void rvle_condition_set_integer(rvle_t handle,
-                                const char* conditionname,
-                                const char* portname,
-                                long value)
+int rvle_condition_set_integer(rvle_t handle,
+                               const char* conditionname,
+                               const char* portname,
+                               long value)
 {
     assert(handle && conditionname && portname);
 
@@ -251,16 +253,20 @@ void rvle_condition_set_integer(rvle_t handle,
                             conditions().get(conditionname));
 
         cnd.setValueToPort(portname, value::IntegerFactory::create(value));
+        return -1;
     } catch(const std::exception& e) {
+        return 0;
     }
 }
 
-void rvle_experiment_set_duration(rvle_t handle, double value)
+int rvle_experiment_set_duration(rvle_t handle, double value)
 {
     assert(handle);
 
     vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
     file->project().experiment().setDuration(value);
+
+    return -1;
 }
 
 double rvle_experiment_get_duration(rvle_t handle)
@@ -272,17 +278,19 @@ double rvle_experiment_get_duration(rvle_t handle)
 
         return file->project().experiment().duration();
     } catch(const std::exception& e) {
-        return 0.0;
+        return NULL;
     }
 }
 
-void rvle_save(rvle_t handle, const char* filename)
+int rvle_save(rvle_t handle, const char* filename)
 {
     assert(handle and filename);
 
     try {
         vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
         file->write(filename);
+        return -1;
     } catch(const std::exception& e) {
+        return 0;
     }
 }

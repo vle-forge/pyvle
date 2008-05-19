@@ -113,7 +113,7 @@ int rvle_condition_size(rvle_t handle);
  * @brief Get the number of portname for the specified condition.
  * @param handle The reference to the Vpz file.
  * @param conditionname The name of the condition to get port list.
- * @return The number of conditions.
+ * @return The number of conditions, -1 on error.
  */
 int rvle_condition_port_list_size(rvle_t handle, const char* conditionname);
 
@@ -125,10 +125,10 @@ int rvle_condition_port_list_size(rvle_t handle, const char* conditionname);
  * @param value The value to push.
  * @return 0 if failed, -1 otherwise.
  */
-void rvle_condition_set_real(rvle_t handle,
-                             const char* conditionname,
-                             const char* portname,
-                             double value);
+int rvle_condition_set_real(rvle_t handle,
+                            const char* conditionname,
+                            const char* portname,
+                            double value);
 
 /**
  * @brief Set the initial condition of the specified condition and portname.
@@ -138,17 +138,18 @@ void rvle_condition_set_real(rvle_t handle,
  * @param value The value to push.
  * @return 0 if failed, -1 otherwise.
  */
-void rvle_condition_set_integer(rvle_t handle,
-                                const char* conditionname,
-                                const char* portname,
-                                long value);
+int rvle_condition_set_integer(rvle_t handle,
+                               const char* conditionname,
+                               const char* portname,
+                               long value);
 
 /**
  * @brief Set the duration of the experiment.
  * @param handle the reference to the Vpz file.
  * @param value the duration to set, must be greather than 0.
+ * @return 0 if failed, -1 otherwise.
  */
-void rvle_experiment_set_duration(rvle_t handle, double value);
+int rvle_experiment_set_duration(rvle_t handle, double value);
 
 /**
  * @brief Get the duration of the experiment.
@@ -162,7 +163,7 @@ double rvle_experiment_get_duration(rvle_t handle);
  * @param handle The reference to the Vpz file.
  * @param filename The filename where store file.
  */
-void rvle_save(rvle_t handle, const char* filename);
+int rvle_save(rvle_t handle, const char* filename);
 
 #ifdef __cplusplus
 }

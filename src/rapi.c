@@ -72,6 +72,8 @@ R_CallMethodDef callMethods[] = {
         { "run_manager_manager", (DL_FUNC) r_rvle_manager_cluster, 1},
         { "run_manager_cluster_matrix", (DL_FUNC) r_rvle_manager_cluster_matrix,
                 1},
+        { "condition_size", (DL_FUNC) r_rvle_condition_size, 1},
+        { "condition_list", (DL_FUNC) r_rvle_condition_list, 1},
         { "condition_port_list", (DL_FUNC) r_rvle_condition_port_list, 2},
         { "condition_port_list_size", (DL_FUNC) r_rvle_condition_port_list_size,
                 2},
@@ -106,7 +108,9 @@ SEXP r_rvle_open(SEXP name)
         SEXP r = R_NilValue;
 
         void* p = (void*) rvle_open(CHAR(STRING_ELT(name, 0)));
-        if (p) {
+        if (!p) {
+                Rf_error("RVLE: unable to open %s", CHAR(STRING_ELT(name, 0)));
+        } else {
                 PROTECT(r = R_MakeExternalPtr(p, R_NilValue, R_NilValue));
                 R_RegisterCFinalizer(r, (R_CFinalizer_t) r_rvle_delete);
                 UNPROTECT(1);
@@ -121,7 +125,9 @@ SEXP r_rvle_run(SEXP rvle)
         rvle_output_t result;
 
         result = rvle_run(R_ExternalPtrAddr(rvle));
-        if (result) {
+        if (!result) {
+                Rf_warning("RVLE: empty result, (use output storage)");
+        } else {
                 r = rvle_convert_simulation_dataframe(result);
         }
 
@@ -134,7 +140,9 @@ SEXP r_rvle_run_matrix(SEXP rvle)
         rvle_output_t result;
 
         result = rvle_run(R_ExternalPtrAddr(rvle));
-        if (result) {
+        if (!result) {
+                Rf_warning("RVLE: empty result, (use output storage)");
+        } else {
                 r = rvle_convert_simulation_matrix(result);
         }
 
@@ -147,7 +155,9 @@ SEXP r_rvle_manager(SEXP rvle)
         rvle_output_t result;
 
         result = rvle_manager(R_ExternalPtrAddr(rvle));
-        if (result) {
+        if (!result) {
+                Rf_warning("RVLE: empty result, (use output storage)");
+        } else {
                 r = rvle_convert_simulation_dataframe(result);
         }
 
@@ -160,7 +170,9 @@ SEXP r_rvle_manager_matrix(SEXP rvle)
         rvle_output_t result;
 
         result = rvle_manager(R_ExternalPtrAddr(rvle));
-        if (result) {
+        if (!result) {
+                Rf_warning("RVLE: empty result, (use output storage)");
+        } else {
                 r = rvle_convert_simulation_matrix(result);
         }
 
@@ -174,7 +186,9 @@ SEXP r_rvle_manager_thread(SEXP rvle, SEXP th)
 
         result = rvle_manager_thread(R_ExternalPtrAddr(rvle),
                         INTEGER(th)[0]);
-        if (result) {
+        if (!result) {
+                Rf_warning("RVLE: empty result, (use output storage)");
+        } else {
                 r = rvle_convert_simulation_dataframe(result);
         }
 
@@ -188,7 +202,9 @@ SEXP r_rvle_manager_thread_matrix(SEXP rvle, SEXP th)
 
         result = rvle_manager_thread(R_ExternalPtrAddr(rvle),
                         INTEGER(th)[0]);
-        if (result) {
+        if (!result) {
+                Rf_warning("RVLE: empty result, (use output storage)");
+        } else {
                 r = rvle_convert_simulation_matrix(result);
         }
 
@@ -201,7 +217,9 @@ SEXP r_rvle_manager_cluster(SEXP rvle)
         rvle_output_t result;
 
         result = rvle_manager_cluster(R_ExternalPtrAddr(rvle));
-        if (result) {
+        if (!result) {
+                Rf_warning("RVLE: empty result, (use output storage)");
+        } else {
                 r = rvle_convert_simulation_dataframe(result);
         }
 
@@ -214,7 +232,9 @@ SEXP r_rvle_manager_cluster_matrix(SEXP rvle)
         rvle_output_t result;
 
         result = rvle_manager_cluster(R_ExternalPtrAddr(rvle));
-        if (result) {
+        if (!result) {
+                Rf_warning("RVLE: empty result, (use output storage)");
+        } else {
                 r = rvle_convert_simulation_matrix(result);
         }
 
@@ -234,19 +254,21 @@ SEXP r_rvle_condition_list(SEXP rvle)
         int i;
 
         size = rvle_condition_size(R_ExternalPtrAddr(rvle));
-        result = rvle_condition_list(R_ExternalPtrAddr(rvle));
-
         PROTECT(r = allocVector(STRSXP, size));
-        for (i = 0; i < size; ++i) {
-		SET_STRING_ELT(r, i, mkChar(result[i]));
+
+        if (size > 0) {
+                result = rvle_condition_list(R_ExternalPtrAddr(rvle));
+                for (i = 0; i < size; ++i) {
+                        SET_STRING_ELT(r, i, mkChar(result[i]));
+                }
+
+                for (i = 0; i < size; ++i) {
+                        free(result[i]);
+                }
+                free(result);
         }
 
-        for (i = 0; i < size; ++i) {
-                free(result[i]);
-        }
-        free(result);
         UNPROTECT(1);
-
         return r;
 }
 
@@ -271,7 +293,15 @@ SEXP r_rvle_condition_port_list_size(SEXP rvle, SEXP cnd)
         PROTECT(r = allocVector(INTSXP, 1));
         result = rvle_condition_port_list_size(R_ExternalPtrAddr(rvle),
                         CHAR(STRING_ELT(cnd, 0)));
-        INTEGER(r)[0] = result;
+
+        if (result == -1) {
+                Rf_error("RVLE: Unknow condition name %s", CHAR(STRING_ELT(cnd,
+                                                0)));
+                INTEGER(r)[0] = 0;
+        } else {
+                INTEGER(r)[0] = result;
+        }
+
         UNPROTECT(1);
 
         return r;
@@ -287,37 +317,62 @@ SEXP r_rvle_condition_port_list(SEXP rvle, SEXP cnd)
         size = rvle_condition_port_list_size(R_ExternalPtrAddr(rvle),
                         CHAR(STRING_ELT(cnd, 0)));
 
-        result = rvle_condition_port_list(R_ExternalPtrAddr(rvle),
-                        CHAR(STRING_ELT(cnd, 0)));
+        if (size == -1) {
+                PROTECT(r = allocVector(STRSXP, 0));
+                Rf_error("RVLE: Unknow condition name %s", CHAR(STRING_ELT(cnd,
+                                                0)));
+        } else if (size == 0) {
+                PROTECT(r = allocVector(STRSXP, 0));
+                Rf_error("RVLE: Empty condition list with name %s",
+                                CHAR(STRING_ELT(cnd, 0)));
+        } else {
+                PROTECT(r = allocVector(STRSXP, size));
+                result = rvle_condition_port_list(R_ExternalPtrAddr(rvle),
+                                CHAR(STRING_ELT(cnd, 0)));
+                if (!result) {
+                        Rf_error("RVLE: Cannot get condition list with name %s",
+                                        CHAR(STRING_ELT(cnd, 0)));
+                } else {
+                        for (i = 0; i < size; ++i) {
+                                SET_STRING_ELT(r, i, mkChar(result[i]));
+                        }
 
-        PROTECT(r = allocVector(STRSXP, size));
-        for (i = 0; i < size; ++i) {
-		SET_STRING_ELT(r, i, mkChar(result[i]));
+                        for (i = 0; i < size; ++i) {
+                                free(result[i]);
+                        }
+                        free(result);
+                }
         }
-
-        for (i = 0; i < size; ++i) {
-                free(result[i]);
-        }
-        free(result);
         UNPROTECT(1);
-
         return r;
 }
 
 void r_rvle_condition_set_real(SEXP rvle, SEXP cnd, SEXP prt, SEXP val)
 {
-        rvle_condition_set_real(R_ExternalPtrAddr(rvle),
+        int result = rvle_condition_set_real(R_ExternalPtrAddr(rvle),
                         CHAR(STRING_ELT(cnd, 0)),
                         CHAR(STRING_ELT(prt, 0)),
                         REAL(val)[0]);
+
+        if (!result) {
+                Rf_error("RVLE: cannot set %d to condition %s port %s",
+                                REAL(val)[0], CHAR(STRING_ELT(prt, 0)),
+                                CHAR(STRING_ELT(cnd, 0)));
+        }
 }
 
 void r_rvle_condition_set_integer(SEXP rvle, SEXP cnd, SEXP prt, SEXP val)
 {
-        rvle_condition_set_integer(R_ExternalPtrAddr(rvle),
+        int result = rvle_condition_set_integer(R_ExternalPtrAddr(rvle),
                         CHAR(STRING_ELT(cnd, 0)),
                         CHAR(STRING_ELT(prt, 0)),
                         INTEGER(val)[0]);
+
+        if (!result) {
+                Rf_error("RVLE: cannot set %i to condition %s port %s",
+                                INTEGER(val)[0], CHAR(STRING_ELT(prt, 0)),
+                                CHAR(STRING_ELT(cnd, 0)));
+        }
 }
 
 void r_rvle_experiment_set_duration(SEXP rvle, SEXP val)
@@ -340,5 +395,9 @@ SEXP r_rvle_experiment_get_duration(SEXP rvle)
 
 void r_rvle_save(SEXP rvle, SEXP file)
 {
-        rvle_save(R_ExternalPtrAddr(rvle), CHAR(STRING_ELT(file, 0)));
+        int result = rvle_save(R_ExternalPtrAddr(rvle), CHAR(STRING_ELT(file, 0)));
+
+        if (!result) {
+                Rf_error("RVLE: error writing vpz file %s", CHAR(STRING_ELT(file, 0)));
+        }
 }
