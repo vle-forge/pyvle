@@ -43,16 +43,16 @@ static SEXP r_rvle_manager_thread(SEXP rvle, SEXP th);
 static SEXP r_rvle_manager_thread_matrix(SEXP rvle, SEXP th);
 static SEXP r_rvle_manager_cluster(SEXP rvle);
 static SEXP r_rvle_manager_cluster_matrix(SEXP rvle);
-static SEXP r_rvle_delete(SEXP rvle);
+static void r_rvle_delete(SEXP rvle);
 static SEXP r_rvle_condition_list(SEXP rvle);
 static SEXP r_rvle_condition_size(SEXP rvle);
 static SEXP r_rvle_condition_port_list(SEXP rvle, SEXP cnd);
 static SEXP r_rvle_condition_port_list_size(SEXP rvle, SEXP cnd);
-static SEXP r_rvle_condition_set_real(SEXP rvle, SEXP cnd, SEXP prt, SEXP val);
-static SEXP r_rvle_condition_set_integer(SEXP rvle, SEXP cnd, SEXP prt, SEXP val);
-static SEXP r_rvle_experiment_set_duration(SEXP rvle, SEXP val);
+static void r_rvle_condition_set_real(SEXP rvle, SEXP cnd, SEXP prt, SEXP val);
+static void r_rvle_condition_set_integer(SEXP rvle, SEXP cnd, SEXP prt, SEXP val);
+static void r_rvle_experiment_set_duration(SEXP rvle, SEXP val);
 static SEXP r_rvle_experiment_get_duration(SEXP rvle);
-static SEXP r_rvle_save(SEXP rvle, SEXP file);
+static void r_rvle_save(SEXP rvle, SEXP file);
 
 /*
  *
@@ -221,17 +221,9 @@ SEXP r_rvle_manager_cluster_matrix(SEXP rvle)
         return r;
 }
 
-SEXP r_rvle_delete(SEXP rvle)
+void r_rvle_delete(SEXP rvle)
 {
-        SEXP r;
-        int result;
-
-        PROTECT(r = allocVector(INTSXP, 1));
-        result = rvle_delete(R_ExternalPtrAddr(rvle));
-        INTEGER(r)[0] = result;
-        UNPROTECT(1);
-
-        return r;
+        rvle_delete(R_ExternalPtrAddr(rvle));
 }
 
 SEXP r_rvle_condition_list(SEXP rvle)
@@ -312,49 +304,25 @@ SEXP r_rvle_condition_port_list(SEXP rvle, SEXP cnd)
         return r;
 }
 
-SEXP r_rvle_condition_set_real(SEXP rvle, SEXP cnd, SEXP prt, SEXP val)
+void r_rvle_condition_set_real(SEXP rvle, SEXP cnd, SEXP prt, SEXP val)
 {
-        SEXP r;
-        int result;
-
-        PROTECT(r = allocVector(INTSXP, 1));
-        result = rvle_condition_set_real(R_ExternalPtrAddr(rvle),
+        rvle_condition_set_real(R_ExternalPtrAddr(rvle),
                         CHAR(STRING_ELT(cnd, 0)),
                         CHAR(STRING_ELT(prt, 0)),
                         REAL(val)[0]);
-        INTEGER(r)[0] = result;
-        UNPROTECT(1);
-
-        return r;
 }
 
-SEXP r_rvle_condition_set_integer(SEXP rvle, SEXP cnd, SEXP prt, SEXP val)
+void r_rvle_condition_set_integer(SEXP rvle, SEXP cnd, SEXP prt, SEXP val)
 {
-        SEXP r;
-        int result;
-
-        PROTECT(r = allocVector(INTSXP, 1));
-        result = rvle_condition_set_integer(R_ExternalPtrAddr(rvle),
+        rvle_condition_set_integer(R_ExternalPtrAddr(rvle),
                         CHAR(STRING_ELT(cnd, 0)),
                         CHAR(STRING_ELT(prt, 0)),
                         INTEGER(val)[0]);
-        INTEGER(r)[0] = result;
-        UNPROTECT(1);
-
-        return r;
 }
 
-SEXP r_rvle_experiment_set_duration(SEXP rvle, SEXP val)
+void r_rvle_experiment_set_duration(SEXP rvle, SEXP val)
 {
-        SEXP r;
-        int result;
-
-        PROTECT(r = allocVector(INTSXP, 1));
         rvle_experiment_set_duration(R_ExternalPtrAddr(rvle), REAL(val)[0]);
-        INTEGER(r)[0] = result;
-        UNPROTECT(1);
-
-        return r;
 }
 
 SEXP r_rvle_experiment_get_duration(SEXP rvle)
@@ -370,15 +338,7 @@ SEXP r_rvle_experiment_get_duration(SEXP rvle)
         return r;
 }
 
-SEXP r_rvle_save(SEXP rvle, SEXP file)
+void r_rvle_save(SEXP rvle, SEXP file)
 {
-        SEXP r;
-        int result;
-
-        PROTECT(r = allocVector(INTSXP, 1));
-        result = rvle_save(R_ExternalPtrAddr(rvle), CHAR(STRING_ELT(file, 0)));
-        INTEGER(r)[0] = result;
-        UNPROTECT(1);
-
-        return r;
+        rvle_save(R_ExternalPtrAddr(rvle), CHAR(STRING_ELT(file, 0)));
 }

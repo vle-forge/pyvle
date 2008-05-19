@@ -1,4 +1,4 @@
-/** 
+/**
  * @file rvle.cpp
  * @author The VLE Development Team
  */
@@ -134,13 +134,12 @@ rvle_output_t rvle_manager_cluster(rvle_t handle)
 }
 
 
-int rvle_delete(rvle_t handle)
+void rvle_delete(rvle_t handle)
 {
     assert(handle);
 
     vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
     delete file;
-    return -1;
 }
 
 char** rvle_condition_list(rvle_t handle)
@@ -222,10 +221,10 @@ int rvle_condition_size(rvle_t handle)
     return file->project().experiment().conditions().conditionlist().size();
 }
 
-int rvle_condition_set_real(rvle_t handle,
-                            const char* conditionname,
-                            const char* portname,
-                            double value)
+void rvle_condition_set_real(rvle_t handle,
+                             const char* conditionname,
+                             const char* portname,
+                             double value)
 {
     assert(handle && conditionname && portname);
 
@@ -236,16 +235,13 @@ int rvle_condition_set_real(rvle_t handle,
 
         cnd.setValueToPort(portname, value::DoubleFactory::create(value));
     } catch(const std::exception& e) {
-        return 0;
     }
-
-    return -1;
 }
 
-int rvle_condition_set_integer(rvle_t handle,
-                               const char* conditionname,
-                               const char* portname,
-                               long value)
+void rvle_condition_set_integer(rvle_t handle,
+                                const char* conditionname,
+                                const char* portname,
+                                long value)
 {
     assert(handle && conditionname && portname);
 
@@ -256,10 +252,7 @@ int rvle_condition_set_integer(rvle_t handle,
 
         cnd.setValueToPort(portname, value::IntegerFactory::create(value));
     } catch(const std::exception& e) {
-        return 0;
     }
-
-    return -1;
 }
 
 void rvle_experiment_set_duration(rvle_t handle, double value)
@@ -273,7 +266,7 @@ void rvle_experiment_set_duration(rvle_t handle, double value)
 double rvle_experiment_get_duration(rvle_t handle)
 {
     assert(handle);
-    
+
     try {
         vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
 
@@ -283,7 +276,7 @@ double rvle_experiment_get_duration(rvle_t handle)
     }
 }
 
-int rvle_save(rvle_t handle, const char* filename)
+void rvle_save(rvle_t handle, const char* filename)
 {
     assert(handle and filename);
 
@@ -291,8 +284,5 @@ int rvle_save(rvle_t handle, const char* filename)
         vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
         file->write(filename);
     } catch(const std::exception& e) {
-        return 0;
     }
-
-    return -1;
 }

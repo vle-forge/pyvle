@@ -82,9 +82,8 @@ rvle_output_t rvle_manager_cluster(rvle_t handle);
 /**
  * @brief Destruction of the rvle_t object.
  * @param handle The reference to the Vpz file.
- * @return 0 if failed, -1 otherwise.
  */
-int rvle_delete(rvle_t handle);
+void rvle_delete(rvle_t handle);
 
 /**
  * @brief Get the list of conditions lists.
@@ -126,10 +125,10 @@ int rvle_condition_port_list_size(rvle_t handle, const char* conditionname);
  * @param value The value to push.
  * @return 0 if failed, -1 otherwise.
  */
-int rvle_condition_set_real(rvle_t handle,
-                            const char* conditionname,
-                            const char* portname,
-                            double value);
+void rvle_condition_set_real(rvle_t handle,
+                             const char* conditionname,
+                             const char* portname,
+                             double value);
 
 /**
  * @brief Set the initial condition of the specified condition and portname.
@@ -139,10 +138,10 @@ int rvle_condition_set_real(rvle_t handle,
  * @param value The value to push.
  * @return 0 if failed, -1 otherwise.
  */
-int rvle_condition_set_integer(rvle_t handle,
-                               const char* conditionname,
-                               const char* portname,
-                               long value);
+void rvle_condition_set_integer(rvle_t handle,
+                                const char* conditionname,
+                                const char* portname,
+                                long value);
 
 /**
  * @brief Set the duration of the experiment.
@@ -162,9 +161,8 @@ double rvle_experiment_get_duration(rvle_t handle);
  * @brief Save the current file under the specified filename.
  * @param handle The reference to the Vpz file.
  * @param filename The filename where store file.
- * @return 0 if failed, -1 otherwise.
  */
-int rvle_save(rvle_t handle, const char* filename);
+void rvle_save(rvle_t handle, const char* filename);
 
 #ifdef __cplusplus
 }
