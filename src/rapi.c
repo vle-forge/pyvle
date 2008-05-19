@@ -50,6 +50,8 @@ static SEXP r_rvle_condition_port_list(SEXP rvle, SEXP cnd);
 static SEXP r_rvle_condition_port_list_size(SEXP rvle, SEXP cnd);
 static SEXP r_rvle_condition_set_real(SEXP rvle, SEXP cnd, SEXP prt, SEXP val);
 static SEXP r_rvle_condition_set_integer(SEXP rvle, SEXP cnd, SEXP prt, SEXP val);
+static SEXP r_rvle_experiment_set_duration(SEXP rvle, SEXP val);
+static SEXP r_rvle_experiment_get_duration(SEXP rvle);
 static SEXP r_rvle_save(SEXP rvle, SEXP file);
 
 /*
@@ -75,6 +77,8 @@ R_CallMethodDef callMethods[] = {
                 2},
         { "condition_set_real", (DL_FUNC) r_rvle_condition_set_real, 4},
         { "condition_set_integer", (DL_FUNC) r_rvle_condition_set_integer, 4},
+        { "experiment_set_duration", (DL_FUNC) r_rvle_experiment_set_duration, 2},
+        { "experiment_get_duration", (DL_FUNC) r_rvle_experiment_get_duration, 1},
         { "save", (DL_FUNC) r_rvle_save, 2},
         { NULL, NULL, 0}
 };
@@ -335,6 +339,32 @@ SEXP r_rvle_condition_set_integer(SEXP rvle, SEXP cnd, SEXP prt, SEXP val)
                         CHAR(STRING_ELT(prt, 0)),
                         INTEGER(val)[0]);
         INTEGER(r)[0] = result;
+        UNPROTECT(1);
+
+        return r;
+}
+
+SEXP r_rvle_experiment_set_duration(SEXP rvle, SEXP val)
+{
+        SEXP r;
+        int result;
+
+        PROTECT(r = allocVector(INTSXP, 1));
+        rvle_experiment_set_duration(R_ExternalPtrAddr(rvle), REAL(val)[0]);
+        INTEGER(r)[0] = result;
+        UNPROTECT(1);
+
+        return r;
+}
+
+SEXP r_rvle_experiment_get_duration(SEXP rvle)
+{
+        SEXP r;
+        double result;
+
+        PROTECT(r = allocVector(REALSXP, 1));
+        result = rvle_experiment_get_duration(R_ExternalPtrAddr(rvle));
+        REAL(r)[0] = result;
         UNPROTECT(1);
 
         return r;

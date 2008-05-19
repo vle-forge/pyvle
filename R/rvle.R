@@ -132,6 +132,20 @@ rvle.condition_set_integer <- function(x, condition, port, value)
           PACKAGE="rvle")
 }
 
+rvle.experiment_set_duration <- function(x, value)
+{
+    is.rvle(x)
+
+    .Call("experiment_set_duration", x, as.real(value), PACKAGE="rvle")
+}
+
+rvle.experiment_get_duration <- function(x)
+{
+    is.rvle(x)
+
+    .Call("experiment_get_duration", x, PACKAGE="rvle")
+}
+
 rvle.save <- function(x, file)
 {
     is.rvle(x)

@@ -262,6 +262,26 @@ int rvle_condition_set_integer(rvle_t handle,
     return -1;
 }
 
+void rvle_experiment_set_duration(rvle_t handle, double value)
+{
+    assert(handle);
+
+    vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
+    file->project().experiment().setDuration(value);
+}
+
+double rvle_experiment_get_duration(rvle_t handle)
+{
+    assert(handle);
+    
+    try {
+        vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
+
+        return file->project().experiment().duration();
+    } catch(const std::exception& e) {
+        return 0.0;
+    }
+}
 
 int rvle_save(rvle_t handle, const char* filename)
 {
