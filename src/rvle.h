@@ -165,6 +165,18 @@ double rvle_experiment_get_duration(rvle_t handle);
  */
 int rvle_save(rvle_t handle, const char* filename);
 
+/**
+ * @brief Delete the output matrix of simulation.
+ * @param out The output of matrix to delete.
+ */
+void rvle_clear_matrix(rvle_output_t out);
+
+/**
+ * @brief Delete the output of simulation.
+ * @param out The output of to delete.
+ */
+void rvle_clear(rvle_output_t out);
+
 #ifdef __cplusplus
 }
 #endif

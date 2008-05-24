@@ -291,3 +291,19 @@ int rvle_save(rvle_t handle, const char* filename)
         return 0;
     }
 }
+
+void rvle_clear_matrix(rvle_output_t out)
+{
+    manager::OutputSimulationMatrix* matrix(
+        reinterpret_cast < manager::OutputSimulationMatrix* >(out));
+
+    delete matrix;
+}
+
+void rvle_clear(rvle_output_t out)
+{
+    oov::OutputMatrixViewList* lst(
+        reinterpret_cast < oov::OutputMatrixViewList* >(out));
+
+    delete lst;
+}

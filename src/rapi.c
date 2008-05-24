@@ -129,6 +129,7 @@ SEXP r_rvle_run(SEXP rvle)
                 Rf_warning("RVLE: empty result, (use output storage)");
         } else {
                 r = rvle_convert_dataframe(result);
+                rvle_clear(result);
         }
 
         return r;
@@ -144,6 +145,7 @@ SEXP r_rvle_run_matrix(SEXP rvle)
                 Rf_warning("RVLE: empty result, (use output storage)");
         } else {
                 r = rvle_convert_matrix(result);
+                rvle_clear(result);
         }
 
         return r;
@@ -159,6 +161,7 @@ SEXP r_rvle_manager(SEXP rvle)
                 Rf_warning("RVLE: empty result, (use output storage)");
         } else {
                 r = rvle_convert_simulation_dataframe(result);
+                rvle_clear_matrix(result);
         }
 
         return r;
@@ -174,6 +177,7 @@ SEXP r_rvle_manager_matrix(SEXP rvle)
                 Rf_warning("RVLE: empty result, (use output storage)");
         } else {
                 r = rvle_convert_simulation_matrix(result);
+                rvle_clear_matrix(result);
         }
 
         return r;
@@ -190,6 +194,7 @@ SEXP r_rvle_manager_thread(SEXP rvle, SEXP th)
                 Rf_warning("RVLE: empty result, (use output storage)");
         } else {
                 r = rvle_convert_simulation_dataframe(result);
+                rvle_clear_matrix(result);
         }
 
         return r;
@@ -206,6 +211,7 @@ SEXP r_rvle_manager_thread_matrix(SEXP rvle, SEXP th)
                 Rf_warning("RVLE: empty result, (use output storage)");
         } else {
                 r = rvle_convert_simulation_matrix(result);
+                rvle_clear_matrix(result);
         }
 
         return r;
@@ -221,6 +227,7 @@ SEXP r_rvle_manager_cluster(SEXP rvle)
                 Rf_warning("RVLE: empty result, (use output storage)");
         } else {
                 r = rvle_convert_simulation_dataframe(result);
+                rvle_clear_matrix(result);
         }
 
         return r;
@@ -236,6 +243,7 @@ SEXP r_rvle_manager_cluster_matrix(SEXP rvle)
                 Rf_warning("RVLE: empty result, (use output storage)");
         } else {
                 r = rvle_convert_simulation_matrix(result);
+                rvle_clear_matrix(result);
         }
 
         return r;
