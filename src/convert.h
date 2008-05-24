@@ -1,4 +1,4 @@
-/** 
+/**
  * @file convert.h
  * @author The VLE Development Team
  */
@@ -34,27 +34,52 @@ extern "C" {
 #include <R.h>
 #include <Rinternals.h>
 
-/** 
+/**
+ * @brief Build an output of simulations result int a Vector (each cell is a
+ * list of view) of Matrix of real (the result of the simulation). Values of
+ * type boolean, integer or double from the vle are transformed into double
+ * value, other value return a NA value.
+ *
+ * @param out The output of simulations.
+ *
+ * @return A SEXP representationof Lst of Matrix.
+ */
+SEXP rvle_convert_matrix(rvle_output_t out);
+
+/**
  * @brief Build an output of simulations result into a Matrix (replicas x
  * combination) of Vector (each cell is a list of view) of Matrix of real (the
- * result of the simulation. Values of type boolean, integer or double from the
+ * result of the simulation). Values of type boolean, integer or double from the
  * vle are transformed into double value, other value return a NA value.
- * 
+ *
  * @param out The output of simulations.
- * 
+ *
  * @return A SEXP representation of: Matrix of List of Matrix.
 */
 SEXP rvle_convert_simulation_matrix(rvle_output_t out);
 
-/** 
+/**
+ * @brief Build an output of simulations result into a Vector (each cell is a
+ * list of view) of Data frame. Values of type boolean, integer, double, string
+ * conserve their type but by column. If in a column, different values are
+ * returned, the value are set to NA. Only the first value of the column is used
+ * to get the type of the column.
+ *
+ * @param out The output of simulations.
+ *
+ * @return A SEXP representation of: List of Data frames.
+ */
+SEXP rvle_convert_dataframe(rvle_output_t out);
+
+/**
  * @brief Build an output of simulations result into a Matrix (replicas x
  * conbination) of Vector (each cell is a list of view) of Data frame. Values of
  * type boolean, integer, double, string conserve their type but by column. If
  * in a column, different values are returned, the value are set to NA. Only the
  * first value of the column is used to get the type of the column.
- * 
+ *
  * @param out The output of simulations.
- * 
+ *
  * @return A SEXP representation of: Matrix of List of Data frames.
  */
 SEXP rvle_convert_simulation_dataframe(rvle_output_t out);

@@ -1,4 +1,4 @@
-/** 
+/**
  * @file rapi.c
  * @author The VLE Development Team
  */
@@ -128,7 +128,7 @@ SEXP r_rvle_run(SEXP rvle)
         if (!result) {
                 Rf_warning("RVLE: empty result, (use output storage)");
         } else {
-                r = rvle_convert_simulation_dataframe(result);
+                r = rvle_convert_dataframe(result);
         }
 
         return r;
@@ -143,7 +143,7 @@ SEXP r_rvle_run_matrix(SEXP rvle)
         if (!result) {
                 Rf_warning("RVLE: empty result, (use output storage)");
         } else {
-                r = rvle_convert_simulation_matrix(result);
+                r = rvle_convert_matrix(result);
         }
 
         return r;

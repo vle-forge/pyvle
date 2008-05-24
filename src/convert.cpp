@@ -1,4 +1,4 @@
-/** 
+/**
  * @file convert.cpp
  * @author The VLE Development Team
  */
@@ -47,7 +47,7 @@ static void rvle_convert_view_matrix(const oov::OutputMatrix& matrix, SEXP out)
                 break;
             }
             case value::ValueBase::DOUBLE: {
-                REAL(out)[j + i * view.shape()[1]] = 
+                REAL(out)[j + i * view.shape()[1]] =
                     value::toDouble(view[i][j]);
                 break;
             }
@@ -204,6 +204,31 @@ static SEXP rvle_build_data_frame(const oov::OutputMatrix& matrix)
 // public R part
 //
 
+SEXP rvle_convert_matrix(rvle_output_t out)
+{
+    SEXP sexplst;
+
+    oov::OutputMatrixViewList* lst(
+        reinterpret_cast < oov::OutputMatrixViewList* >(out));
+
+    PROTECT(sexplst = allocVector(VECSXP, lst->size()));
+
+    oov::OutputMatrixViewList::const_iterator it;
+    int n;
+    for (it = lst->begin(), n = 0; it != lst->end(); ++it, ++n) {
+      SEXP sexpdata;
+      PROTECT(sexpdata = allocMatrix(REALSXP,
+                                     it->second.values().shape()[1],
+                                     it->second.values().shape()[0]));
+      rvle_convert_view_matrix(it->second, sexpdata);
+
+      SET_VECTOR_ELT(sexplst, n, sexpdata);
+    }
+    UNPROTECT(lst->size() + 1);
+
+    return sexplst;
+}
+
 SEXP rvle_convert_simulation_matrix(rvle_output_t out)
 {
     SEXP r;
@@ -239,6 +264,25 @@ SEXP rvle_convert_simulation_matrix(rvle_output_t out)
     UNPROTECT(matrix->shape()[0] * matrix->shape()[1]);
     UNPROTECT(1);
     return r;
+}
+
+SEXP rvle_convert_dataframe(rvle_output_t out)
+{
+    SEXP sexplst;
+
+    oov::OutputMatrixViewList* lst(
+        reinterpret_cast < oov::OutputMatrixViewList* >(out));
+
+    PROTECT(sexplst = allocVector(VECSXP, lst->size()));
+    oov::OutputMatrixViewList::const_iterator it;
+    int n;
+    for (it = lst->begin(), n = 0; it != lst->end(); ++it, ++n) {
+        SEXP sexpdata = rvle_build_data_frame(it->second);
+        SET_VECTOR_ELT(sexplst, n, sexpdata);
+    }
+    UNPROTECT(lst->size() + 1);
+
+    return sexplst;
 }
 
 SEXP rvle_convert_simulation_dataframe(rvle_output_t out)

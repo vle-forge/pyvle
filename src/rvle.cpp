@@ -72,10 +72,7 @@ rvle_output_t rvle_run(rvle_t handle)
         manager::RunVerbose jrm(std::cerr);
         jrm.start(*file);
         const oov::OutputMatrixViewList& result(jrm.outputs());
-        manager::OutputSimulationMatrix* matrix;
-        matrix = new manager::OutputSimulationMatrix;
-        rvle_build_matrix(result, *matrix);
-        return matrix;
+        return new oov::OutputMatrixViewList(result);
     } catch(const std::exception& e) {
         return NULL;
     }
