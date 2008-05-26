@@ -275,7 +275,7 @@ double rvle_experiment_get_duration(rvle_t handle)
 
         return file->project().experiment().duration();
     } catch(const std::exception& e) {
-        return NULL;
+        return 0.0;
     }
 }
 
