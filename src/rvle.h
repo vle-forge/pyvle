@@ -118,6 +118,17 @@ int rvle_condition_size(rvle_t handle);
 int rvle_condition_port_list_size(rvle_t handle, const char* conditionname);
 
 /**
+ * @brief Clear the initial condition of the specified condition and portname.
+ * @param handle The reference to the Vpz file.
+ * @param conditionname The name of the condition.
+ * @param portname The name of the condition's port.
+ * @return 0 if failed, -1 otherwise.
+ */
+int rvle_condition_clear(rvle_t handle,
+                         const char* conditionname,
+                         const char* portname);
+
+/**
  * @brief Set the initial condition of the specified condition and portname.
  * @param handle The reference to the Vpz file.
  * @param conditionname The name of the condition.
@@ -125,7 +136,7 @@ int rvle_condition_port_list_size(rvle_t handle, const char* conditionname);
  * @param value The value to push.
  * @return 0 if failed, -1 otherwise.
  */
-int rvle_condition_set_real(rvle_t handle,
+int rvle_condition_add_real(rvle_t handle,
                             const char* conditionname,
                             const char* portname,
                             double value);
@@ -138,7 +149,7 @@ int rvle_condition_set_real(rvle_t handle,
  * @param value The value to push.
  * @return 0 if failed, -1 otherwise.
  */
-int rvle_condition_set_integer(rvle_t handle,
+int rvle_condition_add_integer(rvle_t handle,
                                const char* conditionname,
                                const char* portname,
                                long value);

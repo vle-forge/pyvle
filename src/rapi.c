@@ -48,8 +48,9 @@ static SEXP r_rvle_condition_list(SEXP rvle);
 static SEXP r_rvle_condition_size(SEXP rvle);
 static SEXP r_rvle_condition_port_list(SEXP rvle, SEXP cnd);
 static SEXP r_rvle_condition_port_list_size(SEXP rvle, SEXP cnd);
-static void r_rvle_condition_set_real(SEXP rvle, SEXP cnd, SEXP prt, SEXP val);
-static void r_rvle_condition_set_integer(SEXP rvle, SEXP cnd, SEXP prt, SEXP val);
+static void r_rvle_condition_clear(SEXP rvle, SEXP cnd, SEXP prt);
+static void r_rvle_condition_add_real(SEXP rvle, SEXP cnd, SEXP prt, SEXP val);
+static void r_rvle_condition_add_integer(SEXP rvle, SEXP cnd, SEXP prt, SEXP val);
 static void r_rvle_experiment_set_duration(SEXP rvle, SEXP val);
 static SEXP r_rvle_experiment_get_duration(SEXP rvle);
 static void r_rvle_save(SEXP rvle, SEXP file);
@@ -77,8 +78,9 @@ R_CallMethodDef callMethods[] = {
         { "condition_port_list", (DL_FUNC) r_rvle_condition_port_list, 2},
         { "condition_port_list_size", (DL_FUNC) r_rvle_condition_port_list_size,
                 2},
-        { "condition_set_real", (DL_FUNC) r_rvle_condition_set_real, 4},
-        { "condition_set_integer", (DL_FUNC) r_rvle_condition_set_integer, 4},
+        { "condition_clear", (DL_FUNC) r_rvle_condition_clear, 3},
+        { "condition_add_real", (DL_FUNC) r_rvle_condition_add_real, 4},
+        { "condition_add_integer", (DL_FUNC) r_rvle_condition_add_integer, 4},
         { "experiment_set_duration", (DL_FUNC) r_rvle_experiment_set_duration, 2},
         { "experiment_get_duration", (DL_FUNC) r_rvle_experiment_get_duration, 1},
         { "save", (DL_FUNC) r_rvle_save, 2},
@@ -355,29 +357,43 @@ SEXP r_rvle_condition_port_list(SEXP rvle, SEXP cnd)
         return r;
 }
 
-void r_rvle_condition_set_real(SEXP rvle, SEXP cnd, SEXP prt, SEXP val)
+void r_rvle_condition_clear(SEXP rvle, SEXP cnd, SEXP prt)
 {
-        int result = rvle_condition_set_real(R_ExternalPtrAddr(rvle),
+        int result = rvle_condition_clear(R_ExternalPtrAddr(rvle),
+                        CHAR(STRING_ELT(cnd, 0)),
+                        CHAR(STRING_ELT(prt, 0)));
+
+        if (!result) {
+                Rf_error("RVLE: cannot clear values from condition %s port %s",
+                                CHAR(STRING_ELT(prt, 0)),
+                                CHAR(STRING_ELT(cnd, 0)));
+        }
+
+}
+
+void r_rvle_condition_add_real(SEXP rvle, SEXP cnd, SEXP prt, SEXP val)
+{
+        int result = rvle_condition_add_real(R_ExternalPtrAddr(rvle),
                         CHAR(STRING_ELT(cnd, 0)),
                         CHAR(STRING_ELT(prt, 0)),
                         REAL(val)[0]);
 
         if (!result) {
-                Rf_error("RVLE: cannot set %d to condition %s port %s",
+                Rf_error("RVLE: cannot add %d to condition %s port %s",
                                 REAL(val)[0], CHAR(STRING_ELT(prt, 0)),
                                 CHAR(STRING_ELT(cnd, 0)));
         }
 }
 
-void r_rvle_condition_set_integer(SEXP rvle, SEXP cnd, SEXP prt, SEXP val)
+void r_rvle_condition_add_integer(SEXP rvle, SEXP cnd, SEXP prt, SEXP val)
 {
-        int result = rvle_condition_set_integer(R_ExternalPtrAddr(rvle),
+        int result = rvle_condition_add_integer(R_ExternalPtrAddr(rvle),
                         CHAR(STRING_ELT(cnd, 0)),
                         CHAR(STRING_ELT(prt, 0)),
                         INTEGER(val)[0]);
 
         if (!result) {
-                Rf_error("RVLE: cannot set %i to condition %s port %s",
+                Rf_error("RVLE: cannot add %i to condition %s port %s",
                                 INTEGER(val)[0], CHAR(STRING_ELT(prt, 0)),
                                 CHAR(STRING_ELT(cnd, 0)));
         }

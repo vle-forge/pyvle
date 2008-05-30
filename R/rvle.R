@@ -128,17 +128,36 @@ rvle.condition_port_list_size <- function(f, condition)
     .Call("condition_port_list_size", f, condition, PACKAGE="rvle")
 }
 
+rvle.condition_clear <- function(f, condition, port)
+{
+    stopifnot(is.rvle(f))
+    stopifnot(as.character(condition))
+    stopifnot(as.character(port))
+
+    .Call("condition_clear", f, condition, port, PACKAGE="rvle")
+}
+
+rvle.condition_add_real <- function(f, condition, port, value)
+{
+    stopifnot(is.rvle(f))
+    stopifnot(as.character(condition))
+    stopifnot(as.character(port))
+
+    .Call("condition_add_real", f, condition, port, as.real(value),
+            PACKAGE="rvle")
+}
+
 rvle.condition_set_real <- function(f, condition, port, value)
 {
     stopifnot(is.rvle(f))
     stopifnot(as.character(condition))
     stopifnot(as.character(port))
 
-    .Call("condition_set_real", f, condition, port, as.real(value),
-            PACKAGE="rvle")
+    rvle.condition_clear(f, condition, port)
+    rvle.condition_add_real(f, condition, port, value)
 }
 
-rvle.condition_set_integer <- function(f, condition, port, value)
+rvle.condition_add_integer <- function(f, condition, port, value)
 {
     stopifnot(is.rvle(f))
     stopifnot(as.character(condition))
@@ -148,6 +167,16 @@ rvle.condition_set_integer <- function(f, condition, port, value)
             PACKAGE="rvle")
 
     return (invisible(NULL))
+}
+
+rvle.condition_add_integer <- function(f, condition, port, value)
+{
+    stopifnot(is.rvle(f))
+    stopifnot(as.character(condition))
+    stopifnot(as.character(port))
+
+    rvle.condition_clear(f, condition, port)
+    rvle.condition_add_integer(f, condition, port, value)
 }
 
 rvle.experiment_set_duration <- function(f, value)
