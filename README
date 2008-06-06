@@ -1,0 +1,23 @@
+Requirements
+============
+
+glibmm		2.4.0 http://www.gtkmm.org
+libxml++	2.6.0 http://libxmlplusplus.sourceforge.net
+boost		1.32  http://www.boost.org
+cmake		2.4.0 http://www.cmake.org
+python          2.4   http://www.python.org
+swig		1.3   http://www.swig.org
+
+
+Installation
+============
+
+See documentation available on VLE website http://vle.univ-littoral.fr
+
+The following commands configure, build and install examples (build type: Debug):
+
+$ mkdir build
+$ cd build
+$ cmake -DCMAKE_INSTALL_PREFIX=/usr/local ..
+$ make
+$ make install
