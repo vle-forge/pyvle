@@ -25,16 +25,23 @@
 
 #include <vle/manager.hpp>
 #include <vle/value.hpp>
+#include <vle/utils.hpp>
 #include "convert.hpp"
 #include "pyvle.hpp"
 
 using namespace vle;
+
+static bool thread_init = false;
 
 vpz::Vpz* pyvle_open(const char* filename)
 {
     vpz::Vpz* file = 0;
 
     try {
+	if (!thread_init) {
+	    vle::utils::init();
+	    thread_init = true;
+	}
         file = new vpz::Vpz(filename);
         return file;
     } catch(const std::exception& e) {

@@ -147,7 +147,7 @@ PyObject* pyvle_convert_simulation_matrix(const vle::manager::OutputSimulationMa
             for (it = lst.begin(), n = 0; it != lst.end(); ++it, ++n) {
 		PyObject* pdata = pyvle_convert_view_matrix(it->second);
 
-		PyList_SetItem(plst, n, column);
+		PyList_SetItem(plst, n, pdata);
             }
 	    PyTuple_SetItem(column, j, plst);
         }
@@ -191,7 +191,7 @@ PyObject* pyvle_convert_simulation_dataframe(const vle::manager::OutputSimulatio
             for (it = lst.begin(), n = 0; it != lst.end(); ++it, ++n) {
 		PyObject* pdata = pyvle_build_data_frame(it->second);
 
-		PyList_SetItem(plst, n, column);
+		PyList_SetItem(plst, n, pdata);
             }
 	    PyTuple_SetItem(column, j, plst);
         }
