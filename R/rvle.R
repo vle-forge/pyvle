@@ -165,6 +165,31 @@ rvle.condition_set_real <- function(f, condition, port, value)
     return (invisible(NULL))
 }
 
+rvle.condition_set_string <- function(f, condition, port, value)
+{
+    stopifnot(is.rvle(f))
+    stopifnot(is.character(condition))
+    stopifnot(is.character(port))
+    stopifnot(is.character(value))
+
+    rvle.condition_clear(f, condition, port)
+    rvle.condition_add_string(f, condition, port, value)
+
+    return (invisible(NULL))
+}
+
+rvle.condition_add_string <- function(f, condition, port, value)
+{
+    stopifnot(is.rvle(f))
+    stopifnot(is.character(condition))
+    stopifnot(is.character(port))
+    stopifnot(is.character(value))
+
+    .Call("condition_add_string", f, condition, port, value, PACKAGE="rvle")
+
+    return (invisible(NULL))
+}
+
 rvle.condition_add_integer <- function(f, condition, port, value)
 {
     stopifnot(is.rvle(f))

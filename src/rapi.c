@@ -51,6 +51,7 @@ static SEXP r_rvle_condition_port_list_size(SEXP rvle, SEXP cnd);
 static void r_rvle_condition_clear(SEXP rvle, SEXP cnd, SEXP prt);
 static void r_rvle_condition_add_real(SEXP rvle, SEXP cnd, SEXP prt, SEXP val);
 static void r_rvle_condition_add_integer(SEXP rvle, SEXP cnd, SEXP prt, SEXP val);
+static void r_rvle_condition_add_string(SEXP rvle, SEXP cnd, SEXP prt, SEXP val);
 static void r_rvle_experiment_set_duration(SEXP rvle, SEXP val);
 static SEXP r_rvle_experiment_get_duration(SEXP rvle);
 static void r_rvle_save(SEXP rvle, SEXP file);
@@ -81,6 +82,7 @@ R_CallMethodDef callMethods[] = {
         { "condition_clear", (DL_FUNC) r_rvle_condition_clear, 3},
         { "condition_add_real", (DL_FUNC) r_rvle_condition_add_real, 4},
         { "condition_add_integer", (DL_FUNC) r_rvle_condition_add_integer, 4},
+        { "condition_add_string", (DL_FUNC) r_rvle_condition_add_string, 4},
         { "experiment_set_duration", (DL_FUNC) r_rvle_experiment_set_duration, 2},
         { "experiment_get_duration", (DL_FUNC) r_rvle_experiment_get_duration, 1},
         { "save", (DL_FUNC) r_rvle_save, 2},
@@ -395,6 +397,20 @@ void r_rvle_condition_add_integer(SEXP rvle, SEXP cnd, SEXP prt, SEXP val)
         if (!result) {
                 Rf_error("RVLE: cannot add %i to condition %s port %s",
                                 INTEGER(val)[0], CHAR(STRING_ELT(prt, 0)),
+                                CHAR(STRING_ELT(cnd, 0)));
+        }
+}
+
+void r_rvle_condition_add_string(SEXP rvle, SEXP cnd, SEXP prt, SEXP val)
+{
+        int result = rvle_condition_add_string(R_ExternalPtrAddr(rvle),
+                        CHAR(STRING_ELT(cnd, 0)),
+                        CHAR(STRING_ELT(prt, 0)),
+                        CHAR(STRING_ELT(val, 0)));
+
+        if (!result) {
+                Rf_error("RVLE: cannot add %s to condition %s port %s",
+                                CHAR(STRING_ELT(val, 0)), CHAR(STRING_ELT(prt, 0)),
                                 CHAR(STRING_ELT(cnd, 0)));
         }
 }

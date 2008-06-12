@@ -274,6 +274,25 @@ int rvle_condition_add_integer(rvle_t handle,
     }
 }
 
+int rvle_condition_add_string(rvle_t handle,
+                              const char* conditionname,
+                              const char* portname,
+                              const char* value)
+{
+    assert(handle && conditionname && portname);
+
+    try {
+        vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
+        vpz::Condition& cnd(file->project().experiment().
+                            conditions().get(conditionname));
+
+        cnd.addValueToPort(portname, value::StringFactory::create(value));
+        return -1;
+    } catch(const std::exception& e) {
+        return 0;
+    }
+}
+
 int rvle_experiment_set_duration(rvle_t handle, double value)
 {
     assert(handle);
