@@ -1,4 +1,4 @@
-AC_INIT(rvle, 0.5.0, quesnel@users.sourceforge.net)
+AC_INIT([rvle],[0.5.0],[quesnel@users.sourceforge.net])
 
 : ${R_HOME=`R RHOME`}
 if test -z "${R_HOME}"; then
@@ -19,4 +19,5 @@ PKG_LIBS="${PKG_LIBS} ${VLE_LIBS}"
 AC_SUBST(PKG_CPPFLAGS)
 AC_SUBST(PKG_LIBS)
 
-AC_OUTPUT([src/Makevars])
+AC_CONFIG_FILES([src/Makevars])
+AC_OUTPUT
