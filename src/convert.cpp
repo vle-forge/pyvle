@@ -40,26 +40,30 @@ static void rvle_convert_view_matrix(const oov::OutputMatrix& matrix, SEXP out)
 
     for (i = 0; i < view.shape()[0]; ++i) {
         for (j = 0; j < view.shape()[1]; ++j) {
-            switch (view[i][j]->getType()) {
-            case value::ValueBase::BOOLEAN: {
-                REAL(out)[j + i * view.shape()[1]] = (double)
-                    value::toBoolean(view[i][j]);
-                break;
-            }
-            case value::ValueBase::DOUBLE: {
-                REAL(out)[j + i * view.shape()[1]] =
-                    value::toDouble(view[i][j]);
-                break;
-            }
-            case value::ValueBase::INTEGER: {
-                REAL(out)[j + i * view.shape()[1]] = (double)
-                    value::toInteger(view[i][j]);
-                break;
-            }
-            default: {
+            if (view[i][j].get()) {
+                switch (view[i][j]->getType()) {
+                case value::ValueBase::BOOLEAN: {
+                    REAL(out)[j + i * view.shape()[1]] = (double)
+                        value::toBoolean(view[i][j]);
+                    break;
+                }
+                case value::ValueBase::DOUBLE: {
+                    REAL(out)[j + i * view.shape()[1]] =
+                        value::toDouble(view[i][j]);
+                    break;
+                }
+                case value::ValueBase::INTEGER: {
+                    REAL(out)[j + i * view.shape()[1]] = (double)
+                        value::toInteger(view[i][j]);
+                    break;
+                }
+                default: {
+                    REAL(out)[j + i * view.shape()[1]] = NA_REAL;
+                    break;
+                }
+                }
+            } else {
                 REAL(out)[j + i * view.shape()[1]] = NA_REAL;
-                break;
-            }
             }
         }
     }
@@ -72,10 +76,10 @@ static void rvle_convert_vector_boolean(
     int i = 0;
     for (value::MatrixFactory::ConstVectorView::const_iterator it = vec.begin();
          it != vec.end(); ++it) {
-        if ((*it)->getType() == value::ValueBase::BOOLEAN) {
-            LOGICAL(out)[i] = value::toBoolean(*it);
-        } else {
+        if ((*it).get() == 0 || ((*it)->getType() != value::ValueBase::BOOLEAN)) {
             LOGICAL(out)[i] = NA_LOGICAL;
+        } else {
+            LOGICAL(out)[i] = value::toBoolean(*it);
         }
         ++i;
     }
@@ -88,10 +92,10 @@ static void rvle_convert_vector_double(
     int i = 0;
     for (value::MatrixFactory::ConstVectorView::const_iterator it = vec.begin();
          it != vec.end(); ++it) {
-        if ((*it)->getType() == value::ValueBase::DOUBLE) {
-            REAL(out)[i] = value::toDouble(*it);
-        } else {
+        if ((*it).get() == 0 || ((*it)->getType() != value::ValueBase::DOUBLE)) {
             REAL(out)[i] = NA_REAL;
+        } else {
+            REAL(out)[i] = value::toDouble(*it);
         }
         ++i;
     }
@@ -104,10 +108,10 @@ static void rvle_convert_vector_integer(
     int i = 0;
     for (value::MatrixFactory::ConstVectorView::const_iterator it = vec.begin();
          it != vec.end(); ++it) {
-        if ((*it)->getType() == value::ValueBase::INTEGER) {
-            INTEGER(out)[i] = value::toInteger(*it);
-        } else {
+        if ((*it).get() == 0 || (*it)->getType() != value::ValueBase::INTEGER) {
             INTEGER(out)[i] = NA_INTEGER;
+        } else {
+            INTEGER(out)[i] = value::toInteger(*it);
         }
         ++i;
     }
@@ -120,10 +124,10 @@ static void rvle_convert_vector_string(
     int i = 0;
     for (value::MatrixFactory::ConstVectorView::const_iterator it = vec.begin();
          it != vec.end(); ++it) {
-        if ((*it)->getType() == value::ValueBase::STRING) {
-            SET_STRING_ELT(out, i, mkChar(value::toString(*it).c_str()));
-        } else {
+        if ((*it).get() == 0 || (*it)->getType() != value::ValueBase::STRING) {
             SET_STRING_ELT(out, i, NA_STRING);
+        } else {
+            SET_STRING_ELT(out, i, mkChar(value::toString(*it).c_str()));
         }
         ++i;
     }
