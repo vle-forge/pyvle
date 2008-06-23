@@ -301,7 +301,7 @@ SEXP rvle_convert_simulation_dataframe(rvle_output_t out)
 
             SEXP sexplst;
             PROTECT(sexplst = allocVector(VECSXP, lst.size()));
-            SET_VECTOR_ELT(r, i * matrix->shape()[1] + i, sexplst);
+            SET_VECTOR_ELT(r, i * matrix->shape()[1] + j, sexplst);
 
             oov::OutputMatrixViewList::const_iterator it;
             int n;
