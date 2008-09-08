@@ -48,6 +48,7 @@ static SEXP r_rvle_condition_list(SEXP rvle);
 static SEXP r_rvle_condition_size(SEXP rvle);
 static SEXP r_rvle_condition_port_list(SEXP rvle, SEXP cnd);
 static SEXP r_rvle_condition_port_list_size(SEXP rvle, SEXP cnd);
+static SEXP r_rvle_condition_show(SEXP rvle, SEXP cnd, SEXP prt);
 static void r_rvle_condition_clear(SEXP rvle, SEXP cnd, SEXP prt);
 static void r_rvle_condition_add_real(SEXP rvle, SEXP cnd, SEXP prt, SEXP val);
 static void r_rvle_condition_add_integer(SEXP rvle, SEXP cnd, SEXP prt, SEXP val);
@@ -79,6 +80,7 @@ R_CallMethodDef callMethods[] = {
         { "condition_port_list", (DL_FUNC) r_rvle_condition_port_list, 2},
         { "condition_port_list_size", (DL_FUNC) r_rvle_condition_port_list_size,
                 2},
+	{ "condition_show", (DL_FUNC) r_rvle_condition_show, 3},
         { "condition_clear", (DL_FUNC) r_rvle_condition_clear, 3},
         { "condition_add_real", (DL_FUNC) r_rvle_condition_add_real, 4},
         { "condition_add_integer", (DL_FUNC) r_rvle_condition_add_integer, 4},
@@ -356,6 +358,26 @@ SEXP r_rvle_condition_port_list(SEXP rvle, SEXP cnd)
                 }
         }
         UNPROTECT(1);
+        return r;
+}
+
+SEXP r_rvle_condition_show(SEXP rvle, SEXP cnd, SEXP prt)
+{
+        SEXP r = R_NilValue;
+        rvle_output_t result;
+
+	result = rvle_condition_show(R_ExternalPtrAddr(rvle),
+			CHAR(STRING_ELT(cnd, 0)),
+			CHAR(STRING_ELT(prt, 0)));
+        if (!result) {
+		Rf_error("RVLE: cannot show values from condition %s port %s",
+				CHAR(STRING_ELT(cnd, 0)),
+				CHAR(STRING_ELT(prt, 0)));
+        } else {
+                r = rvle_convert_vectorvalue(result);
+                rvle_clear_vectorvalue(result);
+        }
+
         return r;
 }
 

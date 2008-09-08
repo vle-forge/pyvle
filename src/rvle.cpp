@@ -236,6 +236,22 @@ int rvle_condition_clear(rvle_t handle,
     }
 }
 
+rvle_output_t rvle_condition_show(rvle_t handle,
+		                  const char* conditionname,
+				  const char* portname)
+{
+    assert(handle && conditionname && portname);
+
+    try {
+	vpz::Vpz* file(reinterpret_cast < vpz::Vpz* >(handle));
+	vpz::Condition& cnd(file->project().experiment().
+		conditions().get(conditionname));
+	return new value::VectorValue(cnd.getSetValues(portname)->getValue());
+    } catch (const std::exception& e) {
+	return 0;
+    }
+}
+
 int rvle_condition_add_real(rvle_t handle,
                             const char* conditionname,
                             const char* portname,
@@ -327,6 +343,12 @@ int rvle_save(rvle_t handle, const char* filename)
     } catch(const std::exception& e) {
         return 0;
     }
+}
+
+void rvle_clear_vectorvalue(rvle_output_t out)
+{
+    value::VectorValue* vect(reinterpret_cast < value::VectorValue* >(out));
+    delete vect;
 }
 
 void rvle_clear_matrix(rvle_output_t out)

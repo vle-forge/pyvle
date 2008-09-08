@@ -23,7 +23,6 @@
  */
 
 
-
 #ifndef VLE_RPACKAGE_CONVERT_H
 #define VLE_RPACKAGE_CONVERT_H
 
@@ -45,6 +44,17 @@ extern "C" {
  * @return A SEXP representationof Lst of Matrix.
  */
 SEXP rvle_convert_matrix(rvle_output_t out);
+
+/**
+ * @brief Build an output of a vle::value::VectorValue. Value of type boolean,
+ * integer, double from the vle are transformed into double value, other value
+ * returns a NA value.
+ *
+ * @param out The vle::value::VectorValue.
+ *
+ * @return a SEXP representation of the vle::value::VectorValue.
+ */
+SEXP rvle_convert_vectorvalue(rvle_output_t out);
 
 /**
  * @brief Build an output of simulations result into a Matrix (replicas x

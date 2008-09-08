@@ -141,6 +141,15 @@ rvle.condition_clear <- function(f, condition, port)
     return (invisible(NULL))
 }
 
+rvle.condition_show <- function(f, condition, port)
+{
+    stopifnot(is.rvle(f))
+    stopifnot(is.character(condition))
+    stopifnot(is.character(port))
+
+    .Call("condition_show", f, condition, port, PACKAGE="rvle")
+}
+
 rvle.condition_add_real <- function(f, condition, port, value)
 {
     stopifnot(is.rvle(f))

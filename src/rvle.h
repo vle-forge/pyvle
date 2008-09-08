@@ -23,7 +23,6 @@
  */
 
 
-
 #ifndef VLE_RPACKAGE_VLE_H
 #define VLE_RPACKAGE_VLE_H
 
@@ -129,6 +128,17 @@ int rvle_condition_clear(rvle_t handle,
                          const char* portname);
 
 /**
+ * @brief Build a list of values for a specified condition name, port name.
+ * @param handle The reference to the Vpz file.
+ * @param conditionname The name of the condition.
+ * @param portname The name of the condition's port.
+ * @return A rvle_output_t object or NULL if error.
+ */
+rvle_output_t rvle_condition_show(rvle_t handle,
+		                  const char* conditionname,
+				  const char* portname);
+
+/**
  * @brief Set the initial condition of the specified condition and portname.
  * @param handle The reference to the Vpz file.
  * @param conditionname The name of the condition.
@@ -188,6 +198,12 @@ double rvle_experiment_get_duration(rvle_t handle);
  * @param filename The filename where store file.
  */
 int rvle_save(rvle_t handle, const char* filename);
+
+/**
+ * @brief Delete te value::VectorValue.
+ * @param out The value::VectorValue to delete.
+ */
+void rvle_clear_vectorvalue(rvle_output_t out);
 
 /**
  * @brief Delete the output matrix of simulation.

@@ -22,6 +22,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 #include <vle/manager.hpp>
 #include <vle/oov.hpp>
 #include <vle/value.hpp>
@@ -32,7 +33,6 @@
 
 using namespace vle;
 
-
 static void rvle_convert_view_matrix(const oov::OutputMatrix& matrix, SEXP out)
 {
     value::MatrixFactory::ConstMatrixView view(matrix.values());
@@ -42,25 +42,21 @@ static void rvle_convert_view_matrix(const oov::OutputMatrix& matrix, SEXP out)
         for (j = 0; j < view.shape()[1]; ++j) {
             if (view[i][j].get()) {
                 switch (view[i][j]->getType()) {
-                case value::ValueBase::BOOLEAN: {
+                case value::ValueBase::BOOLEAN:
                     REAL(out)[j + i * view.shape()[1]] = (double)
                         value::toBoolean(view[i][j]);
                     break;
-                }
-                case value::ValueBase::DOUBLE: {
+                case value::ValueBase::DOUBLE:
                     REAL(out)[j + i * view.shape()[1]] =
                         value::toDouble(view[i][j]);
                     break;
-                }
-                case value::ValueBase::INTEGER: {
+                case value::ValueBase::INTEGER:
                     REAL(out)[j + i * view.shape()[1]] = (double)
                         value::toInteger(view[i][j]);
                     break;
-                }
-                default: {
+                default:
                     REAL(out)[j + i * view.shape()[1]] = NA_REAL;
                     break;
-                }
                 }
             } else {
                 REAL(out)[j + i * view.shape()[1]] = NA_REAL;
@@ -70,8 +66,8 @@ static void rvle_convert_view_matrix(const oov::OutputMatrix& matrix, SEXP out)
 }
 
 static void rvle_convert_vector_boolean(
-                const value::MatrixFactory::ConstVectorView& vec,
-                SEXP out)
+    const value::MatrixFactory::ConstVectorView& vec,
+    SEXP out)
 {
     int i = 0;
     for (value::MatrixFactory::ConstVectorView::const_iterator it = vec.begin();
@@ -86,8 +82,8 @@ static void rvle_convert_vector_boolean(
 }
 
 static void rvle_convert_vector_double(
-                const value::MatrixFactory::ConstVectorView& vec,
-                SEXP out)
+    const value::MatrixFactory::ConstVectorView& vec,
+    SEXP out)
 {
     int i = 0;
     for (value::MatrixFactory::ConstVectorView::const_iterator it = vec.begin();
@@ -102,8 +98,8 @@ static void rvle_convert_vector_double(
 }
 
 static void rvle_convert_vector_integer(
-                const value::MatrixFactory::ConstVectorView& vec,
-                SEXP out)
+    const value::MatrixFactory::ConstVectorView& vec,
+    SEXP out)
 {
     int i = 0;
     for (value::MatrixFactory::ConstVectorView::const_iterator it = vec.begin();
@@ -118,8 +114,8 @@ static void rvle_convert_vector_integer(
 }
 
 static void rvle_convert_vector_string(
-                const value::MatrixFactory::ConstVectorView& vec,
-                SEXP out)
+    const value::MatrixFactory::ConstVectorView& vec,
+    SEXP out)
 {
     int i = 0;
     for (value::MatrixFactory::ConstVectorView::const_iterator it = vec.begin();
@@ -220,16 +216,49 @@ SEXP rvle_convert_matrix(rvle_output_t out)
     oov::OutputMatrixViewList::const_iterator it;
     int n;
     for (it = lst->begin(), n = 0; it != lst->end(); ++it, ++n) {
-      SEXP sexpdata;
-      PROTECT(sexpdata = allocMatrix(REALSXP,
-                                     it->second.values().shape()[1],
-                                     it->second.values().shape()[0]));
-      rvle_convert_view_matrix(it->second, sexpdata);
+        SEXP sexpdata;
+        PROTECT(sexpdata = allocMatrix(REALSXP,
+                                       it->second.values().shape()[1],
+                                       it->second.values().shape()[0]));
+        rvle_convert_view_matrix(it->second, sexpdata);
 
-      SET_VECTOR_ELT(sexplst, n, sexpdata);
+        SET_VECTOR_ELT(sexplst, n, sexpdata);
     }
     UNPROTECT(lst->size() + 1);
 
+    return sexplst;
+}
+
+SEXP rvle_convert_vectorvalue(rvle_output_t out)
+{
+    SEXP sexplst;
+
+    value::VectorValue* lst(reinterpret_cast < value::VectorValue* >(out));
+
+    PROTECT(sexplst = NEW_NUMERIC(lst->size()));
+    value::VectorValue::const_iterator it;
+    int n;
+    for (it = lst->begin(), n = 0; it != lst->end(); ++it, ++n) {
+        if ((*it).get()) {
+            switch ((*it)->getType()) {
+            case value::ValueBase::BOOLEAN:
+                REAL(sexplst)[n] = (double) value::toBoolean(*it);
+                break;
+            case value::ValueBase::DOUBLE:
+                REAL(sexplst)[n] = value::toDouble(*it);
+                break;
+            case value::ValueBase::INTEGER:
+                REAL(sexplst)[n] = value::toInteger(*it);
+                break;
+            default:
+                REAL(sexplst)[n] = NA_REAL;
+                break;
+            }
+        } else {
+            REAL(sexplst)[n] = NA_REAL;
+        }
+    }
+    UNPROTECT(1);
     return sexplst;
 }
 
