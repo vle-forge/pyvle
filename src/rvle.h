@@ -26,6 +26,8 @@
 #ifndef VLE_RPACKAGE_VLE_H
 #define VLE_RPACKAGE_VLE_H
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -191,6 +193,21 @@ int rvle_experiment_set_duration(rvle_t handle, double value);
  * @return the duration of the experiment.
  */
 double rvle_experiment_get_duration(rvle_t handle);
+
+/**
+ * @brief Set the seed of the experiment.
+ * @param handle the reference to the Vpz file.
+ * @param value the seed to set.
+ * @return 0 if failed, -1 otherwise.
+ */
+int rvle_experiment_set_seed(rvle_t handle, uint32_t value);
+
+/**
+ * @brief Get the seed of the experiment.
+ * @param handle The reference to the Vpz file.
+ * @return the seed of the experiment.
+ */
+uint32_t rvle_experiment_get_seed(rvle_t handle);
 
 /**
  * @brief Save the current file under the specified filename.

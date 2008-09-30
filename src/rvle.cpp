@@ -332,6 +332,29 @@ double rvle_experiment_get_duration(rvle_t handle)
     }
 }
 
+int rvle_experiment_set_seed(rvle_t handle, uint32_t value)
+{
+    assert(handle);
+
+    vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
+    file->project().experiment().setSeed(value);
+
+    return -1;
+}
+
+uint32_t rvle_experiment_get_seed(rvle_t handle)
+{
+    assert(handle);
+
+    try {
+        vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
+
+        return file->project().experiment().seed();
+    } catch(const std::exception& e) {
+        return 0;
+    }
+}
+
 int rvle_save(rvle_t handle, const char* filename)
 {
     assert(handle and filename);

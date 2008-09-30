@@ -239,6 +239,22 @@ rvle.experiment_get_duration <- function(f)
     .Call("experiment_get_duration", f, PACKAGE="rvle")
 }
 
+rvle.experiment_set_seed <- function(f, value)
+{
+    stopifnot(is.rvle(f))
+
+    .Call("experiment_set_seed", f, as.integer(value), PACKAGE="rvle")
+
+    return (invisible(NULL))
+}
+
+rvle.experiment_get_seed <- function(f)
+{
+    stopifnot(is.rvle(f))
+
+    .Call("experiment_get_seed", f, PACKAGE="rvle")
+}
+
 rvle.save <- function(f, file)
 {
     stopifnot(is.rvle(f))

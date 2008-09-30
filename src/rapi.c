@@ -27,6 +27,7 @@
 #include <R.h>
 #include <Rinternals.h>
 #include <R_ext/Rdynload.h>
+#include <stdint.h>
 
 /*
  *
@@ -55,6 +56,8 @@ static void r_rvle_condition_add_integer(SEXP rvle, SEXP cnd, SEXP prt, SEXP val
 static void r_rvle_condition_add_string(SEXP rvle, SEXP cnd, SEXP prt, SEXP val);
 static void r_rvle_experiment_set_duration(SEXP rvle, SEXP val);
 static SEXP r_rvle_experiment_get_duration(SEXP rvle);
+static void r_rvle_experiment_set_seed(SEXP rvle, SEXP val);
+static SEXP r_rvle_experiment_get_seed(SEXP rvle);
 static void r_rvle_save(SEXP rvle, SEXP file);
 
 /*
@@ -87,6 +90,8 @@ R_CallMethodDef callMethods[] = {
         { "condition_add_string", (DL_FUNC) r_rvle_condition_add_string, 4},
         { "experiment_set_duration", (DL_FUNC) r_rvle_experiment_set_duration, 2},
         { "experiment_get_duration", (DL_FUNC) r_rvle_experiment_get_duration, 1},
+        { "experiment_set_seed", (DL_FUNC) r_rvle_experiment_set_seed, 2},
+        { "experiment_get_seed", (DL_FUNC) r_rvle_experiment_get_seed, 1},
         { "save", (DL_FUNC) r_rvle_save, 2},
         { NULL, NULL, 0}
 };
@@ -435,6 +440,24 @@ void r_rvle_condition_add_string(SEXP rvle, SEXP cnd, SEXP prt, SEXP val)
                                 CHAR(STRING_ELT(val, 0)), CHAR(STRING_ELT(prt, 0)),
                                 CHAR(STRING_ELT(cnd, 0)));
         }
+}
+
+void r_rvle_experiment_set_seed(SEXP rvle, SEXP val)
+{
+        rvle_experiment_set_seed(R_ExternalPtrAddr(rvle), INTEGER(val)[0]);
+}
+
+SEXP r_rvle_experiment_get_seed(SEXP rvle)
+{
+        SEXP r;
+        uint32_t result;
+
+        PROTECT(r = allocVector(INTSXP, 1));
+        result = rvle_experiment_get_seed(R_ExternalPtrAddr(rvle));
+        INTEGER(r)[0] = result;
+        UNPROTECT(1);
+
+        return r;
 }
 
 void r_rvle_experiment_set_duration(SEXP rvle, SEXP val)

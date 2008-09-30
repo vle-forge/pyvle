@@ -41,3 +41,18 @@ checkEqualsNumeric(view1[[1]][[2000]], 19.99, tolerance=1e-5)
 checkEqualsNumeric(view1[[2]][[2000]], 0.04369215, tolerance=1e-5)
 checkEqualsNumeric(view1[[3]][[2000]], 4.927206e+02, tolerance=1e-5)
 checkEqualsNumeric(view1[[4]][[2000]], 8.235717, tolerance=1e-5)
+
+# check the seed
+seed = rvle.experiment_get_seed(f)
+checkEquals(seed, 12379843)
+rvle.experiment_set_seed(f, 12345678)
+seed = rvle.experiment_get_seed(f)
+checkEquals(seed, 12345678)
+
+# check the duration
+duration = rvle.experiment_get_duration(f)
+checkEqualsNumeric(duration, 20, tolerance=1e-5)
+rvle.experiment_set_duration(f, 123.321)
+duration = rvle.experiment_get_duration(f)
+checkEqualsNumeric(duration, 123.321, tolerance=1e-5)
+
