@@ -255,6 +255,26 @@ rvle.experiment_get_seed <- function(f)
     .Call("experiment_get_seed", f, PACKAGE="rvle")
 }
 
+rvle.experiment_linear_combination <- function(f, seed, repliquas)
+{
+    stopifnot(is.rvle(f))
+
+    .Call("experiment_linear_combination", f, as.integer(seed),
+	    as.integer(repliquas), PACKAGE="rvle")
+
+    return (invisible(NULL))
+}
+
+rvle.experiment_total_combination <- function(f, seed, repliquas)
+{
+    stopifnot(is.rvle(f))
+
+    .Call("experiment_total_combination", f, as.integer(seed),
+	    as.integer(repliquas), PACKAGE="rvle")
+
+    return (invisible(NULL))
+}
+
 rvle.save <- function(f, file)
 {
     stopifnot(is.rvle(f))

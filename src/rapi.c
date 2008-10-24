@@ -58,6 +58,10 @@ static void r_rvle_experiment_set_duration(SEXP rvle, SEXP val);
 static SEXP r_rvle_experiment_get_duration(SEXP rvle);
 static void r_rvle_experiment_set_seed(SEXP rvle, SEXP val);
 static SEXP r_rvle_experiment_get_seed(SEXP rvle);
+static void r_rvle_experiment_linear_combination(SEXP rvle, SEXP seed, SEXP
+                replicas);
+static void r_rvle_experiment_total_combination(SEXP rvle, SEXP seed, SEXP
+                replicas);
 static void r_rvle_save(SEXP rvle, SEXP file);
 
 /*
@@ -92,6 +96,10 @@ R_CallMethodDef callMethods[] = {
         { "experiment_get_duration", (DL_FUNC) r_rvle_experiment_get_duration, 1},
         { "experiment_set_seed", (DL_FUNC) r_rvle_experiment_set_seed, 2},
         { "experiment_get_seed", (DL_FUNC) r_rvle_experiment_get_seed, 1},
+        { "experiment_linear_combination", (DL_FUNC)
+                r_rvle_experiment_linear_combination, 3},
+        { "experiment_total_combination", (DL_FUNC)
+                r_rvle_experiment_total_combination, 3},
         { "save", (DL_FUNC) r_rvle_save, 2},
         { NULL, NULL, 0}
 };
@@ -478,11 +486,27 @@ SEXP r_rvle_experiment_get_duration(SEXP rvle)
         return r;
 }
 
+void r_rvle_experiment_linear_combination(SEXP rvle, SEXP seed, SEXP
+                replicas)
+{
+        rvle_experiment_linear_combination(R_ExternalPtrAddr(rvle),
+                        INTEGER(seed)[0], INTEGER(replicas)[0]);
+}
+
+void r_rvle_experiment_total_combination(SEXP rvle, SEXP seed, SEXP
+                replicas)
+{
+        rvle_experiment_total_combination(R_ExternalPtrAddr(rvle),
+                        INTEGER(seed)[0], INTEGER(replicas)[0]);
+}
+
 void r_rvle_save(SEXP rvle, SEXP file)
 {
-        int result = rvle_save(R_ExternalPtrAddr(rvle), CHAR(STRING_ELT(file, 0)));
+        int result = rvle_save(R_ExternalPtrAddr(rvle), CHAR(STRING_ELT(file,
+                                        0)));
 
         if (!result) {
-                Rf_error("RVLE: error writing vpz file %s", CHAR(STRING_ELT(file, 0)));
+                Rf_error("RVLE: error writing vpz file %s",
+                                CHAR(STRING_ELT(file, 0)));
         }
 }

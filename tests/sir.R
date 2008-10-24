@@ -56,3 +56,23 @@ rvle.experiment_set_duration(f, 123.321)
 duration = rvle.experiment_get_duration(f)
 checkEqualsNumeric(duration, 123.321, tolerance=1e-5)
 
+# check the exeprimental frames
+rvle.experiment_set_duration(f, 0.25)
+rvle.experiment_linear_combination(f, 1, 5)
+result = rvle.run_manager(f)
+result
+checkEqualsNumeric(dim(result)[1], 5)
+checkEqualsNumeric(dim(result)[2], 1)
+
+rvle.condition_add_real(f, "cond_sir", "a", 0.6)
+rvle.condition_add_real(f, "cond_sir", "r", 0.006)
+result = rvle.run_manager(f)
+result
+checkEqualsNumeric(dim(result)[1], 5)
+checkEqualsNumeric(dim(result)[2], 2)
+
+rvle.experiment_total_combination(f, 1, 5)
+result = rvle.run_manager(f)
+result
+checkEqualsNumeric(dim(result)[1], 5)
+checkEqualsNumeric(dim(result)[2], 4)

@@ -210,6 +210,28 @@ int rvle_experiment_set_seed(rvle_t handle, uint32_t value);
 uint32_t rvle_experiment_get_seed(rvle_t handle);
 
 /**
+ * @brief Assign a linear experimental frame with specific seed to build seeds
+ * of simulations and the number of repliquas.
+ * @param handle the reference to the Vpz file.
+ * @param seed the seed to set to the experimental frame.
+ * @param repliquas the number of repliquas.
+ * @return 0 if failed, -1 otherwise.
+ */
+int rvle_experiment_linear_combination(rvle_t handle, uint32_t seed,
+                                       uint32_t repliquas);
+
+/**
+ * @brief Assign a linear experimental frame with specific seed to build seeds
+ * of simulations and the number of repliquas.
+ * @param handle the reference to the Vpz file.
+ * @param seed the seed to set to the experimental frame.
+ * @param repliquas the number of repliquas.
+ * @return 0 if failed, -1 otherwise.
+ */
+int rvle_experiment_total_combination(rvle_t handle, uint32_t seed,
+                                      uint32_t repliquas);
+
+/**
  * @brief Save the current file under the specified filename.
  * @param handle The reference to the Vpz file.
  * @param filename The filename where store file.

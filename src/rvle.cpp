@@ -355,6 +355,36 @@ uint32_t rvle_experiment_get_seed(rvle_t handle)
     }
 }
 
+int rvle_experiment_linear_combination(rvle_t handle, uint32_t seed,
+                                       uint32_t replicas)
+{
+    assert(handle);
+
+    try {
+        vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
+        file->project().experiment().setCombination("linear");
+        file->project().experiment().replicas().setSeed(seed);
+        file->project().experiment().replicas().setNumber(replicas);
+    } catch(const std::exception& e) {
+        return 0;
+    }
+}
+
+int rvle_experiment_total_combination(rvle_t handle, uint32_t seed,
+                                      uint32_t replicas)
+{
+    assert(handle);
+
+    try {
+        vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
+        file->project().experiment().setCombination("total");
+        file->project().experiment().replicas().setSeed(seed);
+        file->project().experiment().replicas().setNumber(replicas);
+    } catch(const std::exception& e) {
+        return 0;
+    }
+}
+
 int rvle_save(rvle_t handle, const char* filename)
 {
     assert(handle and filename);
