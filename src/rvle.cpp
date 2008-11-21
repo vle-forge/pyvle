@@ -246,7 +246,7 @@ rvle_output_t rvle_condition_show(rvle_t handle,
 	vpz::Vpz* file(reinterpret_cast < vpz::Vpz* >(handle));
 	vpz::Condition& cnd(file->project().experiment().
 		conditions().get(conditionname));
-	return new value::VectorValue(cnd.getSetValues(portname)->getValue());
+	return new value::VectorValue(cnd.getSetValues(portname).value());
     } catch (const std::exception& e) {
 	return 0;
     }
@@ -264,7 +264,7 @@ int rvle_condition_add_real(rvle_t handle,
         vpz::Condition& cnd(file->project().experiment().
                             conditions().get(conditionname));
 
-        cnd.addValueToPort(portname, value::DoubleFactory::create(value));
+        cnd.addValueToPort(portname, value::Double::create(value));
         return -1;
     } catch(const std::exception& e) {
         return 0;
@@ -283,7 +283,7 @@ int rvle_condition_add_integer(rvle_t handle,
         vpz::Condition& cnd(file->project().experiment().
                             conditions().get(conditionname));
 
-        cnd.addValueToPort(portname, value::IntegerFactory::create(value));
+        cnd.addValueToPort(portname, value::Integer::create(value));
         return -1;
     } catch(const std::exception& e) {
         return 0;
@@ -302,7 +302,7 @@ int rvle_condition_add_string(rvle_t handle,
         vpz::Condition& cnd(file->project().experiment().
                             conditions().get(conditionname));
 
-        cnd.addValueToPort(portname, value::StringFactory::create(value));
+        cnd.addValueToPort(portname, value::String::create(value));
         return -1;
     } catch(const std::exception& e) {
         return 0;

@@ -26,6 +26,7 @@
 #include <vle/manager.hpp>
 #include <vle/oov.hpp>
 #include <vle/value.hpp>
+#include <vle/value/Boolean.hpp>
 #include <cassert>
 #include <Rdefines.h>
 #include "rvle.h"
@@ -35,22 +36,22 @@ using namespace vle;
 
 static void rvle_convert_view_matrix(const oov::OutputMatrix& matrix, SEXP out)
 {
-    value::MatrixFactory::ConstMatrixView view(matrix.values());
-    value::MatrixFactory::ConstMatrixView::index i, j;
+    value::ConstMatrixView view(matrix.values());
+    value::ConstMatrixView::index i, j;
 
     for (i = 0; i < view.shape()[0]; ++i) {
         for (j = 0; j < view.shape()[1]; ++j) {
-            if (view[i][j].get()) {
+            if (view[i][j]) {
                 switch (view[i][j]->getType()) {
-                case value::ValueBase::BOOLEAN:
+                case value::Value::BOOLEAN:
                     REAL(out)[j + i * view.shape()[1]] = (double)
                         value::toBoolean(view[i][j]);
                     break;
-                case value::ValueBase::DOUBLE:
+                case value::Value::DOUBLE:
                     REAL(out)[j + i * view.shape()[1]] =
                         value::toDouble(view[i][j]);
                     break;
-                case value::ValueBase::INTEGER:
+                case value::Value::INTEGER:
                     REAL(out)[j + i * view.shape()[1]] = (double)
                         value::toInteger(view[i][j]);
                     break;
@@ -66,13 +67,13 @@ static void rvle_convert_view_matrix(const oov::OutputMatrix& matrix, SEXP out)
 }
 
 static void rvle_convert_vector_boolean(
-    const value::MatrixFactory::ConstVectorView& vec,
+    const value::ConstVectorView& vec,
     SEXP out)
 {
     int i = 0;
-    for (value::MatrixFactory::ConstVectorView::const_iterator it = vec.begin();
+    for (value::ConstVectorView::const_iterator it = vec.begin();
          it != vec.end(); ++it) {
-        if ((*it).get() == 0 || ((*it)->getType() != value::ValueBase::BOOLEAN)) {
+        if (*it == 0 || ((*it)->getType() != value::Value::BOOLEAN)) {
             LOGICAL(out)[i] = NA_LOGICAL;
         } else {
             LOGICAL(out)[i] = value::toBoolean(*it);
@@ -82,13 +83,13 @@ static void rvle_convert_vector_boolean(
 }
 
 static void rvle_convert_vector_double(
-    const value::MatrixFactory::ConstVectorView& vec,
+    const value::ConstVectorView& vec,
     SEXP out)
 {
     int i = 0;
-    for (value::MatrixFactory::ConstVectorView::const_iterator it = vec.begin();
+    for (value::ConstVectorView::const_iterator it = vec.begin();
          it != vec.end(); ++it) {
-        if ((*it).get() == 0 || ((*it)->getType() != value::ValueBase::DOUBLE)) {
+        if (*it == 0 || ((*it)->getType() != value::Value::DOUBLE)) {
             REAL(out)[i] = NA_REAL;
         } else {
             REAL(out)[i] = value::toDouble(*it);
@@ -98,13 +99,13 @@ static void rvle_convert_vector_double(
 }
 
 static void rvle_convert_vector_integer(
-    const value::MatrixFactory::ConstVectorView& vec,
+    const value::ConstVectorView& vec,
     SEXP out)
 {
     int i = 0;
-    for (value::MatrixFactory::ConstVectorView::const_iterator it = vec.begin();
+    for (value::ConstVectorView::const_iterator it = vec.begin();
          it != vec.end(); ++it) {
-        if ((*it).get() == 0 || (*it)->getType() != value::ValueBase::INTEGER) {
+        if (*it == 0 || (*it)->getType() != value::Value::INTEGER) {
             INTEGER(out)[i] = NA_INTEGER;
         } else {
             INTEGER(out)[i] = value::toInteger(*it);
@@ -114,13 +115,13 @@ static void rvle_convert_vector_integer(
 }
 
 static void rvle_convert_vector_string(
-    const value::MatrixFactory::ConstVectorView& vec,
+    const value::ConstVectorView& vec,
     SEXP out)
 {
     int i = 0;
-    for (value::MatrixFactory::ConstVectorView::const_iterator it = vec.begin();
+    for (value::ConstVectorView::const_iterator it = vec.begin();
          it != vec.end(); ++it) {
-        if ((*it).get() == 0 || (*it)->getType() != value::ValueBase::STRING) {
+        if (*it == 0 || (*it)->getType() != value::Value::STRING) {
             SET_STRING_ELT(out, i, NA_STRING);
         } else {
             SET_STRING_ELT(out, i, mkChar(value::toString(*it).c_str()));
@@ -131,7 +132,7 @@ static void rvle_convert_vector_string(
 
 static SEXP rvle_build_data_frame(const oov::OutputMatrix& matrix)
 {
-    value::MatrixFactory::ConstMatrixView view(matrix.values());
+    value::ConstMatrixView view(matrix.values());
     SEXP ret, names, value;
 
     PROTECT(ret = NEW_LIST(view.shape()[0]));
@@ -151,27 +152,27 @@ static SEXP rvle_build_data_frame(const oov::OutputMatrix& matrix)
                                          it->first.first %
                                          it->first.second).c_str()));
 
-        if (view[it->second][0].get() == 0) {
+        if (view[it->second][0] == 0) {
             UNPROTECT(2);
             error("empty value in (%d,0)\n", it->second);
         } else {
             switch(view[it->second][0]->getType()) {
-            case value::ValueBase::BOOLEAN:
+            case value::Value::BOOLEAN:
                 PROTECT(value = NEW_LOGICAL(view.shape()[1]));
                 rvle_convert_vector_boolean(matrix.getValue(it->second),
                                             value);
                 break;
-            case value::ValueBase::DOUBLE:
+            case value::Value::DOUBLE:
                 PROTECT(value = NEW_NUMERIC(view.shape()[1]));
                 rvle_convert_vector_double(matrix.getValue(it->second),
                                            value);
                 break;
-            case value::ValueBase::INTEGER:
+            case value::Value::INTEGER:
                 PROTECT(value = NEW_INTEGER(view.shape()[1]));
                 rvle_convert_vector_integer(matrix.getValue(it->second),
                                             value);
                 break;
-            case value::ValueBase::STRING:
+            case value::Value::STRING:
                 PROTECT(value = NEW_CHARACTER(view.shape()[1]));
                 rvle_convert_vector_string(matrix.getValue(it->second),
                                            value);
@@ -239,15 +240,15 @@ SEXP rvle_convert_vectorvalue(rvle_output_t out)
     value::VectorValue::const_iterator it;
     int n;
     for (it = lst->begin(), n = 0; it != lst->end(); ++it, ++n) {
-        if ((*it).get()) {
+        if (*it) {
             switch ((*it)->getType()) {
-            case value::ValueBase::BOOLEAN:
+            case value::Value::BOOLEAN:
                 REAL(sexplst)[n] = (double) value::toBoolean(*it);
                 break;
-            case value::ValueBase::DOUBLE:
+            case value::Value::DOUBLE:
                 REAL(sexplst)[n] = value::toDouble(*it);
                 break;
-            case value::ValueBase::INTEGER:
+            case value::Value::INTEGER:
                 REAL(sexplst)[n] = value::toInteger(*it);
                 break;
             default:
