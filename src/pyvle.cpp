@@ -279,7 +279,7 @@ void pyvle_condition_add_real(vpz::Vpz* file,
     vpz::Condition& cnd(file->project().experiment().
 			conditions().get(conditionname));
     
-    cnd.addValueToPort(portname, value::DoubleFactory::create(value));
+    cnd.addValueToPort(portname, value::Double::create(value));
 }
 
 void pyvle_condition_add_integer(vpz::Vpz* file, 
@@ -292,7 +292,7 @@ void pyvle_condition_add_integer(vpz::Vpz* file,
     vpz::Condition& cnd(file->project().experiment().
 			conditions().get(conditionname));
     
-    cnd.addValueToPort(portname, value::IntegerFactory::create(value));
+    cnd.addValueToPort(portname, value::Integer::create(value));
 }
 
 void pyvle_experiment_set_duration(vpz::Vpz* file, 

@@ -31,23 +31,23 @@ PyObject* pyvle_convert_value(const vle::value::Value& value)
 {
     PyObject* result;
     
-    switch (value->getType()) {
-    case vle::value::ValueBase::BOOLEAN: {
+    switch (value.getType()) {
+    case vle::value::Value::BOOLEAN: {
 	result = PyBool_FromLong(
 	    vle::value::toBoolean(value));
 	break;
     }
-    case vle::value::ValueBase::DOUBLE: {
+    case vle::value::Value::DOUBLE: {
 	result = PyFloat_FromDouble(
 	    vle::value::toDouble(value));
 	break;
     }
-    case vle::value::ValueBase::INTEGER: {
+    case vle::value::Value::INTEGER: {
 	result = PyInt_FromLong(
 	    vle::value::toLong(value));
 	break;
     }
-    case vle::value::ValueBase::STRING: {
+    case vle::value::Value::STRING: {
 	result = PyString_FromString(
 	    vle::value::toString(value).c_str());
 	break;
@@ -63,8 +63,8 @@ PyObject* pyvle_convert_value(const vle::value::Value& value)
 
 PyObject* pyvle_convert_view_matrix(const vle::oov::OutputMatrix& matrix)
 {
-    vle::value::MatrixFactory::ConstMatrixView view(matrix.values());
-    vle::value::MatrixFactory::ConstMatrixView::index i, j;
+    vle::value::ConstMatrixView view(matrix.values());
+    vle::value::ConstMatrixView::index i, j;
 
     PyObject* out = PyTuple_New(view.shape()[0]);
 
@@ -72,7 +72,7 @@ PyObject* pyvle_convert_view_matrix(const vle::oov::OutputMatrix& matrix)
 	PyObject* column = PyTuple_New(view.shape()[1]);
 
         for (j = 0; j < view.shape()[1]; ++j)
-	    PyTuple_SetItem(column, j, pyvle_convert_value(view[i][j]));
+	    PyTuple_SetItem(column, j, pyvle_convert_value(*view[i][j]));
 	PyTuple_SetItem(out, i, column);
     }
     return out;
@@ -80,8 +80,8 @@ PyObject* pyvle_convert_view_matrix(const vle::oov::OutputMatrix& matrix)
 
 PyObject* pyvle_build_data_frame(const vle::oov::OutputMatrix& matrix)
 {
-    vle::value::MatrixFactory::ConstMatrixView view(matrix.values());
-    vle::value::MatrixFactory::ConstMatrixView::index i, j;
+    vle::value::ConstMatrixView view(matrix.values());
+    vle::value::ConstMatrixView::index i, j;
 
     PyObject* out = PyDict_New();
     PyObject* time = PyTuple_New(view.shape()[1]);
@@ -100,7 +100,7 @@ PyObject* pyvle_build_data_frame(const vle::oov::OutputMatrix& matrix)
 
 	i = it->second;	    
         for (j = 0; j < view.shape()[1]; ++j)
-	    PyTuple_SetItem(column, j, pyvle_convert_value(view[i][j]));
+	    PyTuple_SetItem(column, j, pyvle_convert_value(*view[i][j]));
 	PyDict_SetItemString(out, boost::str(boost::format("%1%.%2%") %
 					     it->first.first %
 					     it->first.second).c_str(), column);
