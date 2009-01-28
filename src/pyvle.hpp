@@ -41,6 +41,9 @@ PyObject* pyvle_manager_cluster(vle::vpz::Vpz* file);
 PyObject* pyvle_manager_cluster_matrix(vle::vpz::Vpz* file);
 PyObject* pyvle_condition_size(vle::vpz::Vpz* file);
 PyObject* pyvle_condition_list(vle::vpz::Vpz* file);
+PyObject* pyvle_condition_show(vle::vpz::Vpz* file, 
+			       std::string conditionname, 
+			       std::string portname);
 PyObject* pyvle_condition_port_list_size(vle::vpz::Vpz* file, 
 					 std::string conditionname);
 PyObject* pyvle_condition_port_list(vle::vpz::Vpz* file, 
@@ -56,9 +59,16 @@ void pyvle_condition_add_integer(vle::vpz::Vpz* file,
 				 std::string conditionname, 
 				 std::string portname, 
 				 long value);
+void pyvle_condition_add_string(vle::vpz::Vpz* file, 
+				std::string conditionname, 
+				std::string portname, 
+				std::string value);
 void pyvle_experiment_set_duration(vle::vpz::Vpz* file, 
 				   double value);
 PyObject* pyvle_experiment_get_duration(vle::vpz::Vpz* file);
+void pyvle_experiment_set_seed(vle::vpz::Vpz* file, 
+				   double value);
+PyObject* pyvle_experiment_get_seed(vle::vpz::Vpz* file);
 void pyvle_save(vle::vpz::Vpz* file, 
 		std::string filename);
 

@@ -29,6 +29,8 @@
 #include <vle/manager.hpp>
 #include <vle/oov.hpp>
 
+PyObject* pyvle_convert_value(const vle::value::Value& value);
+
 /**
  * @brief Build an output of simulations result into a Map (each cell is a
  * list of view) of Matrix of real (the result of the simulation). Values of

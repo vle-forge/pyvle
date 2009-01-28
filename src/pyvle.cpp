@@ -208,6 +208,29 @@ PyObject* pyvle_condition_list(vpz::Vpz* file)
     return r;
 }
 
+PyObject* pyvle_condition_show(vle::vpz::Vpz* file, 
+			       std::string conditionname, 
+			       std::string portname)
+{
+    assert(file);
+    
+    PyObject* r;    /* condition list result */
+    
+    vle::vpz::Condition& cnd(file->project().experiment().
+			     conditions().get(conditionname));
+    vle::value::VectorValue& v(cnd.getSetValues(portname).value());
+    int size = v.size();
+
+    if (size > 1) {
+	r = PyList_New(size);
+	for (int i = 0; i < size; ++i)
+	  PyList_SetItem(r, i, pyvle_convert_value(*v[i]));  
+    } else {
+	r = pyvle_convert_value(*v[0]);
+    }
+    return r;
+}
+
 PyObject* pyvle_condition_size(vpz::Vpz* file)
 {
     assert(file);
@@ -270,9 +293,9 @@ void pyvle_condition_clear(vpz::Vpz* file,
 }
 
 void pyvle_condition_add_real(vpz::Vpz* file, 
-			std::string conditionname, 
-			std::string portname, 
-			double value)
+			      std::string conditionname, 
+			      std::string portname, 
+			      double value)
 {
     assert(file);
     
@@ -283,9 +306,9 @@ void pyvle_condition_add_real(vpz::Vpz* file,
 }
 
 void pyvle_condition_add_integer(vpz::Vpz* file, 
-			   std::string conditionname, 
-			   std::string portname, 
-			   long value)
+				 std::string conditionname, 
+				 std::string portname, 
+				 long value)
 {
     assert(file);
     
@@ -293,6 +316,19 @@ void pyvle_condition_add_integer(vpz::Vpz* file,
 			conditions().get(conditionname));
     
     cnd.addValueToPort(portname, value::Integer::create(value));
+}
+
+void pyvle_condition_add_string(vpz::Vpz* file, 
+				std::string conditionname, 
+				std::string portname, 
+				std::string value)
+{
+    assert(file);
+    
+    vpz::Condition& cnd(file->project().experiment().
+			conditions().get(conditionname));
+    
+    cnd.addValueToPort(portname, value::String::create(value));
 }
 
 void pyvle_experiment_set_duration(vpz::Vpz* file, 
@@ -308,6 +344,21 @@ PyObject* pyvle_experiment_get_duration(vpz::Vpz* file)
     assert(file);
     
     return PyFloat_FromDouble(file->project().experiment().duration());
+}
+
+void pyvle_experiment_set_seed(vpz::Vpz* file, 
+			       double value)
+{
+    assert(file);
+    
+    file->project().experiment().setSeed(value);
+}
+
+PyObject* pyvle_experiment_get_seed(vpz::Vpz* file)
+{
+    assert(file);
+    
+    return PyFloat_FromDouble(file->project().experiment().seed());
 }
 
 void pyvle_save(vpz::Vpz* file, 

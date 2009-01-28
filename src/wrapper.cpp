@@ -43,13 +43,15 @@ BOOST_PYTHON_MODULE(libpyvle)
     def("manager_cluster", pyvle_manager_cluster);
     def("manager_cluster_matrix", pyvle_manager_cluster_matrix);
     def("condition_list", pyvle_condition_list);
-    def("condition_size", pyvle_condition_size);
-    def("condition_port_list_size", pyvle_condition_port_list_size);
+    def("condition_show", pyvle_condition_show);
     def("condition_port_list", pyvle_condition_port_list);
     def("condition_clear", pyvle_condition_clear);
     def("condition_add_real", pyvle_condition_add_real);
     def("condition_add_integer", pyvle_condition_add_integer);    
+    def("condition_add_string", pyvle_condition_add_string);    
     def("experiment_set_duration", pyvle_experiment_set_duration);
     def("experiment_get_duration", pyvle_experiment_get_duration);
+    def("experiment_set_seed", pyvle_experiment_set_seed);
+    def("experiment_get_seed", pyvle_experiment_get_seed);
     def("save", pyvle_save);
 }
