@@ -85,11 +85,10 @@ PyObject* pyvle_build_data_frame(const vle::oov::OutputMatrix& matrix)
 
     PyObject* out = PyDict_New();
     PyObject* time = PyTuple_New(view.shape()[1]);
-	
+    vle::value::ConstVectorView t = matrix.getValue(0);
+
     for (i = 0; i < view.shape()[1]; ++i)
-	PyTuple_SetItem(time, i, PyString_FromString(boost::str(
-							 boost::format("%1%") 
-							 % i ).c_str()));
+	PyTuple_SetItem(time, i, pyvle_convert_value(*t[i]));
     PyDict_SetItemString(out, "time", time);
 
     const vle::oov::OutputMatrix::MapPairIndex& index(matrix.index());
