@@ -30,7 +30,7 @@
 PyObject* pyvle_convert_value(const vle::value::Value& value)
 {
     PyObject* result;
-    
+
     switch (value.getType()) {
     case vle::value::Value::BOOLEAN: {
 	result = PyBool_FromLong(
@@ -92,12 +92,13 @@ PyObject* pyvle_build_data_frame(const vle::oov::OutputMatrix& matrix)
     PyDict_SetItemString(out, "time", time);
 
     const vle::oov::OutputMatrix::MapPairIndex& index(matrix.index());
-    for (vle::oov::OutputMatrix::MapPairIndex::const_iterator it = index.begin();
+    for (vle::oov::OutputMatrix::MapPairIndex::const_iterator it =
+	     index.begin();
          it != index.end(); ++it) {
 
 	PyObject* column = PyTuple_New(view.shape()[1]);
 
-	i = it->second;	    
+	i = it->second;
         for (j = 0; j < view.shape()[1]; ++j)
 	    PyTuple_SetItem(column, j, pyvle_convert_value(*view[i][j]));
 	PyDict_SetItemString(out, boost::str(boost::format("%1%.%2%") %

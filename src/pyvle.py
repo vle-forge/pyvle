@@ -28,7 +28,7 @@ class Vle:
     def run_matrix(self):
         return libpyvle.run_matrix(self.vpz)
 
-# condition methods
+# conditions
     def conditions(self):
         return libpyvle.condition_list(self.vpz)
 
@@ -49,3 +49,7 @@ class Vle:
 
     def addStringCondition(self, name, port, value):
         libpyvle.condition_add_string(self.vpz, name, port, value)
+
+# views
+
+# observables
