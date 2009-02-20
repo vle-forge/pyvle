@@ -45,6 +45,11 @@ typedef void* rvle_t;
 typedef void* rvle_output_t;
 
 /**
+ * @brief Initialize the API of VLE.
+ */
+void rvle_init();
+
+/**
  * @brief Open the file vpz filename using vpz library.
  * @param filename The vpz file to laod with his path.
  * @return A rvle_t object or NULL if error.

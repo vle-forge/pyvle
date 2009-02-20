@@ -104,9 +104,12 @@ R_CallMethodDef callMethods[] = {
         { NULL, NULL, 0}
 };
 
+#include "rvle.h"
+
 void R_init_rvle(DllInfo* info)
 {
         R_registerRoutines(info, NULL, callMethods, NULL, NULL);
+        rvle_init();
 }
 
 void R_unload_rvle(DllInfo* info)
@@ -119,7 +122,6 @@ void R_unload_rvle(DllInfo* info)
  *
  */
 
-#include "rvle.h"
 #include "convert.h"
 
 SEXP r_rvle_open(SEXP name)

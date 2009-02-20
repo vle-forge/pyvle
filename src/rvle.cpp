@@ -49,6 +49,11 @@ static void rvle_build_matrix(const oov::OutputMatrixViewList& view,
 // R interface
 //
 
+void rvle_init()
+{
+    vle::manager::init();
+}
+
 rvle_t rvle_open(const char* filename)
 {
     assert(filename);
