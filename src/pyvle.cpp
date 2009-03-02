@@ -39,7 +39,7 @@ vpz::Vpz* pyvle_open(const char* filename)
 
     try {
 	if (!thread_init) {
-	    vle::utils::init();
+	    vle::manager::init();
 	    thread_init = true;
 	}
         file = new vpz::Vpz(filename);
