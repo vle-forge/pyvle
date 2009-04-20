@@ -187,7 +187,7 @@ PyObject* pyvle_manager_cluster_matrix(vpz::Vpz* file)
 PyObject* pyvle_condition_list(vpz::Vpz* file)
 {
     assert(file);
-    
+
     PyObject* r;    /* condition list result */
     int size;       /* size of the condition list from the vle api */
     int i;
@@ -200,22 +200,22 @@ PyObject* pyvle_condition_list(vpz::Vpz* file)
 	file->project().experiment().conditions().conditionnames(lst);
 
 	std::list < std::string >::const_iterator it;
-	
+
 	i = 0;
-	for (it = lst.begin(); it != lst.end(); ++it, ++i) 
+	for (it = lst.begin(); it != lst.end(); ++it, ++i)
 	    PyList_SetItem(r, i, PyString_FromString(it->c_str()));
     }
     return r;
 }
 
-PyObject* pyvle_condition_show(vle::vpz::Vpz* file, 
-			       std::string conditionname, 
+PyObject* pyvle_condition_show(vle::vpz::Vpz* file,
+			       std::string conditionname,
 			       std::string portname)
 {
     assert(file);
-    
+
     PyObject* r;    /* condition list result */
-    
+
     vle::vpz::Condition& cnd(file->project().experiment().
 			     conditions().get(conditionname));
     vle::value::VectorValue& v(cnd.getSetValues(portname).value());
@@ -224,7 +224,7 @@ PyObject* pyvle_condition_show(vle::vpz::Vpz* file,
     if (size > 1) {
 	r = PyList_New(size);
 	for (int i = 0; i < size; ++i)
-	  PyList_SetItem(r, i, pyvle_convert_value(*v[i]));  
+	  PyList_SetItem(r, i, pyvle_convert_value(*v[i]));
     } else {
 	r = pyvle_convert_value(*v[0]);
     }
@@ -234,14 +234,14 @@ PyObject* pyvle_condition_show(vle::vpz::Vpz* file,
 PyObject* pyvle_condition_size(vpz::Vpz* file)
 {
     assert(file);
-    
+
     return PyInt_FromLong(file->project().experiment().conditions().conditionlist().size());
 }
 
 PyObject* pyvle_condition_port_list_size(vpz::Vpz* file, std::string conditionname)
 {
     assert(file);
-    
+
     int result;
 
     try {
@@ -257,7 +257,7 @@ PyObject* pyvle_condition_port_list_size(vpz::Vpz* file, std::string conditionna
 PyObject* pyvle_condition_port_list(vpz::Vpz* file, std::string conditionname)
 {
     assert(file);
-    
+
     PyObject* r;    /* port list result */
     int size;       /* size of the port list from the vle api */
     int i;
@@ -272,99 +272,203 @@ PyObject* pyvle_condition_port_list(vpz::Vpz* file, std::string conditionname)
         cnd.portnames(lst);
 
 	std::list < std::string >::const_iterator it;
-	
+
 	i = 0;
-	for (it = lst.begin(); it != lst.end(); ++it, ++i) 
+	for (it = lst.begin(); it != lst.end(); ++it, ++i)
 	    PyList_SetItem(r, i, PyString_FromString(it->c_str()));
     }
     return r;
 }
 
-void pyvle_condition_clear(vpz::Vpz* file, 
-		     std::string conditionname, 
+void pyvle_condition_clear(vpz::Vpz* file,
+		     std::string conditionname,
 		     std::string portname)
 {
     assert(file);
-    
+
     vpz::Condition& cnd(file->project().experiment().
 			conditions().get(conditionname));
-    
+
     cnd.clearValueOfPort(portname);
 }
 
-void pyvle_condition_add_real(vpz::Vpz* file, 
-			      std::string conditionname, 
-			      std::string portname, 
+void pyvle_condition_add_real(vpz::Vpz* file,
+			      std::string conditionname,
+			      std::string portname,
 			      double value)
 {
     assert(file);
-    
+
     vpz::Condition& cnd(file->project().experiment().
 			conditions().get(conditionname));
-    
+
     cnd.addValueToPort(portname, value::Double::create(value));
 }
 
-void pyvle_condition_add_integer(vpz::Vpz* file, 
-				 std::string conditionname, 
-				 std::string portname, 
+void pyvle_condition_add_integer(vpz::Vpz* file,
+				 std::string conditionname,
+				 std::string portname,
 				 long value)
 {
     assert(file);
-    
+
     vpz::Condition& cnd(file->project().experiment().
 			conditions().get(conditionname));
-    
+
     cnd.addValueToPort(portname, value::Integer::create(value));
 }
 
-void pyvle_condition_add_string(vpz::Vpz* file, 
-				std::string conditionname, 
-				std::string portname, 
+void pyvle_condition_add_string(vpz::Vpz* file,
+				std::string conditionname,
+				std::string portname,
 				std::string value)
 {
     assert(file);
-    
+
     vpz::Condition& cnd(file->project().experiment().
 			conditions().get(conditionname));
-    
+
     cnd.addValueToPort(portname, value::String::create(value));
 }
 
-void pyvle_experiment_set_duration(vpz::Vpz* file, 
+void pyvle_experiment_set_duration(vpz::Vpz* file,
 			     double value)
 {
     assert(file);
-    
+
     file->project().experiment().setDuration(value);
 }
 
 PyObject* pyvle_experiment_get_duration(vpz::Vpz* file)
 {
     assert(file);
-    
+
     return PyFloat_FromDouble(file->project().experiment().duration());
 }
 
-void pyvle_experiment_set_seed(vpz::Vpz* file, 
+void pyvle_experiment_set_seed(vpz::Vpz* file,
 			       double value)
 {
     assert(file);
-    
+
     file->project().experiment().setSeed(value);
 }
 
 PyObject* pyvle_experiment_get_seed(vpz::Vpz* file)
 {
     assert(file);
-    
+
     return PyFloat_FromDouble(file->project().experiment().seed());
 }
 
-void pyvle_save(vpz::Vpz* file, 
+void pyvle_save(vpz::Vpz* file,
 	  std::string filename)
 {
     assert(file);
-    
+
     file->write(filename);
+}
+
+PyObject* pyvle_dynamics_list(vpz::Vpz* file)
+{
+	assert(file);
+
+	PyObject* r;    /* dynamics list result */
+	int size;       /* size of the dynamics list from the vle api */
+	int i;
+	vpz::DynamicList& dynlist(file->project().dynamics().dynamiclist());
+	vpz::DynamicList::iterator dynit;
+
+	size = dynlist.size();
+
+	r = PyList_New(size);
+	i = 0;
+	if (size > 0) {
+		for (dynit = dynlist.begin(); dynit != dynlist.end(); ++dynit, ++i) {
+			PyList_SetItem(r, i, PyString_FromString(dynit->first.c_str()));
+		}
+	}
+	return r;
+}
+
+PyObject* pyvle_dynamic_get_name(vle::vpz::Vpz* file,
+				std::string dynamicname)
+{
+	assert(file);
+
+	PyObject* r;    /* dynamic name result */
+	vpz::Dynamic& dyn(file->project().dynamics().get(dynamicname));
+
+	r = PyString_FromString(dyn.name().c_str());
+
+	return r;
+}
+
+PyObject* pyvle_dynamic_get_model(vle::vpz::Vpz* file,
+				std::string dynamicname)
+{
+	assert(file);
+
+	PyObject* r;    /* dynamic model result */
+	vpz::Dynamic& dyn(file->project().dynamics().get(dynamicname));
+
+	r = PyString_FromString(dyn.model().c_str());
+
+	return r;
+}
+
+PyObject* pyvle_dynamic_get_library(vle::vpz::Vpz* file,
+				std::string dynamicname)
+{
+	assert(file);
+
+	PyObject* r;    /* dynamic library result */
+	vpz::Dynamic& dyn(file->project().dynamics().get(dynamicname));
+
+	r = PyString_FromString(dyn.library().c_str());
+
+	return r;
+}
+
+PyObject* pyvle_dynamic_get_language(vle::vpz::Vpz* file,
+				std::string dynamicname)
+{
+	assert(file);
+
+	PyObject* r;    /* dynamic language result */
+	vpz::Dynamic& dyn(file->project().dynamics().get(dynamicname));
+
+	r = PyString_FromString(dyn.language().c_str());
+
+	return r;
+}
+
+void pyvle_dynamic_set_model(vle::vpz::Vpz* file,
+				std::string dynamicname,
+				std::string model)
+{
+	assert(file);
+
+	vpz::Dynamic& dyn(file->project().dynamics().get(dynamicname));
+	dyn.setModel(model);
+}
+
+void pyvle_dynamic_set_library(vle::vpz::Vpz* file,
+				std::string dynamicname,
+				std::string library)
+{
+	assert(file);
+
+	vpz::Dynamic& dyn(file->project().dynamics().get(dynamicname));
+	dyn.setLibrary(library);
+}
+
+void pyvle_dynamic_set_language(vle::vpz::Vpz* file,
+				std::string dynamicname,
+				std::string language)
+{
+	assert(file);
+
+	vpz::Dynamic& dyn(file->project().dynamics().get(dynamicname));
+	dyn.setLanguage(language);
 }

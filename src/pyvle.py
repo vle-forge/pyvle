@@ -53,3 +53,28 @@ class Vle:
 # views
 
 # observables
+
+# dynamics
+    def dynamics(self):
+        return libpyvle.dynamics_list(self.vpz)
+
+    def getDynamicName(self, name):
+        return libpyvle.dynamic_get_name(self.vpz, name)
+
+    def getDynamicModel(self, name):
+        return libpyvle.dynamic_get_model(self.vpz, name)
+
+    def getDynamicLibrary(self, name):
+        return libpyvle.dynamic_get_library(self.vpz, name)
+
+    def getDynamicLanguage(self, name):
+        return libpyvle.dynamic_get_language(self.vpz, name)
+
+    def setDynamicModel(self, name, model):
+        libpyvle.dynamic_set_model(self.vpz, name, model)
+
+    def setDynamicLibrary(self, name, library):
+        libpyvle.dynamic_set_library(self.vpz, name, library)
+
+    def setDynamicLanguage(self, name, language):
+        libpyvle.dynamic_set_language(self.vpz, name, language)

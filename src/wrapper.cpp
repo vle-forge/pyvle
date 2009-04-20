@@ -47,11 +47,19 @@ BOOST_PYTHON_MODULE(libpyvle)
     def("condition_port_list", pyvle_condition_port_list);
     def("condition_clear", pyvle_condition_clear);
     def("condition_add_real", pyvle_condition_add_real);
-    def("condition_add_integer", pyvle_condition_add_integer);    
-    def("condition_add_string", pyvle_condition_add_string);    
+    def("condition_add_integer", pyvle_condition_add_integer);
+    def("condition_add_string", pyvle_condition_add_string);
     def("experiment_set_duration", pyvle_experiment_set_duration);
     def("experiment_get_duration", pyvle_experiment_get_duration);
     def("experiment_set_seed", pyvle_experiment_set_seed);
     def("experiment_get_seed", pyvle_experiment_get_seed);
     def("save", pyvle_save);
+    def("dynamics_list", pyvle_dynamics_list);
+    def("dynamic_get_name", pyvle_dynamic_get_name);
+    def("dynamic_get_model", pyvle_dynamic_get_model);
+    def("dynamic_get_library", pyvle_dynamic_get_library);
+    def("dynamic_get_language", pyvle_dynamic_get_language);
+    def("dynamic_set_model", pyvle_dynamic_set_model);
+    def("dynamic_set_library", pyvle_dynamic_set_library);
+    def("dynamic_set_language", pyvle_dynamic_set_language);
 }

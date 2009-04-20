@@ -26,7 +26,7 @@
 #ifndef __PYVLE_HPP
 #define __PYVLE_HPP
 
-#include <Python.h> 
+#include <Python.h>
 #include <vle/vpz.hpp>
 
 vle::vpz::Vpz* pyvle_open(const char* filename);
@@ -41,35 +41,52 @@ PyObject* pyvle_manager_cluster(vle::vpz::Vpz* file);
 PyObject* pyvle_manager_cluster_matrix(vle::vpz::Vpz* file);
 PyObject* pyvle_condition_size(vle::vpz::Vpz* file);
 PyObject* pyvle_condition_list(vle::vpz::Vpz* file);
-PyObject* pyvle_condition_show(vle::vpz::Vpz* file, 
-			       std::string conditionname, 
+PyObject* pyvle_condition_show(vle::vpz::Vpz* file,
+			       std::string conditionname,
 			       std::string portname);
-PyObject* pyvle_condition_port_list_size(vle::vpz::Vpz* file, 
+PyObject* pyvle_condition_port_list_size(vle::vpz::Vpz* file,
 					 std::string conditionname);
-PyObject* pyvle_condition_port_list(vle::vpz::Vpz* file, 
+PyObject* pyvle_condition_port_list(vle::vpz::Vpz* file,
 				    std::string conditionname);
-void pyvle_condition_clear(vle::vpz::Vpz* file, 
-			   std::string conditionname, 
+void pyvle_condition_clear(vle::vpz::Vpz* file,
+			   std::string conditionname,
 			   std::string portname);
-void pyvle_condition_add_real(vle::vpz::Vpz* file, 
-			      std::string conditionname, 
-			      std::string portname, 
+void pyvle_condition_add_real(vle::vpz::Vpz* file,
+			      std::string conditionname,
+			      std::string portname,
 			      double value);
-void pyvle_condition_add_integer(vle::vpz::Vpz* file, 
-				 std::string conditionname, 
-				 std::string portname, 
+void pyvle_condition_add_integer(vle::vpz::Vpz* file,
+				 std::string conditionname,
+				 std::string portname,
 				 long value);
-void pyvle_condition_add_string(vle::vpz::Vpz* file, 
-				std::string conditionname, 
-				std::string portname, 
+void pyvle_condition_add_string(vle::vpz::Vpz* file,
+				std::string conditionname,
+				std::string portname,
 				std::string value);
-void pyvle_experiment_set_duration(vle::vpz::Vpz* file, 
+void pyvle_experiment_set_duration(vle::vpz::Vpz* file,
 				   double value);
 PyObject* pyvle_experiment_get_duration(vle::vpz::Vpz* file);
-void pyvle_experiment_set_seed(vle::vpz::Vpz* file, 
+void pyvle_experiment_set_seed(vle::vpz::Vpz* file,
 				   double value);
 PyObject* pyvle_experiment_get_seed(vle::vpz::Vpz* file);
-void pyvle_save(vle::vpz::Vpz* file, 
+void pyvle_save(vle::vpz::Vpz* file,
 		std::string filename);
-
+PyObject* pyvle_dynamics_list(vle::vpz::Vpz* file);
+PyObject* pyvle_dynamic_get_name(vle::vpz::Vpz* file,
+				std::string dynamicname);
+PyObject* pyvle_dynamic_get_model(vle::vpz::Vpz* file,
+				std::string dynamicname);
+PyObject* pyvle_dynamic_get_library(vle::vpz::Vpz* file,
+				std::string dynamicname);
+PyObject* pyvle_dynamic_get_language(vle::vpz::Vpz* file,
+				std::string dynamicname);
+void pyvle_dynamic_set_model(vle::vpz::Vpz* file,
+				std::string dynamicname,
+				std::string model);
+void pyvle_dynamic_set_library(vle::vpz::Vpz* file,
+				std::string dynamicname,
+				std::string library);
+void pyvle_dynamic_set_language(vle::vpz::Vpz* file,
+				std::string dynamicname,
+				std::string language);
 #endif
