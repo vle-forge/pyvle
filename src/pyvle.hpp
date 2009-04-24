@@ -89,4 +89,37 @@ void pyvle_dynamic_set_library(vle::vpz::Vpz* file,
 void pyvle_dynamic_set_language(vle::vpz::Vpz* file,
 				std::string dynamicname,
 				std::string language);
+PyObject* pyvle_views_list(vle::vpz::Vpz* file);
+PyObject* pyvle_view_get_name(vle::vpz::Vpz* file,
+				std::string viewname);
+PyObject* pyvle_view_get_type(vle::vpz::Vpz* file,
+				std::string viewname);
+PyObject* pyvle_view_get_timestep(vle::vpz::Vpz* file,
+				std::string viewname);
+PyObject* pyvle_view_get_output(vle::vpz::Vpz* file,
+				std::string viewname);
+PyObject* pyvle_view_get_data(vle::vpz::Vpz* file,
+				std::string viewname);
+void pyvle_view_set_name(vle::vpz::Vpz* file,
+				std::string viewoldname,
+				std::string viewnewname);
+void pyvle_view_set_type(vle::vpz::Vpz* file,
+				std::string viewname,
+				std::string viewtype);
+void pyvle_view_set_timestep(vle::vpz::Vpz* file,
+				std::string viewname,
+				double time);
+void pyvle_view_set_data(vle::vpz::Vpz* file,
+				std::string viewname,
+				std::string data);
+void pyvle_views_add_eventview(vle::vpz::Vpz* file,
+				std::string viewname,
+				std::string output);
+void pyvle_views_add_timedview(vle::vpz::Vpz* file,
+				std::string viewname,
+				std::string output,
+				double time);
+void pyvle_views_add_finishview(vle::vpz::Vpz* file,
+				std::string viewname,
+				std::string output);
 #endif

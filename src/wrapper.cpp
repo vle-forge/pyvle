@@ -62,4 +62,17 @@ BOOST_PYTHON_MODULE(libpyvle)
     def("dynamic_set_model", pyvle_dynamic_set_model);
     def("dynamic_set_library", pyvle_dynamic_set_library);
     def("dynamic_set_language", pyvle_dynamic_set_language);
+    def("views_list", pyvle_views_list);
+    def("view_get_name",pyvle_view_get_name);
+    def("view_get_type",pyvle_view_get_type);
+    def("view_get_timestep",pyvle_view_get_timestep);
+    def("view_get_output",pyvle_view_get_output);
+    def("view_get_data",pyvle_view_get_data);
+    def("view_set_name",pyvle_view_set_name);
+    def("view_set_type",pyvle_view_set_type);
+    def("view_set_timestep",pyvle_view_set_timestep);
+    def("view_set_data",pyvle_view_set_data);
+    def("views_add_eventview",pyvle_views_add_eventview);
+    def("views_add_timedview",pyvle_views_add_timedview);
+    def("views_add_finishview",pyvle_views_add_finishview);
 }

@@ -472,3 +472,169 @@ void pyvle_dynamic_set_language(vle::vpz::Vpz* file,
 	vpz::Dynamic& dyn(file->project().dynamics().get(dynamicname));
 	dyn.setLanguage(language);
 }
+
+PyObject* pyvle_views_list(vle::vpz::Vpz* file)
+{
+	assert(file);
+
+	PyObject* r;    /* views list result */
+	vpz::ViewList& viewslst(file->project().experiment().views().viewlist());
+	vpz::ViewList::iterator it;
+	int size;
+	int i;
+
+	size = viewslst.size();
+
+	r = PyList_New(size);
+	i = 0;
+
+	if (size > 0) {
+		for (it = viewslst.begin(); it != viewslst.end(); ++it, ++i) {
+			PyList_SetItem(r, i, PyString_FromString(it->first.c_str()));
+		}
+	}
+	return r;
+}
+
+PyObject* pyvle_view_get_name(vle::vpz::Vpz* file,
+				std::string viewname)
+{
+	assert(file);
+
+	PyObject* r;    /* view name result */
+	vpz::View& view(file->project().experiment().views().get(viewname));
+
+	r = PyString_FromString(view.name().c_str());
+
+	return r;
+}
+
+PyObject* pyvle_view_get_type(vle::vpz::Vpz* file,
+				std::string viewname)
+{
+	assert(file);
+
+	PyObject* r;    /* view type result */
+	vpz::View& view(file->project().experiment().views().get(viewname));
+
+	r = PyString_FromString(view.streamtype().c_str());
+
+	return r;
+}
+
+PyObject* pyvle_view_get_timestep(vle::vpz::Vpz* file,
+				std::string viewname)
+{
+	assert(file);
+
+	PyObject* r;    /* view timestep result */
+	vpz::View& view(file->project().experiment().views().get(viewname));
+
+	r = PyFloat_FromDouble(view.timestep());
+
+	return r;
+}
+
+PyObject* pyvle_view_get_output(vle::vpz::Vpz* file,
+				std::string viewname)
+{
+	assert(file);
+
+	PyObject* r;    /* view output result */
+	vpz::View& view(file->project().experiment().views().get(viewname));
+
+	r = PyString_FromString(view.output().c_str());
+
+	return r;
+}
+
+PyObject* pyvle_view_get_data(vle::vpz::Vpz* file,
+		std::string viewname)
+{
+	assert(file);
+
+	PyObject* r;    /* view data result */
+	vpz::View& view(file->project().experiment().views().get(viewname));
+
+	r = PyString_FromString(view.data().c_str());
+
+	return r;
+}
+
+void pyvle_view_set_name(vle::vpz::Vpz* file,
+				std::string viewoldname,
+				std::string viewnewname)
+{
+	assert(file);
+
+	vpz::View& view(file->project().experiment().views().get(viewoldname));
+
+	view.setName(viewnewname);
+}
+
+void pyvle_view_set_type(vle::vpz::Vpz* file,
+				std::string viewname,
+				std::string viewtype)
+{
+	assert(file);
+
+	vpz::View& view(file->project().experiment().views().get(viewname));
+
+	if (viewtype=="TIMED")
+		view.setType(vpz::View::TIMED);
+	else if (viewtype=="EVENT")
+		view.setType(vpz::View::EVENT);
+	else if (viewtype=="FINISH")
+		view.setType(vpz::View::FINISH);
+}
+
+void pyvle_view_set_timestep(vle::vpz::Vpz* file,
+				std::string viewname,
+				double time)
+{
+	assert(file);
+
+	vpz::View& view(file->project().experiment().views().get(viewname));
+
+	if (time >= 0.0)
+		view.setTimestep(time);
+}
+
+void pyvle_view_set_data(vle::vpz::Vpz* file,
+				std::string viewname,
+				std::string data)
+{
+	assert(file);
+
+	vpz::View& view(file->project().experiment().views().get(viewname));
+
+	view.setData(data);
+}
+
+void pyvle_views_add_eventview(vle::vpz::Vpz* file,
+				std::string viewname,
+				std::string output)
+{
+	assert(file);
+
+	file->project().experiment().views().addEventView(viewname,output);
+}
+
+void pyvle_views_add_timedview(vle::vpz::Vpz* file,
+				std::string viewname,
+				std::string output,
+				double time)
+{
+	assert(file);
+
+	file->project().experiment().views().addTimedView(viewname,time,output);
+}
+
+void pyvle_views_add_finishview(vle::vpz::Vpz* file,
+				std::string viewname,
+				std::string output)
+{
+	assert(file);
+
+	file->project().experiment().views().addFinishView(viewname,output);
+}

@@ -51,7 +51,44 @@ class Vle:
         libpyvle.condition_add_string(self.vpz, name, port, value)
 
 # views
+    def views(self):
+        return libpyvle.views_list(self.vpz)
 
+    def getViewName(self, name):
+        return libpyvle.view_get_name(self.vpz, name)
+
+    def getViewType(self, name):
+        return libpyvle.view_get_type(self.vpz, name)
+
+    def getViewTimestep(self, name):
+        return libpyvle.view_get_timestep(self.vpz, name)
+
+    def getViewOutput(self, name):
+        return libpyvle.view_get_output(self.vpz, name)
+
+    def getViewData(self, name):
+        return libpyvle.view_get_data(self.vpz, name)
+
+    def setViewName(self, oldname, newname):
+        libpyvle.view_set_name(self.vpz, oldname, newname)
+
+    def setViewType(self, name, type):
+        libpyvle.view_set_type(self.vpz, name, type)
+
+    def setViewTimestep(self, name, timestep):
+        libpyvle.view_set_timestep(self.vpz, name, timestep)
+
+    def setViewData(self, name, data):
+        libpyvle.view_set_data(self.vpz, name, data)
+
+    def addEventView(self, name, output):
+        libpyvle.views_add_eventview(self.vpz, name, output)
+
+    def addTimedView(self, name, output, time):
+        libpyvle.views_add_timedview(self.vpz, name, output, time)
+
+    def addFinishView(self, name, output):
+        libpyvle.views_add_finishview(self.vpz, name, output)
 # observables
 
 # dynamics
