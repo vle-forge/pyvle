@@ -89,7 +89,49 @@ class Vle:
 
     def addFinishView(self, name, output):
         libpyvle.views_add_finishview(self.vpz, name, output)
+
 # observables
+    def observables(self):
+        return libpyvle.observables_list(self.vpz)
+
+    def addObservable(self, name):
+        libpyvle.observable_add(self.vpz, name)
+
+    def delObservable(self, name):
+        libpyvle.observable_del(self.vpz, name)
+
+    def observableExists(self, name):
+        return libpyvle.observable_exists(self.vpz, name)
+
+    def observablesClear(self):
+        libpyvle.observables_clear(self.vpz)
+
+    def observablesIsEmpty(self):
+        return libpyvle.observables_empty(self.vpz)
+
+    def getObservableName(self, name):
+        return libpyvle.observable_get_name(self.vpz, name)
+
+    def listObservablePorts(self, name):
+        return libpyvle.observable_ports_list(self.vpz, name)
+
+    def addObservablePort(self, obsname, portname):
+        libpyvle.observable_add_port(self.vpz, obsname, portname)
+
+    def delObservablePort(self, obsname, portname):
+        libpyvle.observable_del_port(self.vpz, obsname, portname)
+
+    def observableHasView(self, obsname, viewname):
+        return libpyvle.observable_has_view(self.vpz, obsname, viewname)
+
+    def getObservablePortName(self, obsname, viewname):
+        return libpyvle.observable_get_port_name(self.vpz, obsname, viewname)
+
+    def isObservablePermanent(self, obsname):
+        return libpyvle.observable_is_permanent(self.vpz, obsname)
+
+    def setObservablePermanent(self, obsname, ispermanent):
+        libpyvle.observable_set_permanent(self.vpz, obsname, ispermanent)
 
 # dynamics
     def dynamics(self):

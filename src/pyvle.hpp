@@ -122,4 +122,34 @@ void pyvle_views_add_timedview(vle::vpz::Vpz* file,
 void pyvle_views_add_finishview(vle::vpz::Vpz* file,
 				std::string viewname,
 				std::string output);
+PyObject* pyvle_observables_list(vle::vpz::Vpz* file);
+void pyvle_observable_add(vle::vpz::Vpz* file,
+				std::string obsname);
+void pyvle_observable_del(vle::vpz::Vpz* file,
+				std::string obsname);
+PyObject* pyvle_observable_exists(vle::vpz::Vpz* file,
+				std::string obsname);
+void pyvle_observables_clear(vle::vpz::Vpz* file);
+PyObject* pyvle_observables_empty(vle::vpz::Vpz* file);
+PyObject* pyvle_observable_get_name(vle::vpz::Vpz* file,
+				std::string obsname);
+PyObject* pyvle_observable_ports_list(vle::vpz::Vpz* file,
+				std::string obsname);
+void pyvle_observable_add_port(vle::vpz::Vpz* file,
+				std::string obsname,
+				std::string portname);
+void pyvle_observable_del_port(vle::vpz::Vpz* file,
+				std::string obsname,
+				std::string portname);
+PyObject* pyvle_observable_has_view(vle::vpz::Vpz* file,
+				std::string obsname,
+				std::string viewname);
+PyObject* pyvle_observable_get_port_name(vle::vpz::Vpz* file,
+				std::string obsname,
+				std::string viewname);
+PyObject* pyvle_observable_is_permanent(vle::vpz::Vpz* file,
+				std::string obsname);
+void pyvle_observable_set_permanent(vle::vpz::Vpz* file,
+				std::string obsname,
+				bool ispermanent);
 #endif

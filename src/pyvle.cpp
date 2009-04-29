@@ -638,3 +638,205 @@ void pyvle_views_add_finishview(vle::vpz::Vpz* file,
 
 	file->project().experiment().views().addFinishView(viewname,output);
 }
+
+PyObject* pyvle_observables_list(vle::vpz::Vpz* file)
+{
+	assert(file);
+
+	PyObject* r;    /* observables list result */
+	vpz::ObservableList& obslst(file->project().experiment().views().observables().observablelist());
+	vpz::ObservableList::iterator it;
+	int size;
+	int i;
+
+	size = obslst.size();
+
+	r = PyList_New(size);
+	i = 0;
+
+	if (size > 0) {
+		for (it = obslst.begin(); it != obslst.end(); ++it, ++i) {
+			PyList_SetItem(r, i, PyString_FromString(it->first.c_str()));
+		}
+	}
+	return r;
+}
+
+void pyvle_observable_add(vle::vpz::Vpz* file,
+				std::string obsname)
+{
+	assert(file);
+
+	vpz::Observable newobs(obsname);
+
+	file->project().experiment().views().observables().add(newobs);
+}
+
+void pyvle_observable_del(vle::vpz::Vpz* file,
+				std::string obsname)
+{
+	assert(file);
+
+	file->project().experiment().views().observables().del(obsname);
+}
+
+PyObject* pyvle_observable_exists(vle::vpz::Vpz* file,
+				std::string obsname)
+{
+	assert(file);
+
+	if (file->project().experiment().views().observables().exist(obsname)) {
+		return Py_True;
+	} else {
+		return Py_False;
+	}
+}
+
+void pyvle_observables_clear(vle::vpz::Vpz* file)
+{
+	assert(file);
+
+	file->project().experiment().views().observables().clear();
+}
+
+PyObject* pyvle_observables_empty(vle::vpz::Vpz* file)
+{
+	assert(file);
+
+	if (file->project().experiment().views().observables().empty()) {
+		return Py_True;
+	} else {
+		return Py_False;
+	}
+}
+
+PyObject* pyvle_observable_get_name(vle::vpz::Vpz* file,
+				std::string obsname)
+{
+	assert(file);
+
+	PyObject* r;    /* observable name list result */
+	vpz::Observable& obs(file->project().experiment().views().observables().get(obsname));
+
+	r = PyString_FromString(obs.name().c_str());
+
+	return r;
+}
+
+PyObject* pyvle_observable_ports_list(vle::vpz::Vpz* file,
+				std::string obsname)
+{
+	assert(file);
+
+	PyObject* r;    /* observable port list result */
+	vpz::ObservablePortList& obsportlst(file->project().experiment().views().observables().get(obsname).observableportlist());
+	vpz::ObservablePortList::iterator it;
+	int size;
+	int i;
+
+	size = obsportlst.size();
+
+	r = PyList_New(size);
+	i = 0;
+
+	if (size > 0) {
+		for (it = obsportlst.begin(); it != obsportlst.end(); ++it, ++i) {
+			PyList_SetItem(r, i, PyString_FromString(it->first.c_str()));
+		}
+	}
+	return r;
+}
+
+void pyvle_observable_add_port(vle::vpz::Vpz* file,
+				std::string obsname,
+				std::string portname)
+{
+	assert(file);
+
+	vpz::Observable& obs(file->project().experiment().views().observables().get(obsname));
+
+	if (!obs.exist(portname)) {
+		obs.add(portname);
+	}
+
+}
+
+void pyvle_observable_del_port(vle::vpz::Vpz* file,
+				std::string obsname,
+				std::string portname)
+{
+	assert(file);
+
+	vpz::Observable& obs(file->project().experiment().views().observables().get(obsname));
+
+	if (obs.exist(portname)) {
+		obs.del(portname);
+	}
+
+}
+
+PyObject* pyvle_observable_has_view(vle::vpz::Vpz* file,
+				std::string obsname,
+				std::string viewname)
+{
+	assert(file);
+
+	vpz::Observable& obs(file->project().experiment().views().observables().get(obsname));
+
+	if (obs.hasView(viewname)) {
+		return Py_True;
+	} else {
+		return Py_False;
+	}
+}
+
+PyObject* pyvle_observable_get_port_name(vle::vpz::Vpz* file,
+				std::string obsname,
+				std::string viewname)
+{
+	assert(file);
+
+	PyObject* r;    /* port list result */
+	vpz::Observable& obs(file->project().experiment().views().observables().get(obsname));
+	vpz::PortNameList obsportlist = obs.getPortname(viewname);
+	vpz::PortNameList::iterator it;
+	int size;
+	int i;
+
+	size = obsportlist.size();
+
+	r = PyList_New(size);
+	i = 0;
+
+	if (size > 0) {
+		for (it = obsportlist.begin(); it != obsportlist.end(); ++it, ++i) {
+			PyList_SetItem(r, i, PyString_FromString(it->c_str()));
+		}
+	}
+	return r;
+}
+
+PyObject* pyvle_observable_is_permanent(vle::vpz::Vpz* file,
+				std::string obsname)
+{
+	assert(file);
+
+	vpz::Observable& obs(file->project().experiment().views().observables().get(obsname));
+
+	if (obs.isPermanent()) {
+		return Py_True;
+	} else {
+		return Py_False;
+	}
+}
+
+void pyvle_observable_set_permanent(vle::vpz::Vpz* file,
+				std::string obsname,
+				bool ispermanent)
+{
+	assert(file);
+
+	vpz::Observable& obs(file->project().experiment().views().observables().get(obsname));
+
+	obs.permanent(ispermanent);
+}

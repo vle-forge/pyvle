@@ -75,4 +75,18 @@ BOOST_PYTHON_MODULE(libpyvle)
     def("views_add_eventview",pyvle_views_add_eventview);
     def("views_add_timedview",pyvle_views_add_timedview);
     def("views_add_finishview",pyvle_views_add_finishview);
+    def("observables_list",pyvle_observables_list);
+    def("observable_add",pyvle_observable_add);
+    def("observable_del",pyvle_observable_del);
+    def("observable_exists",pyvle_observable_exists);
+    def("observables_clear",pyvle_observables_clear);
+    def("observables_empty",pyvle_observables_empty);
+    def("observable_get_name",pyvle_observable_get_name);
+    def("observable_ports_list",pyvle_observable_ports_list);
+    def("observable_add_port",pyvle_observable_add_port);
+    def("observable_del_port",pyvle_observable_del_port);
+    def("observable_has_view",pyvle_observable_has_view);
+    def("observable_get_port_name",pyvle_observable_get_port_name);
+    def("observable_is_permanent",pyvle_observable_is_permanent);
+    def("observable_set_permanent",pyvle_observable_set_permanent);
 }
