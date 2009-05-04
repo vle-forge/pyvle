@@ -9,17 +9,17 @@ class Vle:
 
 # duration of experiments
     def duration(self, value):
-        libpyvle.set_duration(self.vpz, value)
+        libpyvle.experiment_set_duration(self.vpz, value)
 
     def duration(self):
-        return libpyvle.get_duration(self.vpz)
+        return libpyvle.experiment_get_duration(self.vpz)
 
 # seed of experiments
     def seed(self, value):
-        libpyvle.set_seed(self.vpz, value)
+        libpyvle.experiment_set_seed(self.vpz, value)
 
     def seed(self):
-        return libpyvle.get_seed(self.vpz)
+        return libpyvle.experiment_get_seed(self.vpz)
 
 # execution of experiments
     def run(self):
