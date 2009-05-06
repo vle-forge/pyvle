@@ -4,8 +4,8 @@ class Vle:
     def __init__(self, filename):
         self.vpz = libpyvle.open(filename)
 
-    def save(self):
-        libpyvle.save(self.vpz)
+    def save(self, filename):
+        libpyvle.save(self.vpz, filename)
 
 # duration of experiments
     def duration(self, value):
@@ -50,6 +50,26 @@ class Vle:
     def addStringCondition(self, name, port, value):
         libpyvle.condition_add_string(self.vpz, name, port, value)
 
+    def setConditionValue(self, name, port, value, type, i):
+        libpyvle.condition_set_value(self.vpz, name, port, value, type, i)
+
+    def getConditionSetValue(self, name, port):
+        return libpyvle.condition_get_setvalue(self.vpz, name, port)
+
+    def getConditionValue(self, name, port, i):
+        return libpyvle.condition_get_value(self.vpz, name, port, i)
+
+    def getConditionValueType(self, name, port, i):
+        return libpyvle.condition_get_value_type(self.vpz, name, port, i)
+
+    def delConditionValue(self, name, port, i):
+        libpyvle.condition_delete_value(self.vpz, name, port, i)
+
+    def atomicModelConditionsList(self, name):
+        return libpyvle.atomic_model_conditions_list(self.vpz, name)
+
+    def dynamicConditionsList(self, name):
+        return libpyvle.dynamic_conditions_list(self.vpz, name)
 # views
     def views(self):
         return libpyvle.views_list(self.vpz)
@@ -132,6 +152,9 @@ class Vle:
 
     def setObservablePermanent(self, obsname, ispermanent):
         libpyvle.observable_set_permanent(self.vpz, obsname, ispermanent)
+
+    def dynamicObservablesList(self, name):
+        return libpyvle.dynamic_observables_list(self.vpz, name)
 
 # dynamics
     def dynamics(self):

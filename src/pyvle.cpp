@@ -28,6 +28,7 @@
 #include <vle/utils.hpp>
 #include "convert.hpp"
 #include "pyvle.hpp"
+#include <boost/lexical_cast.hpp>
 
 using namespace vle;
 
@@ -329,6 +330,178 @@ void pyvle_condition_add_string(vpz::Vpz* file,
 			conditions().get(conditionname));
 
     cnd.addValueToPort(portname, value::String::create(value));
+}
+
+void pyvle_condition_set_value(vle::vpz::Vpz* file,
+				std::string conditionname,
+				std::string portname,
+				std::string value,
+				std::string type,
+				int i)
+{
+	assert(file);
+
+	vpz::Condition& cnd(file->project().experiment().
+				conditions().get(conditionname));
+	vle::value::VectorValue& vector(cnd.getSetValues(portname).value());
+
+	if (type == "integer") {
+		vector[i]=value::Integer::create(boost::lexical_cast<int> (value));
+	}
+	else if(type == "double") {
+		vector[i]=value::Double::create(boost::lexical_cast<double> (value));
+	}
+	else {
+		vector[i]=value::String::create(value);
+	}
+}
+
+PyObject* pyvle_condition_get_setvalue(vle::vpz::Vpz* file,
+				std::string conditionname,
+				std::string portname)
+{
+	assert(file);
+
+	PyObject* r;    /* condition list result */
+
+	vle::vpz::Condition& cnd(file->project().experiment().
+				 conditions().get(conditionname));
+	vle::value::VectorValue& v(cnd.getSetValues(portname).value());
+	int size = v.size();
+
+	r = PyList_New(size);
+	for (int i = 0; i < size; ++i) {
+	  PyList_SetItem(r, i, pyvle_convert_value(*v[i]));
+	}
+	return r;
+}
+
+PyObject* pyvle_condition_get_value(vle::vpz::Vpz* file,
+				std::string conditionname,
+				std::string portname,
+				int i)
+{
+	assert(file);
+
+	PyObject* r;
+
+	vpz::Condition& cnd(file->project().experiment().
+				conditions().get(conditionname));
+	vle::value::VectorValue& vector(cnd.getSetValues(portname).value());
+
+	r=pyvle_convert_value(*vector[i]);
+
+	return r;
+}
+
+PyObject* pyvle_condition_get_value_type(vle::vpz::Vpz* file,
+				std::string conditionname,
+				std::string portname,
+				int i)
+{
+	assert(file);
+
+	PyObject* r;
+	vpz::Condition& cnd(file->project().experiment().
+					conditions().get(conditionname));
+	vle::value::VectorValue& v(cnd.getSetValues(portname).value());
+
+	switch(v[i]->getType()) {
+		case vle::value::Value::DOUBLE: {
+			r = PyString_FromString("double");
+			break;
+		}
+		case vle::value::Value::INTEGER: {
+			r = PyString_FromString("integer");
+			break;
+		}
+		case vle::value::Value::STRING: {
+			r = PyString_FromString("string");
+			break;
+		}
+		default : {
+			r = PyString_FromString("none");
+			break;
+		}
+	}
+
+	return r;
+}
+
+void pyvle_condition_delete_value(vle::vpz::Vpz* file,
+		std::string conditionname,
+		std::string portname,
+		int i)
+{
+	assert(file);
+
+	vpz::Condition& cnd(file->project().experiment().
+						conditions().get(conditionname));
+	vle::value::VectorValue& vector(cnd.getSetValues(portname).value());
+	vle::value::VectorValue::iterator it = vector.begin();
+
+	value::Value* base = vector[i];
+
+	while (it != vector.end()) {
+		if (&**it == base)
+			break;
+		++it;
+	}
+
+	if (it != vector.end()) {
+		vector.erase(it);
+	}
+
+}
+
+PyObject* pyvle_atomic_model_conditions_list(vle::vpz::Vpz* file,
+		std::string name)
+{
+	assert(file);
+
+	PyObject* r;
+	vpz::AtomicModelList& atommods(file->project().model().atomicModels());
+	vpz::AtomicModelList::iterator it=atommods.begin();
+
+	while (it != atommods.end()) {
+		if (it->first->getName() == name) {
+			vpz::AtomicModel& a = it->second;
+			vpz::Strings s = a.conditions();
+			vpz::Strings::iterator sit;
+			int size = s.size();
+			r = PyList_New(size);
+			int i = 0;
+			for (sit = s.begin(); sit != s.end(); ++sit, ++i)
+				PyList_SetItem(r, i, PyString_FromString(sit->c_str()));
+			return r;
+		}
+		++it;
+	}
+}
+
+PyObject* pyvle_dynamic_conditions_list(vle::vpz::Vpz* file,
+		std::string name)
+{
+	assert(file);
+
+	PyObject* r;
+	vpz::AtomicModelList& atommods(file->project().model().atomicModels());
+	vpz::AtomicModelList::iterator it=atommods.begin();
+
+	while (it != atommods.end()) {
+		if (it->second.dynamics() == name) {
+			vpz::AtomicModel& a = it->second;
+			vpz::Strings s = a.conditions();
+			vpz::Strings::iterator sit;
+			int size = s.size();
+			r = PyList_New(size);
+			int i = 0;
+			for (sit = s.begin(); sit != s.end(); ++sit, ++i)
+				PyList_SetItem(r, i, PyString_FromString(sit->c_str()));
+			return r;
+		}
+		++it;
+	}
 }
 
 void pyvle_experiment_set_duration(vpz::Vpz* file,
@@ -839,4 +1012,24 @@ void pyvle_observable_set_permanent(vle::vpz::Vpz* file,
 	vpz::Observable& obs(file->project().experiment().views().observables().get(obsname));
 
 	obs.permanent(ispermanent);
+}
+
+PyObject* pyvle_dynamic_observables_list(vle::vpz::Vpz* file,
+				std::string name)
+{
+	assert(file);
+
+	PyObject* r;
+	vpz::AtomicModelList& atommods(file->project().model().atomicModels());
+	vpz::AtomicModelList::iterator it=atommods.begin();
+
+	while (it != atommods.end()) {
+		if (it->second.dynamics() == name) {
+			vpz::AtomicModel& a = it->second;
+			std::string s = a.observables();
+			r = PyString_FromString(s.c_str());
+			return r;
+		}
+		++it;
+	}
 }

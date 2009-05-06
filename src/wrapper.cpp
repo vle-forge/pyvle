@@ -49,6 +49,13 @@ BOOST_PYTHON_MODULE(libpyvle)
     def("condition_add_real", pyvle_condition_add_real);
     def("condition_add_integer", pyvle_condition_add_integer);
     def("condition_add_string", pyvle_condition_add_string);
+    def("condition_set_value",pyvle_condition_set_value);
+    def("condition_get_setvalue",pyvle_condition_get_setvalue);
+    def("condition_get_value",pyvle_condition_get_value);
+    def("condition_get_value_type",pyvle_condition_get_value_type);
+    def("condition_delete_value",pyvle_condition_delete_value);
+    def("atomic_model_conditions_list",pyvle_atomic_model_conditions_list);
+    def("dynamic_conditions_list",pyvle_dynamic_conditions_list);
     def("experiment_set_duration", pyvle_experiment_set_duration);
     def("experiment_get_duration", pyvle_experiment_get_duration);
     def("experiment_set_seed", pyvle_experiment_set_seed);
@@ -89,4 +96,5 @@ BOOST_PYTHON_MODULE(libpyvle)
     def("observable_get_port_name",pyvle_observable_get_port_name);
     def("observable_is_permanent",pyvle_observable_is_permanent);
     def("observable_set_permanent",pyvle_observable_set_permanent);
+    def("dynamic_observables_list",pyvle_dynamic_observables_list);
 }

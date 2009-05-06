@@ -63,6 +63,31 @@ void pyvle_condition_add_string(vle::vpz::Vpz* file,
 				std::string conditionname,
 				std::string portname,
 				std::string value);
+void pyvle_condition_set_value(vle::vpz::Vpz* file,
+				std::string conditionname,
+				std::string portname,
+				std::string value,
+				std::string type,
+				int i);
+PyObject* pyvle_condition_get_setvalue(vle::vpz::Vpz* file,
+				std::string conditionname,
+				std::string portname);
+PyObject* pyvle_condition_get_value(vle::vpz::Vpz* file,
+				std::string conditionname,
+				std::string portname,
+				int i);
+PyObject* pyvle_condition_get_value_type(vle::vpz::Vpz* file,
+				std::string conditionname,
+				std::string portname,
+				int i);
+void pyvle_condition_delete_value(vle::vpz::Vpz* file,
+				std::string conditionname,
+				std::string portname,
+				int i);
+PyObject* pyvle_atomic_model_conditions_list(vle::vpz::Vpz* file,
+		std::string name);
+PyObject* pyvle_dynamic_conditions_list(vle::vpz::Vpz* file,
+		std::string name);
 void pyvle_experiment_set_duration(vle::vpz::Vpz* file,
 				   double value);
 PyObject* pyvle_experiment_get_duration(vle::vpz::Vpz* file);
@@ -152,4 +177,6 @@ PyObject* pyvle_observable_is_permanent(vle::vpz::Vpz* file,
 void pyvle_observable_set_permanent(vle::vpz::Vpz* file,
 				std::string obsname,
 				bool ispermanent);
+PyObject* pyvle_dynamic_observables_list(vle::vpz::Vpz* file,
+				std::string name);
 #endif
