@@ -110,6 +110,9 @@ class Vle:
     def addFinishView(self, name, output):
         libpyvle.views_add_finishview(self.vpz, name, output)
 
+    def getOutputPlugin(self, output):
+        return libpyvle.output_get_plugin(self.vpz, output)
+
 # observables
     def observables(self):
         return libpyvle.observables_list(self.vpz)

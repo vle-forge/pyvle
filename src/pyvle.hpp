@@ -147,6 +147,8 @@ void pyvle_views_add_timedview(vle::vpz::Vpz* file,
 void pyvle_views_add_finishview(vle::vpz::Vpz* file,
 				std::string viewname,
 				std::string output);
+PyObject* pyvle_get_output_plugin(vle::vpz::Vpz* file,
+				std::string outputname);
 PyObject* pyvle_observables_list(vle::vpz::Vpz* file);
 void pyvle_observable_add(vle::vpz::Vpz* file,
 				std::string obsname);

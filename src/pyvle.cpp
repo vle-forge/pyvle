@@ -812,6 +812,18 @@ void pyvle_views_add_finishview(vle::vpz::Vpz* file,
 	file->project().experiment().views().addFinishView(viewname,output);
 }
 
+PyObject* pyvle_get_output_plugin(vle::vpz::Vpz* file,
+				std::string outputname)
+{
+	assert(file);
+
+	PyObject* r;
+	vpz::Output& out(file->project().experiment().views().outputs().get(outputname));
+
+	r = PyString_FromString(out.plugin().c_str());
+	return r;
+}
+
 PyObject* pyvle_observables_list(vle::vpz::Vpz* file)
 {
 	assert(file);

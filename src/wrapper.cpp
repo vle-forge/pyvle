@@ -82,6 +82,7 @@ BOOST_PYTHON_MODULE(libpyvle)
     def("views_add_eventview",pyvle_views_add_eventview);
     def("views_add_timedview",pyvle_views_add_timedview);
     def("views_add_finishview",pyvle_views_add_finishview);
+    def("output_get_plugin",pyvle_get_output_plugin);
     def("observables_list",pyvle_observables_list);
     def("observable_add",pyvle_observable_add);
     def("observable_del",pyvle_observable_del);
