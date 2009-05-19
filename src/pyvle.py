@@ -8,14 +8,14 @@ class Vle:
         libpyvle.save(self.vpz, filename)
 
 # duration of experiments
-    def duration(self, value):
+    def setDuration(self, value):
         libpyvle.experiment_set_duration(self.vpz, value)
 
     def duration(self):
         return libpyvle.experiment_get_duration(self.vpz)
 
 # seed of experiments
-    def seed(self, value):
+    def setSeed(self, value):
         libpyvle.experiment_set_seed(self.vpz, value)
 
     def seed(self):
