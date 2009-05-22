@@ -1045,3 +1045,36 @@ PyObject* pyvle_dynamic_observables_list(vle::vpz::Vpz* file,
 		++it;
 	}
 }
+
+PyObject* pyvle_export(vle::vpz::Vpz* file,
+		std::string location,
+		std::string view,
+		std::string type)
+{
+	assert(file);
+
+	PyObject* r;
+
+	vpz::View& v(file->project().experiment().views().get(view));
+	std::string o_tmp_name(v.output());
+	file->project().experiment().views().outputs().get(o_tmp_name).setLocalStream(location,type);
+
+	manager::RunQuiet jrm;
+
+	jrm.start(*file);
+
+	std::string ext;
+	if (type=="text") {
+		ext = ".dat";
+	} else if (type=="csv") {
+		ext = ".csv";
+	} else if (type=="rdata") {
+		ext = ".rdata";
+	}
+	std::string expname(file->project().experiment().name());
+	std::string filename(expname + "_" + view + ext);
+
+	r = PyString_FromString(filename.c_str());
+
+	return r;
+}

@@ -181,4 +181,8 @@ void pyvle_observable_set_permanent(vle::vpz::Vpz* file,
 				bool ispermanent);
 PyObject* pyvle_dynamic_observables_list(vle::vpz::Vpz* file,
 				std::string name);
+PyObject* pyvle_export(vle::vpz::Vpz* file,
+		std::string location,
+		std::string view,
+		std::string type);
 #endif

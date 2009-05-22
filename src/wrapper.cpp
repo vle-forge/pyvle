@@ -98,4 +98,5 @@ BOOST_PYTHON_MODULE(libpyvle)
     def("observable_is_permanent",pyvle_observable_is_permanent);
     def("observable_set_permanent",pyvle_observable_set_permanent);
     def("dynamic_observables_list",pyvle_dynamic_observables_list);
+    def("export",pyvle_export);
 }

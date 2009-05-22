@@ -183,3 +183,7 @@ class Vle:
 
     def setDynamicLanguage(self, name, language):
         libpyvle.dynamic_set_language(self.vpz, name, language)
+
+# export
+    def export(self, location, view, type):
+        return libpyvle.export(self.vpz, location, view, type)
