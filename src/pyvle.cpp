@@ -332,6 +332,29 @@ void pyvle_condition_add_string(vpz::Vpz* file,
     cnd.addValueToPort(portname, value::String::create(value));
 }
 
+void pyvle_condition_add_boolean(vpz::Vpz* file,
+				std::string conditionname,
+				std::string portname,
+				std::string value)
+{
+	assert(file);
+
+	vpz::Condition& cnd(file->project().experiment().
+			conditions().get(conditionname));
+
+	bool val;
+	if(value=="true")
+	{
+		val=true;
+	}
+	else
+	{
+		val=false;
+	}
+
+	cnd.addValueToPort(portname, value::Boolean::create(val));
+}
+
 void pyvle_condition_set_value(vle::vpz::Vpz* file,
 				std::string conditionname,
 				std::string portname,
@@ -350,6 +373,22 @@ void pyvle_condition_set_value(vle::vpz::Vpz* file,
 	}
 	else if(type == "double") {
 		vector[i]=value::Double::create(boost::lexical_cast<double> (value));
+	}
+	else if(type == "string") {
+		vector[i]=value::String::create(value);
+	}
+	else if(type == "boolean") {
+
+		bool val;
+		if(value=="true")
+		{
+			val=true;
+		}
+		else
+		{
+			val=false;
+		}
+		vector[i]=value::Boolean::create(val);
 	}
 	else {
 		vector[i]=value::String::create(value);
@@ -417,6 +456,10 @@ PyObject* pyvle_condition_get_value_type(vle::vpz::Vpz* file,
 		}
 		case vle::value::Value::STRING: {
 			r = PyString_FromString("string");
+			break;
+		}
+		case vle::value::Value::BOOLEAN: {
+			r = PyString_FromString("boolean");
 			break;
 		}
 		default : {

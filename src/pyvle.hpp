@@ -63,6 +63,10 @@ void pyvle_condition_add_string(vle::vpz::Vpz* file,
 				std::string conditionname,
 				std::string portname,
 				std::string value);
+void pyvle_condition_add_boolean(vle::vpz::Vpz* file,
+				std::string conditionname,
+				std::string portname,
+				std::string value);
 void pyvle_condition_set_value(vle::vpz::Vpz* file,
 				std::string conditionname,
 				std::string portname,

@@ -50,6 +50,9 @@ class Vle:
     def addStringCondition(self, name, port, value):
         libpyvle.condition_add_string(self.vpz, name, port, value)
 
+    def addBooleanCondition(self, name, port, value):
+        libpyvle.condition_add_boolean(self.vpz, name, port, value)
+
     def setConditionValue(self, name, port, value, type, i):
         libpyvle.condition_set_value(self.vpz, name, port, value, type, i)
 
