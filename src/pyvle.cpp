@@ -1069,6 +1069,34 @@ void pyvle_observable_set_permanent(vle::vpz::Vpz* file,
 	obs.permanent(ispermanent);
 }
 
+PyObject* pyvle_observable_port_attached_views(vle::vpz::Vpz* file,
+				std::string obsname,
+				std::string portname)
+{
+	assert(file);
+
+	PyObject* r;
+	vpz::ObservablePort& port(file->project().experiment().views().observables().get(obsname).get(portname));
+	vpz::ViewNameList list = port.viewnamelist();
+	vpz::ViewNameList::iterator it;
+
+	int size;
+	int i;
+
+	size = list.size();
+
+	r = PyList_New(size);
+	i = 0;
+
+	if (size > 0) {
+		for (it = list.begin(); it != list.end(); ++it, ++i) {
+			PyList_SetItem(r, i, PyString_FromString(it->c_str()));
+		}
+	}
+	return r;
+
+}
+
 PyObject* pyvle_dynamic_observables_list(vle::vpz::Vpz* file,
 				std::string name)
 {
