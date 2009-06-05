@@ -193,3 +193,14 @@ class Vle:
 # export
     def export(self, location, view, type):
         return libpyvle.export(self.vpz, location, view, type)
+
+# manager
+    def manager(self):
+		return libpyvle.manager(self.vpz)
+
+# replicas
+    def nbReplicas(self):
+		return libpyvle.nbreplicas(self.vpz)
+
+    def replicasCombinations(self):
+		return libpyvle.replacas_combinations(self.vpz)

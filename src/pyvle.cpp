@@ -24,6 +24,8 @@
  */
 
 #include <vle/manager.hpp>
+#include <vle/manager/TotalExperimentGenerator.hpp>
+#include <vle/manager/LinearExperimentGenerator.hpp>
 #include <vle/value.hpp>
 #include <vle/utils.hpp>
 #include "convert.hpp"
@@ -1149,3 +1151,25 @@ PyObject* pyvle_export(vle::vpz::Vpz* file,
 
 	return r;
 }
+
+PyObject* pyvle_nbreplicas(vle::vpz::Vpz* file)
+{
+	assert(file);
+
+	PyObject* r;
+	file->project().setReplica(10);
+	int nb = file->project().experiment().replicas().number();
+
+	r = PyInt_FromLong(nb);
+
+	return r;
+}
+
+PyObject* pyvle_replicas_combinations(vle::vpz::Vpz* file)
+{
+	assert(file);
+
+	manager::ManagerRunMono jrm(std::cerr, false);
+	//jrm.initRandomGenerator(*file);
+}
+

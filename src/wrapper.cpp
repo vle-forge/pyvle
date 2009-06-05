@@ -101,4 +101,6 @@ BOOST_PYTHON_MODULE(libpyvle)
     def("observable_port_attached_views", pyvle_observable_port_attached_views);
     def("dynamic_observables_list",pyvle_dynamic_observables_list);
     def("export",pyvle_export);
+    def("nbreplicas",pyvle_nbreplicas);
+    def("replacas_combinations",pyvle_replicas_combinations);
 }
