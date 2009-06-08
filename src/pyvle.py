@@ -196,11 +196,11 @@ class Vle:
 
 # manager
     def manager(self):
-		return libpyvle.manager(self.vpz)
+        return libpyvle.manager(self.vpz)
 
 # replicas
     def nbReplicas(self):
-		return libpyvle.nbreplicas(self.vpz)
+        return libpyvle.nbreplicas(self.vpz)
 
-    def replicasCombinations(self):
-		return libpyvle.replacas_combinations(self.vpz)
+    def combinations(self):
+        return libpyvle.combinations(self.vpz)

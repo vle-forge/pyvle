@@ -102,5 +102,5 @@ BOOST_PYTHON_MODULE(libpyvle)
     def("dynamic_observables_list",pyvle_dynamic_observables_list);
     def("export",pyvle_export);
     def("nbreplicas",pyvle_nbreplicas);
-    def("replacas_combinations",pyvle_replicas_combinations);
+    def("combinations",pyvle_combinations);
 }

@@ -193,5 +193,6 @@ PyObject* pyvle_export(vle::vpz::Vpz* file,
 		std::string view,
 		std::string type);
 PyObject* pyvle_nbreplicas(vle::vpz::Vpz* file);
-PyObject* pyvle_replicas_combinations(vle::vpz::Vpz* file);
+PyObject* pyvle_combinations(vle::vpz::Vpz* file);
+
 #endif
