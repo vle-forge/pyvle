@@ -1152,6 +1152,39 @@ PyObject* pyvle_export(vle::vpz::Vpz* file,
     return r;
 }
 
+PyObject* pyvle_export_manager(vle::vpz::Vpz* file,
+		       std::string location,
+		       std::string view,
+		       std::string type)
+{
+    assert(file);
+
+    PyObject* r;
+
+    vpz::View& v(file->project().experiment().views().get(view));
+    std::string o_tmp_name(v.output());
+    file->project().experiment().views().outputs().get(o_tmp_name).setLocalStream(location,type);
+
+    manager::ManagerRunMono jrm(std::cerr, false);
+
+    jrm.start(*file);
+
+    std::string ext;
+    if (type=="text") {
+	ext = ".dat";
+    } else if (type=="csv") {
+	ext = ".csv";
+    } else if (type=="rdata") {
+	ext = ".rdata";
+    }
+    std::string expname(file->project().experiment().name());
+    std::string filename(expname + "_" + view + ext);
+
+    r = PyString_FromString(filename.c_str());
+
+    return r;
+}
+
 PyObject* pyvle_nbreplicas(vle::vpz::Vpz* file)
 {
     assert(file);
@@ -1166,7 +1199,7 @@ PyObject* pyvle_nbreplicas(vle::vpz::Vpz* file)
 
 struct cond_t {
     cond_t() : sz(0), pos(0) { }
-    
+
     size_t  sz;
     size_t  pos;
 };
@@ -1220,7 +1253,7 @@ PyObject* pyvle_combinations(vle::vpz::Vpz* file)
     }
 
     r = PyList_New(combinationNumber);
-    
+
     size_t nb = 0;
 
     do {
@@ -1229,7 +1262,7 @@ PyObject* pyvle_combinations(vle::vpz::Vpz* file)
 
 	PyList_SetItem(r, nb, l);
 
-	vpz::ConditionList::const_iterator itOrig = 
+	vpz::ConditionList::const_iterator itOrig =
 	    cnds.conditionlist().begin();
 	vpz::ConditionValues::const_iterator
 	    itValueOrig = itOrig->second.conditionvalues().begin();
@@ -1242,7 +1275,7 @@ PyObject* pyvle_combinations(vle::vpz::Vpz* file)
 		PyList_SetItem(l, jcom, PyString_FromString(
 				   val.writeToString().c_str()));
 
-		itValueOrig++;		
+		itValueOrig++;
 		if (itValueOrig == itOrig->second.conditionvalues().end()) {
 		    itOrig++;
 		    itValueOrig = itOrig->second.conditionvalues().begin();
@@ -1256,12 +1289,12 @@ PyObject* pyvle_combinations(vle::vpz::Vpz* file)
 		    conditions[i].pos++;
 	} else {
 	    size_t sz = conditions.size() - 1;
-	    
+
 	    if (conditions[sz].pos != conditions[sz].sz - 1) {
 		conditions[sz].pos++;
 	    } else {
 		int i = sz;
-		
+
 		while (i >= 0) {
 		    if (conditions[i].pos == conditions[i].sz - 1) {
 			conditions[i].pos = 0;
@@ -1279,3 +1312,14 @@ PyObject* pyvle_combinations(vle::vpz::Vpz* file)
     return r;
 }
 
+PyObject* pyvle_experiment_get_name(vle::vpz::Vpz* file)
+{
+    assert(file);
+
+    PyObject* r;
+
+    std::string expname(file->project().experiment().name());
+    r = PyString_FromString(expname.c_str());
+
+    return r;
+}

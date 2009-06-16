@@ -194,6 +194,9 @@ class Vle:
     def export(self, location, view, type):
         return libpyvle.export(self.vpz, location, view, type)
 
+    def export_manager(self, location, view, type):
+        return libpyvle.export_manager(self.vpz, location, view, type)
+
 # manager
     def manager(self):
         return libpyvle.manager(self.vpz)
@@ -204,3 +207,7 @@ class Vle:
 
     def combinations(self):
         return libpyvle.combinations(self.vpz)
+
+# other
+    def experimentName(self):
+        return libpyvle.experiment_get_name(self.vpz)

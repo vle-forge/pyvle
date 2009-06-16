@@ -192,7 +192,12 @@ PyObject* pyvle_export(vle::vpz::Vpz* file,
 		std::string location,
 		std::string view,
 		std::string type);
+PyObject* pyvle_export_manager(vle::vpz::Vpz* file,
+		std::string location,
+		std::string view,
+		std::string type);
 PyObject* pyvle_nbreplicas(vle::vpz::Vpz* file);
 PyObject* pyvle_combinations(vle::vpz::Vpz* file);
+PyObject* pyvle_experiment_get_name(vle::vpz::Vpz* file);
 
 #endif
