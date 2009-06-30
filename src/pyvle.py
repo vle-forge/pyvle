@@ -3,6 +3,7 @@ import libpyvle
 class Vle:
     def __init__(self, filename):
         self.vpz = libpyvle.open(filename)
+        self.filename = filename;
 
     def save(self, filename):
         libpyvle.save(self.vpz, filename)
@@ -211,3 +212,6 @@ class Vle:
 # other
     def experimentName(self):
         return libpyvle.experiment_get_name(self.vpz)
+
+    def traceRunError(self):
+        return libpyvle.trace_run_error(self.filename)

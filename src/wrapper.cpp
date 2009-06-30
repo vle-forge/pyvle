@@ -105,4 +105,5 @@ BOOST_PYTHON_MODULE(libpyvle)
     def("nbreplicas",pyvle_nbreplicas);
     def("combinations",pyvle_combinations);
     def("experiment_get_name",pyvle_experiment_get_name);
+    def("trace_run_error",pyvle_trace_run_error);
 }

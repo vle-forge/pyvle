@@ -199,5 +199,5 @@ PyObject* pyvle_export_manager(vle::vpz::Vpz* file,
 PyObject* pyvle_nbreplicas(vle::vpz::Vpz* file);
 PyObject* pyvle_combinations(vle::vpz::Vpz* file);
 PyObject* pyvle_experiment_get_name(vle::vpz::Vpz* file);
-
+PyObject* pyvle_trace_run_error(const char* file);
 #endif

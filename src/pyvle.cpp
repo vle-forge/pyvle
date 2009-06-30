@@ -1323,3 +1323,47 @@ PyObject* pyvle_experiment_get_name(vle::vpz::Vpz* file)
 
     return r;
 }
+
+PyObject* pyvle_trace_run_error(const char* file)
+{
+	std::string m_out = "";
+	bool                    m_error = false;
+	devs::RootCoordinator   m_root;
+	std::string filename(file);
+	try {
+	        {
+	            m_out+=" - Open file.....................: ";
+	            vpz::Vpz vpz(filename);
+	            m_out+="ok<br/>";
+
+	            m_out+=" - Coordinator load models ......: ";
+	            m_root.load(vpz);
+	            m_out+="ok<br/>";
+
+	            m_out+=" - Clean project file ...........: ";
+	        }
+	        m_out+="ok<br/>";
+
+	        m_out+=" - Coordinator initializing .....: ";
+
+	        m_out+="ok<br/>";
+
+	        m_out+=" - Simulation run................: ";
+	        while (m_root.run()) {}
+	        m_out +="ok<br/>";
+
+	        m_out+=" - Coordinator cleaning .........: ";
+	        m_root.finish();
+	        m_out+="ok<br/>";
+	    } catch(const std::exception& e) {
+	        m_out+="<br/>/!\\ vle error reported: " +
+	        utils::demangle(typeid(e)) + "<br/>" + e.what();
+	        m_error = true;
+	    } catch(const Glib::Exception& e) {
+	        m_out+="<br/>/!\\ vle Glib error reported: " +
+	            utils::demangle(typeid(e)) + "<br/>" + e.what();
+	        m_error = true;
+	    }
+	return PyString_FromString(m_out.c_str());
+}
+
