@@ -534,18 +534,19 @@ PyObject* pyvle_dynamic_conditions_list(vle::vpz::Vpz* file,
     vpz::AtomicModelList::iterator it=atommods.begin();
 
     while (it != atommods.end()) {
-	if (it->second.dynamics() == name) {
-	    vpz::AtomicModel& a = it->second;
-	    vpz::Strings s = a.conditions();
-	    vpz::Strings::iterator sit;
-	    int size = s.size();
-	    r = PyList_New(size);
-	    int i = 0;
-	    for (sit = s.begin(); sit != s.end(); ++sit, ++i)
-		PyList_SetItem(r, i, PyString_FromString(sit->c_str()));
-	    return r;
-	}
-	++it;
+		if (it->second.dynamics() == name) {
+			vpz::AtomicModel& a = it->second;
+			vpz::Strings s = a.conditions();
+			vpz::Strings::iterator sit;
+			int size = s.size();
+			r = PyList_New(size);
+			int i = 0;
+			for (sit = s.begin(); sit != s.end(); ++sit, ++i) {
+				PyList_SetItem(r, i, PyString_FromString(sit->c_str()));
+			}
+			return r;
+		}
+		++it;
     }
 }
 
@@ -689,6 +690,28 @@ void pyvle_dynamic_set_language(vle::vpz::Vpz* file,
 
     vpz::Dynamic& dyn(file->project().dynamics().get(dynamicname));
     dyn.setLanguage(language);
+}
+
+PyObject* pyvle_dynamic_get_model_list(vle::vpz::Vpz* file,
+				     std::string dynamicname)
+{
+	 assert(file);
+
+	 PyObject* r;
+	 vpz::AtomicModelList& atommods(file->project().model().atomicModels());
+	 vpz::AtomicModelList::iterator it=atommods.begin();
+
+	 r = PyList_New(0);
+
+	 while (it != atommods.end()) {
+		if (it->second.dynamics() == dynamicname) {
+			std::string atomname = it->first->getName();
+			PyList_Append(r, PyString_FromString(atomname.c_str()));
+		}
+		++it;
+	}
+
+	 return r;
 }
 
 PyObject* pyvle_views_list(vle::vpz::Vpz* file)

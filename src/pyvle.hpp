@@ -118,6 +118,8 @@ void pyvle_dynamic_set_library(vle::vpz::Vpz* file,
 void pyvle_dynamic_set_language(vle::vpz::Vpz* file,
 				std::string dynamicname,
 				std::string language);
+PyObject* pyvle_dynamic_get_model_list(vle::vpz::Vpz* file,
+				std::string dynamicname);
 PyObject* pyvle_views_list(vle::vpz::Vpz* file);
 PyObject* pyvle_view_get_name(vle::vpz::Vpz* file,
 				std::string viewname);

@@ -70,6 +70,7 @@ BOOST_PYTHON_MODULE(libpyvle)
     def("dynamic_set_model", pyvle_dynamic_set_model);
     def("dynamic_set_library", pyvle_dynamic_set_library);
     def("dynamic_set_language", pyvle_dynamic_set_language);
+    def("dynamic_get_model_list", pyvle_dynamic_get_model_list);
     def("views_list", pyvle_views_list);
     def("view_get_name",pyvle_view_get_name);
     def("view_get_type",pyvle_view_get_type);
