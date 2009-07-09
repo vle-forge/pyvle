@@ -107,4 +107,10 @@ BOOST_PYTHON_MODULE(libpyvle)
     def("combinations",pyvle_combinations);
     def("experiment_get_name",pyvle_experiment_get_name);
     def("trace_run_error",pyvle_trace_run_error);
+    def("get_installed_packages",pyvle_get_installed_packages);
+    def("get_package_vpz_list",pyvle_get_package_vpz_list);
+    def("get_package_vpz_directory",pyvle_get_package_vpz_directory);
+    def("get_package_vpz",pyvle_get_package_vpz);
+    def("set_package_mode",pyvle_set_package_mode);
+    def("set_normal_mode",pyvle_set_normal_mode);
 }

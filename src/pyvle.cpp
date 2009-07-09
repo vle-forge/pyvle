@@ -28,9 +28,11 @@
 #include <vle/manager/LinearExperimentGenerator.hpp>
 #include <vle/value.hpp>
 #include <vle/utils.hpp>
+#include <vle/utils/Package.hpp>
 #include "convert.hpp"
 #include "pyvle.hpp"
 #include <boost/lexical_cast.hpp>
+#include <boost/filesystem.hpp>
 
 using namespace vle;
 
@@ -1390,3 +1392,72 @@ PyObject* pyvle_trace_run_error(const char* file)
 	return PyString_FromString(m_out.c_str());
 }
 
+PyObject* pyvle_get_installed_packages()
+{
+	PyObject* r;
+	r = PyList_New(0);
+
+	utils::PathList list = utils::CMakePackage::getInstalledPackages();
+	utils::PathList::const_iterator it = list.begin();
+
+	while (it != list.end()) {
+		PyList_Append(r, PyString_FromString(boost::filesystem::basename(*it).c_str()));
+		++it;
+	}
+
+	return r;
+}
+
+PyObject* pyvle_get_package_vpz_list(std::string name)
+{
+	PyObject* r;
+	r = PyList_New(0);
+
+	utils::CMakePackage pack(name);
+	utils::PathList list = pack.getInstalledExperiments();
+
+	utils::PathList::const_iterator it = list.begin();
+
+	while (it != list.end()) {
+		PyList_Append(r, PyString_FromString(boost::filesystem::basename(*it).c_str()));
+		++it;
+	}
+
+	return r;
+}
+
+PyObject* pyvle_get_package_vpz_directory(std::string name)
+{
+	PyObject* r;
+
+	utils::Path::path().setPackage(name);
+
+	r = PyString_FromString(utils::Path::path().getPackageExpDir().c_str());
+
+	utils::Path::path().setPackage("");
+
+	return r;
+}
+
+PyObject* pyvle_get_package_vpz(std::string name, std::string vpz)
+{
+	PyObject* r;
+
+	utils::Path::path().setPackage(name);
+
+	r = PyString_FromString(utils::Path::path().getPackageExpFile(vpz).c_str());
+
+	utils::Path::path().setPackage("");
+
+	return r;
+}
+
+void pyvle_set_package_mode(std::string name)
+{
+	utils::Path::path().setPackage(name);
+}
+
+void pyvle_set_normal_mode()
+{
+	utils::Path::path().setPackage("");
+}

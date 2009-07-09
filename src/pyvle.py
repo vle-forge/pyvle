@@ -218,3 +218,37 @@ class Vle:
 
     def traceRunError(self):
         return libpyvle.trace_run_error(self.filename)
+
+    def setPackageMode(self, name):
+        libpyvle.set_package_mode(name)
+
+    def setNormalMode(self):
+        libpyvle.set_normal_mode()
+
+
+class VleUtils:
+
+# packages
+    def getInstalledPackages(self):
+        return libpyvle.get_installed_packages()
+
+    def setPackageMode(self, name):
+        libpyvle.set_package_mode(name)
+
+    def setNormalMode(self):
+        libpyvle.set_normal_mode()
+
+class VlePackage:
+
+    def __init__(self, name):
+        self.name = name
+
+    def getVpzList(self):
+        return libpyvle.get_package_vpz_list(self.name)
+
+    def getVpzDirectory(self):
+        return libpyvle.get_package_vpz_directory(self.name)
+
+    def getVpz(self, vpz):
+        return libpyvle.get_package_vpz(self.name, vpz)
+
