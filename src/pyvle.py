@@ -117,6 +117,15 @@ class Vle:
     def getOutputPlugin(self, output):
         return libpyvle.output_get_plugin(self.vpz, output)
 
+    def setOutputPlugin(self, output, location, format, plugin):
+        libpyvle.output_set_plugin(self.vpz, output, location, format, plugin)
+
+    def getOutputFormat(self, output):
+        return libpyvle.output_get_format(self.vpz, output)
+
+    def getOutputLocation(self, output):
+        return libpyvle.output_get_location(self.vpz, output)
+
 # observables
     def observables(self):
         return libpyvle.observables_list(self.vpz)

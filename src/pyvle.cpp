@@ -1461,3 +1461,36 @@ void pyvle_set_normal_mode()
 {
 	utils::Path::path().setPackage("");
 }
+
+void pyvle_set_output_plugin(vle::vpz::Vpz* file,
+				  std::string outputname,
+				  std::string location,
+				  std::string format,
+				  std::string plugin)
+{
+    assert(file);
+
+    vpz::Output& out(file->project().experiment().views().outputs().get(outputname));
+    if (format == "local")
+    	out.setLocalStream(location, plugin);
+    else
+    	out.setDistantStream(location, plugin);
+}
+
+PyObject* pyvle_get_output_format(vle::vpz::Vpz* file,
+									std::string outputname)
+{
+	assert(file);
+
+	vpz::Output& out(file->project().experiment().views().outputs().get(outputname));
+	return PyString_FromString(out.streamformat().c_str());
+}
+
+PyObject* pyvle_get_output_location(vle::vpz::Vpz* file,
+									std::string outputname)
+{
+	assert(file);
+
+	vpz::Output& out(file->project().experiment().views().outputs().get(outputname));
+	return PyString_FromString(out.location().c_str());
+}

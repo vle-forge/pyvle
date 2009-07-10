@@ -113,4 +113,7 @@ BOOST_PYTHON_MODULE(libpyvle)
     def("get_package_vpz",pyvle_get_package_vpz);
     def("set_package_mode",pyvle_set_package_mode);
     def("set_normal_mode",pyvle_set_normal_mode);
+    def("output_set_plugin",pyvle_set_output_plugin);
+    def("output_get_format",pyvle_get_output_format);
+    def("output_get_location",pyvle_get_output_location);
 }

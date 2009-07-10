@@ -208,4 +208,13 @@ PyObject* pyvle_get_package_vpz_directory(std::string name);
 PyObject* pyvle_get_package_vpz(std::string name, std::string vpz);
 void pyvle_set_package_mode(std::string name);
 void pyvle_set_normal_mode();
+void pyvle_set_output_plugin(vle::vpz::Vpz* file,
+				  std::string outputname,
+				  std::string location,
+				  std::string format,
+				  std::string plugin);
+PyObject* pyvle_get_output_format(vle::vpz::Vpz* file,
+									std::string outputname);
+PyObject* pyvle_get_output_location(vle::vpz::Vpz* file,
+									std::string outputname);
 #endif
