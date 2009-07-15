@@ -217,4 +217,6 @@ PyObject* pyvle_get_output_format(vle::vpz::Vpz* file,
 									std::string outputname);
 PyObject* pyvle_get_output_location(vle::vpz::Vpz* file,
 									std::string outputname);
+PyObject* pyvle_run_combination(vle::vpz::Vpz* file,
+								int comb);
 #endif

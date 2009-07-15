@@ -234,6 +234,8 @@ class Vle:
     def setNormalMode(self):
         libpyvle.set_normal_mode()
 
+    def runCombination(self, comb):
+        return libpyvle.run_combination(self.vpz, comb)
 
 class VleUtils:
 

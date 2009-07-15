@@ -116,4 +116,5 @@ BOOST_PYTHON_MODULE(libpyvle)
     def("output_set_plugin",pyvle_set_output_plugin);
     def("output_get_format",pyvle_get_output_format);
     def("output_get_location",pyvle_get_output_location);
+    def("run_combination",pyvle_run_combination);
 }
