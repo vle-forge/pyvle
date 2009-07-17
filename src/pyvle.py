@@ -218,6 +218,15 @@ class Vle:
     def nbReplicas(self):
         return libpyvle.nbreplicas(self.vpz)
 
+    def setNbReplicas(self, nb):
+        libpyvle.set_nb_replicas(self.vpz, nb)
+
+    def seedReplicas(self):
+        return libpyvle.get_seed_replicas(self.vpz)
+
+    def setSeedReplicas(self, seed):
+        libpyvle.set_seed_replicas(self.vpz, seed)
+
     def combinations(self):
         return libpyvle.combinations(self.vpz)
 

@@ -1360,23 +1360,23 @@ PyObject* pyvle_trace_run_error(const char* file)
 	    m_out+=" - Open file.....................: ";
 	    vpz::Vpz vpz(filename);
 	    m_out+="ok<br/>";
-	    
+
 	    m_out+=" - Coordinator load models ......: ";
 	    m_root.load(vpz);
 	    m_out+="ok<br/>";
-	    
+
 	    m_out+=" - Clean project file ...........: ";
 	}
 	m_out+="ok<br/>";
-	
+
 	m_out+=" - Coordinator initializing .....: ";
-	
+
 	m_out+="ok<br/>";
-	
+
 	m_out+=" - Simulation run................: ";
 	while (m_root.run()) {}
 	m_out +="ok<br/>";
-	
+
 	m_out+=" - Coordinator cleaning .........: ";
 	m_root.finish();
 	m_out+="ok<br/>";
@@ -1396,17 +1396,17 @@ PyObject* pyvle_get_installed_packages()
 {
     PyObject* r;
     r = PyList_New(0);
-    
+
     utils::PathList list = utils::CMakePackage::getInstalledPackages();
     utils::PathList::const_iterator it = list.begin();
-    
+
     while (it != list.end()) {
-	PyList_Append(r, 
+	PyList_Append(r,
 		      PyString_FromString(
 			  boost::filesystem::basename(*it).c_str()));
 	++it;
     }
-    
+
     return r;
 }
 
@@ -1414,45 +1414,45 @@ PyObject* pyvle_get_package_vpz_list(std::string name)
 {
     PyObject* r;
     r = PyList_New(0);
-    
+
     utils::CMakePackage pack(name);
     utils::PathList list = pack.getInstalledExperiments();
-    
+
     utils::PathList::const_iterator it = list.begin();
-    
+
     while (it != list.end()) {
-	PyList_Append(r, 
+	PyList_Append(r,
 		      PyString_FromString(
 			  boost::filesystem::basename(*it).c_str()));
 	++it;
     }
-    
+
     return r;
 }
 
 PyObject* pyvle_get_package_vpz_directory(std::string name)
 {
     PyObject* r;
-    
+
     utils::Path::path().setPackage(name);
-    
+
     r = PyString_FromString(utils::Path::path().getPackageExpDir().c_str());
-    
+
     utils::Path::path().setPackage("");
-    
+
     return r;
 }
 
 PyObject* pyvle_get_package_vpz(std::string name, std::string vpz)
 {
     PyObject* r;
-    
+
     utils::Path::path().setPackage(name);
-    
+
     r = PyString_FromString(utils::Path::path().getPackageExpFile(vpz).c_str());
-    
+
     utils::Path::path().setPackage("");
-    
+
     return r;
 }
 
@@ -1473,7 +1473,7 @@ void pyvle_set_output_plugin(vle::vpz::Vpz* file,
 			     std::string plugin)
 {
     assert(file);
-    
+
     vpz::Output& out(file->project().experiment().views().outputs().
 		     get(outputname));
     if (format == "local")
@@ -1486,7 +1486,7 @@ PyObject* pyvle_get_output_format(vle::vpz::Vpz* file,
 				  std::string outputname)
 {
     assert(file);
-    
+
     vpz::Output& out(file->project().experiment().views().outputs().
 		     get(outputname));
     return PyString_FromString(out.streamformat().c_str());
@@ -1496,7 +1496,7 @@ PyObject* pyvle_get_output_location(vle::vpz::Vpz* file,
 				    std::string outputname)
 {
     assert(file);
-    
+
     vpz::Output& out(file->project().experiment().views().outputs().
 		     get(outputname));
     return PyString_FromString(out.location().c_str());
@@ -1506,26 +1506,26 @@ PyObject* pyvle_run_combination(vle::vpz::Vpz* file,
 								int comb)
 {
     assert(file);
-    
+
     vpz::Vpz tmp_file(*file);
-    
+
     std::vector < cond_t > conditions;
     const vpz::Experiment& exp = tmp_file.project().experiment();
     const vpz::Conditions& cnds = exp.conditions();
     const vpz::Experiment& orig_exp = file->project().experiment();
     const vpz::Conditions& orig_cnds = orig_exp.conditions();
     vpz::ConditionList::const_iterator it;
-    
+
     for (it = cnds.conditionlist().begin();
 	 it != cnds.conditionlist().end(); ++it) {
 	const vpz::Condition& cnd = it->second;
 	vpz::ConditionValues::const_iterator jt;
-	
+
 	if (not cnd.conditionvalues().empty()) {
 	    for (jt = cnd.conditionvalues().begin();
 		 jt != cnd.conditionvalues().end(); ++jt) {
 		conditions.push_back(cond_t());
-		
+
 		conditions[conditions.size() - 1].sz = jt->second->size();
 		conditions[conditions.size() - 1].pos = 0;
 	    }
@@ -1535,9 +1535,9 @@ PyObject* pyvle_run_combination(vle::vpz::Vpz* file,
 	    conditions[conditions.size() - 1].pos = 0;
 	}
     }
-    
+
     size_t combinationNumber = 1;
-    
+
     if (exp.combination() == "linear") {
 	std::vector < cond_t >::const_iterator it;
 	for (it = conditions.begin(); it != conditions.end(); ++it) {
@@ -1552,9 +1552,9 @@ PyObject* pyvle_run_combination(vle::vpz::Vpz* file,
 	    combinationNumber *= it->sz;
 	}
     }
-    
+
     size_t nb = 0;
-    
+
     vpz::ConditionList::const_iterator itOrig =
 	cnds.conditionlist().begin();
     vpz::ConditionList::const_iterator itOrig_o =
@@ -1563,7 +1563,7 @@ PyObject* pyvle_run_combination(vle::vpz::Vpz* file,
 	itValueOrig = itOrig->second.conditionvalues().begin();
     vpz::ConditionValues::const_iterator
 	itValueOrig_o = itOrig_o->second.conditionvalues().begin();
-    
+
     //Emptying tmpfile condvalues
     for (size_t jcom = 0; jcom < conditions.size(); ++jcom) {
 	if (not itOrig->second.conditionvalues().empty()) {
@@ -1576,13 +1576,13 @@ PyObject* pyvle_run_combination(vle::vpz::Vpz* file,
 	    }
 	}
     }
-    
+
     do {
 	itOrig = cnds.conditionlist().begin();
 	itValueOrig = itOrig->second.conditionvalues().begin();
 	itOrig_o = orig_cnds.conditionlist().begin();
 	itValueOrig_o = itOrig_o->second.conditionvalues().begin();
-	
+
 	for (size_t jcom = 0; jcom < conditions.size(); ++jcom) {
 	    if (not itOrig_o->second.conditionvalues().empty()) {
 		size_t index = conditions[jcom].pos;
@@ -1602,19 +1602,19 @@ PyObject* pyvle_run_combination(vle::vpz::Vpz* file,
 		}
 	    }
 	}
-	
+
 	if (exp.combination() == "linear") {
 	    for(size_t i=0; i < conditions.size(); ++i)
 		if (conditions[i].sz != 1)
 		    conditions[i].pos++;
 	} else {
 	    size_t sz = conditions.size() - 1;
-	    
+
 	    if (conditions[sz].pos != conditions[sz].sz - 1) {
 		conditions[sz].pos++;
 	    } else {
 		int i = sz;
-		
+
 		while (i >= 0) {
 		    if (conditions[i].pos == conditions[i].sz - 1) {
 			conditions[i].pos = 0;
@@ -1625,19 +1625,44 @@ PyObject* pyvle_run_combination(vle::vpz::Vpz* file,
 		    }
 		}
 	    }
-	    
+
 	}
 	++nb;
     } while (nb < combinationNumber);
-    
+
     try {
 	manager::RunQuiet jrm;
-	
+
 	jrm.start(tmp_file);
 	const oov::OutputMatrixViewList& result(jrm.outputs());
-	
+
 	return pyvle_convert_dataframe(result);
     } catch(const std::exception& e) {
 	return NULL;
     }
+}
+
+void pyvle_set_nbreplicas(vle::vpz::Vpz* file,
+							int number)
+{
+	assert(file);
+
+	file->project().experiment().replicas().setNumber(number);
+}
+
+PyObject* pyvle_get_seedreplicas(vle::vpz::Vpz* file)
+{
+	assert(file);
+
+	long seed = file->project().experiment().replicas().seed();
+
+	return PyInt_FromLong(seed);
+}
+
+void pyvle_set_seedreplicas(vle::vpz::Vpz* file,
+							long number)
+{
+	assert(file);
+
+	file->project().experiment().replicas().setSeed(number);
 }

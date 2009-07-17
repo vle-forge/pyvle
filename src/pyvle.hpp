@@ -219,4 +219,9 @@ PyObject* pyvle_get_output_location(vle::vpz::Vpz* file,
 									std::string outputname);
 PyObject* pyvle_run_combination(vle::vpz::Vpz* file,
 								int comb);
+void pyvle_set_nbreplicas(vle::vpz::Vpz* file,
+							int number);
+PyObject* pyvle_get_seedreplicas(vle::vpz::Vpz* file);
+void pyvle_set_seedreplicas(vle::vpz::Vpz* file,
+							long number);
 #endif
