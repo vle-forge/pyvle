@@ -29,11 +29,16 @@
     library.dynam("rvle", pkg, lib)
 }
 
-rvle.open <- function(file)
+rvle.open <- function(file, pkg = "")
 {
     stopifnot(is.character(file))
+    stopifnot(is.character(pkg))
 
-    x <- .Call("open", file, PACKAGE="rvle")
+    if (pkg == "")
+      x <- .Call("open", file, PACKAGE="rvle")
+    else
+      x <- .Call("open_pkg", file, pkg, PACKAGE="rvle")
+    
     stopifnot(!is.null(x))
     class(x) <- 'rvle'
     return(x)

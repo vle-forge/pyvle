@@ -29,9 +29,11 @@
 #include <vle/manager.hpp>
 #include <vle/value.hpp>
 #include <vle/oov.hpp>
+#include <vle/utils.hpp>
 #include <cassert>
 
 using namespace vle;
+using namespace utils;
 
 //
 // C++ utilities
@@ -52,6 +54,23 @@ static void rvle_build_matrix(const oov::OutputMatrixViewList& view,
 void rvle_init()
 {
     vle::manager::init();
+}
+
+rvle_t rvle_pkg_open(const char* pkgname, const char* filename)
+{
+    assert(pkgname);
+    assert(filename);
+
+    vpz::Vpz*  file = 0;
+
+    try {
+        Package::package().select(pkgname);
+	std::string filepath = Path::path().getPackageExpFile(filename);
+        file = new vpz::Vpz(filepath);
+        return file;
+    } catch(const std::exception& e) {
+        return NULL;
+    }
 }
 
 rvle_t rvle_open(const char* filename)

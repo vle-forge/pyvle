@@ -36,6 +36,7 @@
  */
 
 static SEXP r_rvle_open(SEXP name);
+static SEXP r_rvle_pkg_open(SEXP name, SEXP pkg);
 static SEXP r_rvle_run(SEXP rvle);
 static SEXP r_rvle_run_matrix(SEXP rvle);
 static SEXP r_rvle_manager(SEXP rvle);
@@ -72,6 +73,7 @@ static void r_rvle_save(SEXP rvle, SEXP file);
 
 R_CallMethodDef callMethods[] = {
         { "open", (DL_FUNC) r_rvle_open, 1},
+        { "open_pkg", (DL_FUNC) r_rvle_pkg_open, 2},
         { "run", (DL_FUNC) r_rvle_run, 1},
         { "run_matrix", (DL_FUNC) r_rvle_run_matrix, 1},
         { "run_manager", (DL_FUNC) r_rvle_manager, 1},
@@ -131,6 +133,25 @@ SEXP r_rvle_open(SEXP name)
         void* p = (void*) rvle_open(CHAR(STRING_ELT(name, 0)));
         if (!p) {
                 Rf_error("RVLE: unable to open %s", CHAR(STRING_ELT(name, 0)));
+        } else {
+                PROTECT(r = R_MakeExternalPtr(p, R_NilValue, R_NilValue));
+                R_RegisterCFinalizer(r, (R_CFinalizer_t) r_rvle_delete);
+                UNPROTECT(1);
+        }
+
+        return r;
+}
+
+SEXP r_rvle_pkg_open(SEXP name, SEXP pkg)
+{
+        SEXP r = R_NilValue;
+
+        void* p = (void*) rvle_pkg_open(CHAR(STRING_ELT(pkg, 0)),
+					CHAR(STRING_ELT(name, 0)));
+        if (!p) {
+                Rf_error("RVLE: unable to open %s from package %s",
+			 CHAR(STRING_ELT(name, 0)),
+			 CHAR(STRING_ELT(pkg, 0)));
         } else {
                 PROTECT(r = R_MakeExternalPtr(p, R_NilValue, R_NilValue));
                 R_RegisterCFinalizer(r, (R_CFinalizer_t) r_rvle_delete);

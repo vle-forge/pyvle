@@ -51,6 +51,14 @@ void rvle_init();
 
 /**
  * @brief Open the file vpz filename using vpz library.
+ * @param filename The vpz file to load with his path.
+ * @param pkgname The package name of the file.
+ * @return A rvle_t object or NULL if error.
+ */
+rvle_t rvle_pkg_open(const char* pkgname, const char* filename);
+
+/**
+ * @brief Open the file vpz filename using vpz library.
  * @param filename The vpz file to laod with his path.
  * @return A rvle_t object or NULL if error.
  */
