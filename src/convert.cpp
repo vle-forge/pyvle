@@ -22,7 +22,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include <vle/manager.hpp>
 #include <vle/oov.hpp>
 #include <vle/value.hpp>
@@ -232,34 +231,53 @@ SEXP rvle_convert_matrix(rvle_output_t out)
 
 SEXP rvle_convert_vectorvalue(rvle_output_t out)
 {
-    SEXP sexplst;
+    SEXP sexplst = R_NilValue;
 
     value::VectorValue* lst(reinterpret_cast < value::VectorValue* >(out));
 
-    PROTECT(sexplst = NEW_NUMERIC(lst->size()));
-    value::VectorValue::const_iterator it;
+    value::VectorValue::const_iterator it = lst->begin();
+
+    switch ((*it)->getType()) {
+    case value::Value::BOOLEAN:
+	PROTECT(sexplst = NEW_LOGICAL(lst->size()));
+	break;
+    case value::Value::DOUBLE:
+	PROTECT(sexplst = NEW_NUMERIC(lst->size()));
+	break;
+    case value::Value::INTEGER:
+	PROTECT(sexplst = NEW_INTEGER(lst->size()));
+	break;
+    case value::Value::STRING:
+	PROTECT(sexplst = NEW_CHARACTER(lst->size()));
+	break;
+    default:
+	break;
+    }
+
     int n;
     for (it = lst->begin(), n = 0; it != lst->end(); ++it, ++n) {
         if (*it) {
             switch ((*it)->getType()) {
             case value::Value::BOOLEAN:
-                REAL(sexplst)[n] = (double) value::toBoolean(*it);
+                LOGICAL(sexplst)[n] = (bool)value::toBoolean(*it);
                 break;
             case value::Value::DOUBLE:
                 REAL(sexplst)[n] = value::toDouble(*it);
                 break;
             case value::Value::INTEGER:
-                REAL(sexplst)[n] = value::toInteger(*it);
+                INTEGER(sexplst)[n] = value::toInteger(*it);
+                break;
+	    case value::Value::STRING:
+		SET_STRING_ELT(sexplst, n, mkChar(value::toString(*it).c_str()));
                 break;
             default:
-                REAL(sexplst)[n] = NA_REAL;
                 break;
             }
-        } else {
-            REAL(sexplst)[n] = NA_REAL;
-        }
+	}
     }
-    UNPROTECT(1);
+    if (sexplst != R_NilValue) {
+	UNPROTECT(1);
+    }
     return sexplst;
 }
 
