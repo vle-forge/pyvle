@@ -1,10 +1,10 @@
 \name{rvle}
-\alias{rvle.experiment_set_duration}
+\alias{rvle.setDuration}
 \title{Set the duration of the experiment.}
 \description{Set the duration of the experiment.}
-\usage{experiment_set_duration(x, value)}
+\usage{rvle.setDuration(self, value)}
 \arguments{
-        \item{x}{handle of the rvle}
+        \item{self}{handle of the rvle}
         \item{value}{a real to set the duration}
 }
 \keyword{models}

@@ -3,9 +3,9 @@
 \title{Use the handle of rvle to launch a simulation.}
 \description{Use the handle of rvle to launch a simulation. Returns a
 dataframe.}
-\usage{run(f)}
+\usage{rvle.run(self)}
 \arguments{
-	\item{f}{handle of rvle}
+	\item{self}{handle of rvle}
 }
 \keyword{models}
 \keyword{optimize}

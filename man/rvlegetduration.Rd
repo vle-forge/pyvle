@@ -1,10 +1,10 @@
 \name{rvle}
-\alias{rvle.experiment_get_duration}
+\alias{rvle.getDuration}
 \title{Get the duration of the experiment.}
 \description{Get the duration of the experiment.}
-\usage{experiment_set_duration(f)}
+\usage{rvle.getDuration(self)}
 \arguments{
-        \item{f}{handle of the rvle}
+        \item{self}{handle of the rvle}
 }
 \keyword{models}
 \keyword{optimize}

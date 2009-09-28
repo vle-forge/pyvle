@@ -1,10 +1,10 @@
 \name{rvle}
-\alias{rvle.experiment_get_seed}
+\alias{rvle.getSeed}
 \title{Get the seed of the experiment.}
 \description{Get the seed of the experiment.}
-\usage{experiment_get_seed(f)}
+\usage{rvle.getSeed(self)}
 \arguments{
-        \item{f}{handle of the rvle}
+        \item{self}{handle of the rvle}
 }
 \keyword{models}
 \keyword{optimize}

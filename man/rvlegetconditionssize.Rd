@@ -1,10 +1,10 @@
 \name{rvle}
-\alias{rvle.condition_size}
+\alias{rvle.getConditionsSize}
 \title{Get the number of condition in Vpz file.}
 \description{Get the number of condition in Vpz file.}
-\usage{condition_size(f)}
+\usage{rvle.getConditionsSize(self)}
 \arguments{
-	\item{f}{handle of the rvle}
+	\item{self}{handle of the rvle}
 }
 \keyword{models}
 \keyword{optimize}

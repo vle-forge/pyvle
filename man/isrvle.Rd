@@ -2,9 +2,9 @@
 \alias{is.rvle}
 \title{Check if an object is an rvle handle.}
 \description{Check if an object is an rvle handle.}
-\usage{is.rvle(f)}
+\usage{is.rvle(self)}
 \arguments{
-	\item{f}{reference to an object to test.}
+	\item{self}{reference to an object to test.}
 }
 \keyword{models}
 \keyword{optimize}

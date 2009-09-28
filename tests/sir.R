@@ -2,7 +2,7 @@ library(RUnit)
 library(rvle)
 f <- rvle.open('sir.vpz')
 
-cnd <- rvle.condition_list(f)
+cnd <- rvle.listConditions(f)
 checkEquals(cnd[1], "cond_sir")
 
 result <- rvle.run(f)
@@ -19,7 +19,7 @@ checkEqualsNumeric(view1[[3]][[2000]], 4.973883e+02, tolerance=1e-5)
 checkEqualsNumeric(view1[[4]][[2000]], 3.457524, tolerance=1e-5)
 
 # show port list
-ports <- rvle.condition_port_list(f, cnd)
+ports <- rvle.listConditionPorts(f, cnd)
 checkEquals(ports[1], "a")
 checkEquals(ports[2], "active")
 checkEquals(ports[3], "dependance")
@@ -28,8 +28,8 @@ checkEquals(ports[5], "threshold")
 checkEquals(ports[6], "variables")
 
 # change condition
-checkEqualsNumeric(rvle.condition_show(f, cnd, "a"), 0.5, tolerance=1e-5)
-rvle.condition_set_real(f, cnd, "a", 0.6)
+checkEqualsNumeric(rvle.getConditionPortValues(f, cnd, "a"), 0.5, tolerance=1e-5)
+rvle.setRealCondition(f, cnd, "a", 0.6)
 
 # get the first view
 result <- rvle.run(f)
@@ -43,36 +43,36 @@ checkEqualsNumeric(view1[[3]][[2000]], 4.927206e+02, tolerance=1e-5)
 checkEqualsNumeric(view1[[4]][[2000]], 8.235717, tolerance=1e-5)
 
 # check the seed
-seed = rvle.experiment_get_seed(f)
+seed = rvle.getSeed(f)
 checkEquals(seed, 12379843)
-rvle.experiment_set_seed(f, 12345678)
-seed = rvle.experiment_get_seed(f)
+rvle.setSeed(f, 12345678)
+seed = rvle.getSeed(f)
 checkEquals(seed, 12345678)
 
 # check the duration
-duration = rvle.experiment_get_duration(f)
+duration = rvle.getDuration(f)
 checkEqualsNumeric(duration, 20, tolerance=1e-5)
-rvle.experiment_set_duration(f, 123.321)
-duration = rvle.experiment_get_duration(f)
+rvle.setDuration(f, 123.321)
+duration = rvle.getDuration(f)
 checkEqualsNumeric(duration, 123.321, tolerance=1e-5)
 
 # check the exeprimental frames
-rvle.experiment_set_duration(f, 0.25)
-rvle.experiment_linear_combination(f, 1, 5)
-result = rvle.run_manager(f)
+rvle.setDuration(f, 0.25)
+rvle.setLinearCombination(f, 1, 5)
+result = rvle.runManager(f)
 result
 checkEqualsNumeric(dim(result)[1], 5)
 checkEqualsNumeric(dim(result)[2], 1)
 
-rvle.condition_add_real(f, "cond_sir", "a", 0.6)
-rvle.condition_add_real(f, "cond_sir", "r", 0.006)
-result = rvle.run_manager(f)
+rvle.addRealCondition(f, "cond_sir", "a", 0.6)
+rvle.addRealCondition(f, "cond_sir", "r", 0.006)
+result = rvle.runManager(f)
 result
 checkEqualsNumeric(dim(result)[1], 5)
 checkEqualsNumeric(dim(result)[2], 2)
 
-rvle.experiment_total_combination(f, 1, 5)
-result = rvle.run_manager(f)
+rvle.setTotalCombination(f, 1, 5)
+result = rvle.runManager(f)
 result
 checkEqualsNumeric(dim(result)[1], 5)
 checkEqualsNumeric(dim(result)[2], 4)

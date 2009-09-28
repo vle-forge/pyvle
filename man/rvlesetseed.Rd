@@ -1,10 +1,10 @@
 \name{rvle}
-\alias{rvle.experiment_set_seed}
+\alias{rvle.setSeed}
 \title{Set the seed of the experiment.}
 \description{Set the seed of the experiment.}
-\usage{experiment_set_seed(x, value)}
+\usage{setSeed(self, value)}
 \arguments{
-        \item{x}{handle of the rvle}
+        \item{self}{handle of the rvle}
         \item{value}{an integer to set the seed}
 }
 \keyword{models}

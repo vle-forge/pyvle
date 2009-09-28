@@ -1,10 +1,10 @@
 \name{rvle}
-\alias{rvle.condition_add_string}
+\alias{rvle.addStringCondition}
 \title{Add a string to the specified condition port.}
 \description{Add an string to the specified condition port.}
-\usage{condition_add_string(f, condition, port, value)}
+\usage{rvle.addStringCondition(self, condition, port, value)}
 \arguments{
-        \item{f}{handle of the rvle}
+        \item{self}{handle of the rvle}
         \item{condition}{string representation of the condition}
         \item{port}{string representation of the condition's port}
         \item{value}{a string}
