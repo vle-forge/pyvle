@@ -33,19 +33,30 @@ BOOST_PYTHON_MODULE(libpyvle)
     class_<vle::vpz::Vpz>("Vpz");
 
     def("open", pyvle_open, return_value_policy<manage_new_object>());
+    def("save", pyvle_save);
     def("delete", pyvle_delete);
+    def("experiment_set_begin", pyvle_experiment_set_begin);
+    def("experiment_get_begin", pyvle_experiment_get_begin);
+    def("experiment_set_duration", pyvle_experiment_set_duration);
+    def("experiment_get_duration", pyvle_experiment_get_duration);
+    def("experiment_set_seed", pyvle_experiment_set_seed);
+    def("experiment_get_seed", pyvle_experiment_get_seed);
+    def("experiment_set_linear_combination",
+	pyvle_experiment_set_linear_combination);
+    def("experiment_set_total_combination",
+	pyvle_experiment_set_total_combination);
     def("run", pyvle_run);
     def("run_matrix", pyvle_run_matrix);
-    def("manager", pyvle_manager);
-    def("manager_matrix", pyvle_manager_matrix);
-    def("manager_thread", pyvle_manager_thread);
-    def("manager_thread_matrix", pyvle_manager_thread_matrix);
-    def("manager_cluster", pyvle_manager_cluster);
-    def("manager_cluster_matrix", pyvle_manager_cluster_matrix);
+    def("run_manager", pyvle_run_manager);
+    def("run_manager_matrix", pyvle_run_manager_matrix);
+    def("run_manager_thread", pyvle_run_manager_thread);
+    def("run_manager_thread_matrix", pyvle_run_manager_thread_matrix);
+    def("run_manager_cluster", pyvle_run_manager_cluster);
+    def("run_manager_cluster_matrix", pyvle_run_manager_cluster_matrix);
     def("condition_list", pyvle_condition_list);
     def("condition_show", pyvle_condition_show);
     def("condition_port_list", pyvle_condition_port_list);
-    def("condition_clear", pyvle_condition_clear);
+    def("condition_port_clear", pyvle_condition_port_clear);
     def("condition_add_real", pyvle_condition_add_real);
     def("condition_add_integer", pyvle_condition_add_integer);
     def("condition_add_string", pyvle_condition_add_string);
@@ -57,11 +68,6 @@ BOOST_PYTHON_MODULE(libpyvle)
     def("condition_delete_value",pyvle_condition_delete_value);
     def("atomic_model_conditions_list",pyvle_atomic_model_conditions_list);
     def("dynamic_conditions_list",pyvle_dynamic_conditions_list);
-    def("experiment_set_duration", pyvle_experiment_set_duration);
-    def("experiment_get_duration", pyvle_experiment_get_duration);
-    def("experiment_set_seed", pyvle_experiment_set_seed);
-    def("experiment_get_seed", pyvle_experiment_get_seed);
-    def("save", pyvle_save);
     def("dynamics_list", pyvle_dynamics_list);
     def("dynamic_get_name", pyvle_dynamic_get_name);
     def("dynamic_get_model", pyvle_dynamic_get_model);

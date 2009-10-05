@@ -8,39 +8,95 @@ class Vle:
     def save(self, filename):
         libpyvle.save(self.vpz, filename)
 
+# begin of experiments
+    def setBegin(self, date):
+        libpyvle.experiment_set_begin(date)
+
+    def getBegin(self, date):
+        return libpyvle.experiment_get_begin()
+
 # duration of experiments
     def setDuration(self, value):
         libpyvle.experiment_set_duration(self.vpz, value)
 
-    def duration(self):
+    def getDuration(self):
         return libpyvle.experiment_get_duration(self.vpz)
 
 # seed of experiments
     def setSeed(self, value):
         libpyvle.experiment_set_seed(self.vpz, value)
 
-    def seed(self):
+    def getSeed(self):
         return libpyvle.experiment_get_seed(self.vpz)
+
+# replicas
+    def setLinearCombination(self, seed, replicas):
+        return libpyvle.experiment_set_linear_combination(
+            self.vpz, seed, replicas)
+
+    def setTotalCombination(self, seed, replicas):
+        return libpyvle.experiment_set_total_combination(
+            self.vpz, seed, replicas)
+
+#################
+## pyvle specific
+    def getReplicaNumber(self):
+        return libpyvle.nbreplicas(self.vpz)
+
+    def setReplicaNumber(self, nb):
+        libpyvle.set_nb_replicas(self.vpz, nb)
+
+    def getReplicaSeed(self):
+        return libpyvle.get_seed_replicas(self.vpz)
+
+    def setReplicaSeed(self, seed):
+        libpyvle.set_seed_replicas(self.vpz, seed)
+
+    def getCombinations(self):
+        return libpyvle.combinations(self.vpz)
+##
+#################
 
 # execution of experiments
     def run(self):
         return libpyvle.run(self.vpz)
 
-    def run_matrix(self):
+    def runMatrix(self):
         return libpyvle.run_matrix(self.vpz)
 
+    def runManager(self):
+        return libpyvle.run_manager(self.vpz)
+
+    def runManagerMatrix(self):
+        return libpyvle.run_manager_matrix(self.vpz)
+
+    def runManagerThread(self, th):
+        return libpyvle.run_manager_thread(self.vpz, th)
+
+    def runManagerThreadMatrix(self, th):
+        return libpyvle.run_manager_thread_matrix(self.vpz, th)
+
+    def runManagerCluster(self):
+        return libpyvle.run_manager_cluster(self.vpz)
+
+    def runManagerClusterMatrix(self):
+        return libpyvle.run_manager_cluster_matrix(self.vpz)
+
 # conditions
-    def conditions(self):
+    def listConditions(self):
         return libpyvle.condition_list(self.vpz)
 
-    def conditionPorts(self, name):
+    def listConditionPorts(self, name):
         return libpyvle.condition_port_list(self.vpz, name)
 
-    def clearConditions(self):
-        libpyvle.condition_clear(self.vpz)
+    def clearConditionPort(self, name, port):
+        libpyvle.condition_clear_port(self.vpz, name, port);
 
-    def showCondition(self, name, port):
+    def getConditionPortValues(self, name, port):
         return libpyvle.condition_show(self.vpz, name, port)
+
+    def getConditionPortValue(self, name, port, i):
+        return libpyvle.condition_get_value(self.vpz, name, port, i)
 
     def addRealCondition(self, name, port, value):
         libpyvle.condition_add_real(self.vpz, name, port, value)
@@ -54,14 +110,13 @@ class Vle:
     def addBooleanCondition(self, name, port, value):
         libpyvle.condition_add_boolean(self.vpz, name, port, value)
 
+#################
+## pyvle specific
     def setConditionValue(self, name, port, value, type, i):
         libpyvle.condition_set_value(self.vpz, name, port, value, type, i)
 
     def getConditionSetValue(self, name, port):
         return libpyvle.condition_get_setvalue(self.vpz, name, port)
-
-    def getConditionValue(self, name, port, i):
-        return libpyvle.condition_get_value(self.vpz, name, port, i)
 
     def getConditionValueType(self, name, port, i):
         return libpyvle.condition_get_value_type(self.vpz, name, port, i)
@@ -69,13 +124,16 @@ class Vle:
     def delConditionValue(self, name, port, i):
         libpyvle.condition_delete_value(self.vpz, name, port, i)
 
-    def atomicModelConditionsList(self, name):
+    def listAtomicModelConditions(self, name):
         return libpyvle.atomic_model_conditions_list(self.vpz, name)
 
-    def dynamicConditionsList(self, name):
+    def listDynamicConditions(self, name):
         return libpyvle.dynamic_conditions_list(self.vpz, name)
+##
+#################
+
 # views
-    def views(self):
+    def listViews(self):
         return libpyvle.views_list(self.vpz)
 
     def getViewName(self, name):
@@ -84,7 +142,7 @@ class Vle:
     def getViewType(self, name):
         return libpyvle.view_get_type(self.vpz, name)
 
-    def getViewTimestep(self, name):
+    def getViewTimeStep(self, name):
         return libpyvle.view_get_timestep(self.vpz, name)
 
     def getViewOutput(self, name):
@@ -99,7 +157,7 @@ class Vle:
     def setViewType(self, name, type):
         libpyvle.view_set_type(self.vpz, name, type)
 
-    def setViewTimestep(self, name, timestep):
+    def setViewTimeStep(self, name, timestep):
         libpyvle.view_set_timestep(self.vpz, name, timestep)
 
     def setViewData(self, name, data):
@@ -127,7 +185,7 @@ class Vle:
         return libpyvle.output_get_location(self.vpz, output)
 
 # observables
-    def observables(self):
+    def listObservables(self):
         return libpyvle.observables_list(self.vpz)
 
     def addObservable(self, name):
@@ -136,13 +194,13 @@ class Vle:
     def delObservable(self, name):
         libpyvle.observable_del(self.vpz, name)
 
-    def observableExists(self, name):
+    def existObservable(self, name):
         return libpyvle.observable_exists(self.vpz, name)
 
-    def observablesClear(self):
+    def clearObservables(self):
         libpyvle.observables_clear(self.vpz)
 
-    def observablesIsEmpty(self):
+    def isObservablesEmpty(self):
         return libpyvle.observables_empty(self.vpz)
 
     def getObservableName(self, name):
@@ -157,26 +215,26 @@ class Vle:
     def delObservablePort(self, obsname, portname):
         libpyvle.observable_del_port(self.vpz, obsname, portname)
 
-    def observableHasView(self, obsname, viewname):
+    def hasObservableView(self, obsname, viewname):
         return libpyvle.observable_has_view(self.vpz, obsname, viewname)
 
     def getObservablePortName(self, obsname, viewname):
         return libpyvle.observable_get_port_name(self.vpz, obsname, viewname)
 
-    def isObservablePermanent(self, obsname):
+    def isPermanentObservable(self, obsname):
         return libpyvle.observable_is_permanent(self.vpz, obsname)
 
-    def setObservablePermanent(self, obsname, ispermanent):
+    def setPermanentObservable(self, obsname, ispermanent):
         libpyvle.observable_set_permanent(self.vpz, obsname, ispermanent)
 
     def getObservablePortAttachedViews(self, obsname, portname):
     	return libpyvle.observable_port_attached_views(self.vpz, obsname, portname)
 
-    def dynamicObservablesList(self, name):
+    def listDynamicObservables(self, name):
         return libpyvle.dynamic_observables_list(self.vpz, name)
 
 # dynamics
-    def dynamics(self):
+    def listDynamics(self):
         return libpyvle.dynamics_list(self.vpz)
 
     def getDynamicName(self, name):
@@ -200,38 +258,18 @@ class Vle:
     def setDynamicLanguage(self, name, language):
         libpyvle.dynamic_set_language(self.vpz, name, language)
 
-    def getDynamicModelList(self, name):
+    def listDynamicModels(self, name):
         return libpyvle.dynamic_get_model_list(self.vpz, name)
 
 # export
     def export(self, location, view, type):
         return libpyvle.export(self.vpz, location, view, type)
 
-    def export_manager(self, location, view, type):
+    def exportManager(self, location, view, type):
         return libpyvle.export_manager(self.vpz, location, view, type)
 
-# manager
-    def manager(self):
-        return libpyvle.manager(self.vpz)
-
-# replicas
-    def nbReplicas(self):
-        return libpyvle.nbreplicas(self.vpz)
-
-    def setNbReplicas(self, nb):
-        libpyvle.set_nb_replicas(self.vpz, nb)
-
-    def seedReplicas(self):
-        return libpyvle.get_seed_replicas(self.vpz)
-
-    def setSeedReplicas(self, seed):
-        libpyvle.set_seed_replicas(self.vpz, seed)
-
-    def combinations(self):
-        return libpyvle.combinations(self.vpz)
-
 # other
-    def experimentName(self):
+    def getExperimentName(self):
         return libpyvle.experiment_get_name(self.vpz)
 
     def traceRunError(self):
@@ -247,6 +285,8 @@ class Vle:
         return libpyvle.run_combination(self.vpz, comb)
 
 class VleUtils:
+    def __init__(self):
+        pass
 
 # packages
     def getInstalledPackages(self):

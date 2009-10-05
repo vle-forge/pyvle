@@ -54,12 +54,95 @@ vpz::Vpz* pyvle_open(const char* filename)
     }
 }
 
+void pyvle_save(vpz::Vpz* file,
+		std::string filename)
+{
+    assert(file);
+
+    file->write(filename);
+}
+
 void pyvle_delete(vle::vpz::Vpz* file)
 {
     assert(file);
 
     delete file;
 }
+
+/*  - - - - - - - - - - - - - --ooOoo-- - - - - - - - - - - -  */
+
+void pyvle_experiment_set_begin(vpz::Vpz* file,
+				double value)
+{
+    assert(file);
+
+    file->project().experiment().setBegin(value);
+}
+
+PyObject* pyvle_experiment_get_begin(vpz::Vpz* file)
+{
+    assert(file);
+
+    return PyFloat_FromDouble(file->project().experiment().begin());
+}
+
+/*  - - - - - - - - - - - - - --ooOoo-- - - - - - - - - - - -  */
+
+void pyvle_experiment_set_duration(vpz::Vpz* file,
+				   double value)
+{
+    assert(file);
+
+    file->project().experiment().setDuration(value);
+}
+
+PyObject* pyvle_experiment_get_duration(vpz::Vpz* file)
+{
+    assert(file);
+
+    return PyFloat_FromDouble(file->project().experiment().duration());
+}
+
+/*  - - - - - - - - - - - - - --ooOoo-- - - - - - - - - - - -  */
+
+void pyvle_experiment_set_seed(vpz::Vpz* file,
+			       double value)
+{
+    assert(file);
+
+    file->project().experiment().setSeed(value);
+}
+
+PyObject* pyvle_experiment_get_seed(vpz::Vpz* file)
+{
+    assert(file);
+
+    return PyFloat_FromDouble(file->project().experiment().seed());
+}
+
+/*  - - - - - - - - - - - - - --ooOoo-- - - - - - - - - - - -  */
+
+void pyvle_experiment_set_linear_combination(vpz::Vpz* file,
+					     int seed, int replicas)
+{
+    assert(file);
+
+    file->project().experiment().replicas().setSeed(seed);
+    file->project().experiment().replicas().setNumber(replicas);
+    file->project().experiment().setCombination("linear");
+}
+
+void pyvle_experiment_set_total_combination(vpz::Vpz* file,
+					    int seed, int replicas)
+{
+    assert(file);
+
+    file->project().experiment().replicas().setSeed(seed);
+    file->project().experiment().replicas().setNumber(replicas);
+    file->project().experiment().setCombination("total");
+}
+
+/*  - - - - - - - - - - - - - --ooOoo-- - - - - - - - - - - -  */
 
 PyObject* pyvle_run(vpz::Vpz* file)
 {
@@ -93,7 +176,7 @@ PyObject* pyvle_run_matrix(vpz::Vpz* file)
     }
 }
 
-PyObject* pyvle_manager(vpz::Vpz* file)
+PyObject* pyvle_run_manager(vpz::Vpz* file)
 {
     assert(file);
 
@@ -109,7 +192,7 @@ PyObject* pyvle_manager(vpz::Vpz* file)
     return NULL;
 }
 
-PyObject* pyvle_manager_matrix(vpz::Vpz* file)
+PyObject* pyvle_run_manager_matrix(vpz::Vpz* file)
 {
     assert(file);
 
@@ -125,7 +208,7 @@ PyObject* pyvle_manager_matrix(vpz::Vpz* file)
     return NULL;
 }
 
-PyObject* pyvle_manager_thread(vpz::Vpz* file, int th)
+PyObject* pyvle_run_manager_thread(vpz::Vpz* file, int th)
 {
     assert(file);
 
@@ -141,7 +224,7 @@ PyObject* pyvle_manager_thread(vpz::Vpz* file, int th)
     return NULL;
 }
 
-PyObject* pyvle_manager_thread_matrix(vpz::Vpz* file, int th)
+PyObject* pyvle_run_manager_thread_matrix(vpz::Vpz* file, int th)
 {
     assert(file);
 
@@ -157,7 +240,7 @@ PyObject* pyvle_manager_thread_matrix(vpz::Vpz* file, int th)
     return NULL;
 }
 
-PyObject* pyvle_manager_cluster(vpz::Vpz* file)
+PyObject* pyvle_run_manager_cluster(vpz::Vpz* file)
 {
     assert(file);
 
@@ -173,7 +256,7 @@ PyObject* pyvle_manager_cluster(vpz::Vpz* file)
     return NULL;
 }
 
-PyObject* pyvle_manager_cluster_matrix(vpz::Vpz* file)
+PyObject* pyvle_run_manager_cluster_matrix(vpz::Vpz* file)
 {
     assert(file);
 
@@ -188,6 +271,8 @@ PyObject* pyvle_manager_cluster_matrix(vpz::Vpz* file)
     }
     return NULL;
 }
+
+/*  - - - - - - - - - - - - - --ooOoo-- - - - - - - - - - - -  */
 
 PyObject* pyvle_condition_list(vpz::Vpz* file)
 {
@@ -285,9 +370,9 @@ PyObject* pyvle_condition_port_list(vpz::Vpz* file, std::string conditionname)
     return r;
 }
 
-void pyvle_condition_clear(vpz::Vpz* file,
-			   std::string conditionname,
-			   std::string portname)
+void pyvle_condition_port_clear(vpz::Vpz* file,
+				std::string conditionname,
+				std::string portname)
 {
     assert(file);
 
@@ -533,62 +618,27 @@ PyObject* pyvle_dynamic_conditions_list(vle::vpz::Vpz* file,
 
     PyObject* r;
     vpz::AtomicModelList& atommods(file->project().model().atomicModels());
-    vpz::AtomicModelList::iterator it=atommods.begin();
+    vpz::AtomicModelList::iterator it = atommods.begin();
 
     while (it != atommods.end()) {
-		if (it->second.dynamics() == name) {
-			vpz::AtomicModel& a = it->second;
-			vpz::Strings s = a.conditions();
-			vpz::Strings::iterator sit;
-			int size = s.size();
-			r = PyList_New(size);
-			int i = 0;
-			for (sit = s.begin(); sit != s.end(); ++sit, ++i) {
-				PyList_SetItem(r, i, PyString_FromString(sit->c_str()));
-			}
-			return r;
-		}
-		++it;
+	if (it->second.dynamics() == name) {
+	    vpz::AtomicModel& a = it->second;
+	    vpz::Strings s = a.conditions();
+	    vpz::Strings::iterator sit;
+	    int size = s.size();
+	    r = PyList_New(size);
+	    int i = 0;
+
+	    for (sit = s.begin(); sit != s.end(); ++sit, ++i) {
+		PyList_SetItem(r, i, PyString_FromString(sit->c_str()));
+	    }
+	    return r;
+	}
+	++it;
     }
 }
 
-void pyvle_experiment_set_duration(vpz::Vpz* file,
-				   double value)
-{
-    assert(file);
-
-    file->project().experiment().setDuration(value);
-}
-
-PyObject* pyvle_experiment_get_duration(vpz::Vpz* file)
-{
-    assert(file);
-
-    return PyFloat_FromDouble(file->project().experiment().duration());
-}
-
-void pyvle_experiment_set_seed(vpz::Vpz* file,
-			       double value)
-{
-    assert(file);
-
-    file->project().experiment().setSeed(value);
-}
-
-PyObject* pyvle_experiment_get_seed(vpz::Vpz* file)
-{
-    assert(file);
-
-    return PyFloat_FromDouble(file->project().experiment().seed());
-}
-
-void pyvle_save(vpz::Vpz* file,
-		std::string filename)
-{
-    assert(file);
-
-    file->write(filename);
-}
+/*  - - - - - - - - - - - - - --ooOoo-- - - - - - - - - - - -  */
 
 PyObject* pyvle_dynamics_list(vpz::Vpz* file)
 {
@@ -1394,10 +1444,15 @@ PyObject* pyvle_trace_run_error(const char* file)
 
 PyObject* pyvle_get_installed_packages()
 {
+    if (!thread_init) {
+	vle::manager::init();
+	thread_init = true;
+    }
+
     PyObject* r;
     r = PyList_New(0);
 
-    utils::PathList list = utils::CMakePackage::getInstalledPackages();
+    utils::PathList list = utils::Path::path().getInstalledPackages();
     utils::PathList::const_iterator it = list.begin();
 
     while (it != list.end()) {
@@ -1415,8 +1470,8 @@ PyObject* pyvle_get_package_vpz_list(std::string name)
     PyObject* r;
     r = PyList_New(0);
 
-    utils::CMakePackage pack(name);
-    utils::PathList list = pack.getInstalledExperiments();
+    utils::Package::package().select(name);
+    utils::PathList list = utils::Path::path().getInstalledExperiments();
 
     utils::PathList::const_iterator it = list.begin();
 
@@ -1434,11 +1489,11 @@ PyObject* pyvle_get_package_vpz_directory(std::string name)
 {
     PyObject* r;
 
-    utils::Path::path().setPackage(name);
+    utils::Package::package().select(name);
 
     r = PyString_FromString(utils::Path::path().getPackageExpDir().c_str());
 
-    utils::Path::path().setPackage("");
+    utils::Package::package().select("");
 
     return r;
 }
@@ -1447,23 +1502,31 @@ PyObject* pyvle_get_package_vpz(std::string name, std::string vpz)
 {
     PyObject* r;
 
-    utils::Path::path().setPackage(name);
+    utils::Package::package().select(name);
 
     r = PyString_FromString(utils::Path::path().getPackageExpFile(vpz).c_str());
 
-    utils::Path::path().setPackage("");
+    utils::Package::package().select("");
 
     return r;
 }
 
 void pyvle_set_package_mode(std::string name)
 {
-    utils::Path::path().setPackage(name);
+    if (!thread_init) {
+	vle::manager::init();
+	thread_init = true;
+    }
+    utils::Package::package().select(name);
 }
 
 void pyvle_set_normal_mode()
 {
-    utils::Path::path().setPackage("");
+    if (!thread_init) {
+	vle::manager::init();
+	thread_init = true;
+    }
+    utils::Package::package().select("");
 }
 
 void pyvle_set_output_plugin(vle::vpz::Vpz* file,

@@ -30,15 +30,43 @@
 #include <vle/vpz.hpp>
 
 vle::vpz::Vpz* pyvle_open(const char* filename);
+void pyvle_save(vle::vpz::Vpz* file,
+		std::string filename);
 void pyvle_delete(vle::vpz::Vpz* file);
+
+/* begin of experiments */
+void pyvle_experiment_set_begin(vle::vpz::Vpz* file,
+				   double value);
+PyObject* pyvle_experiment_get_begin(vle::vpz::Vpz* file);
+
+/* duration of experiments */
+void pyvle_experiment_set_duration(vle::vpz::Vpz* file,
+				   double value);
+PyObject* pyvle_experiment_get_duration(vle::vpz::Vpz* file);
+
+/* seed of experiments */
+void pyvle_experiment_set_seed(vle::vpz::Vpz* file,
+			       double value);
+PyObject* pyvle_experiment_get_seed(vle::vpz::Vpz* file);
+
+/* replicas */
+void pyvle_experiment_set_linear_combination(vle::vpz::Vpz* file,
+					     int seed, int replicas);
+void pyvle_experiment_set_total_combination(vle::vpz::Vpz* file,
+					    int seed, int replicas);
+
+/* execution of experiments */
 PyObject* pyvle_run(vle::vpz::Vpz* file);
 PyObject* pyvle_run_matrix(vle::vpz::Vpz* file);
-PyObject* pyvle_manager(vle::vpz::Vpz* file);
-PyObject* pyvle_manager_matrix(vle::vpz::Vpz* file);
-PyObject* pyvle_manager_thread(vle::vpz::Vpz* file, int th);
-PyObject* pyvle_manager_thread_matrix(vle::vpz::Vpz* file, int th);
-PyObject* pyvle_manager_cluster(vle::vpz::Vpz* file);
-PyObject* pyvle_manager_cluster_matrix(vle::vpz::Vpz* file);
+PyObject* pyvle_run_manager(vle::vpz::Vpz* file);
+PyObject* pyvle_run_manager_matrix(vle::vpz::Vpz* file);
+PyObject* pyvle_run_manager_thread(vle::vpz::Vpz* file, int th);
+PyObject* pyvle_run_manager_thread_matrix(vle::vpz::Vpz* file, int th);
+PyObject* pyvle_run_manager_cluster(vle::vpz::Vpz* file);
+PyObject* pyvle_run_manager_cluster_matrix(vle::vpz::Vpz* file);
+
+/* conditions */
+
 PyObject* pyvle_condition_size(vle::vpz::Vpz* file);
 PyObject* pyvle_condition_list(vle::vpz::Vpz* file);
 PyObject* pyvle_condition_show(vle::vpz::Vpz* file,
@@ -48,9 +76,9 @@ PyObject* pyvle_condition_port_list_size(vle::vpz::Vpz* file,
 					 std::string conditionname);
 PyObject* pyvle_condition_port_list(vle::vpz::Vpz* file,
 				    std::string conditionname);
-void pyvle_condition_clear(vle::vpz::Vpz* file,
-			   std::string conditionname,
-			   std::string portname);
+void pyvle_condition_port_clear(vle::vpz::Vpz* file,
+				std::string conditionname,
+				std::string portname);
 void pyvle_condition_add_real(vle::vpz::Vpz* file,
 			      std::string conditionname,
 			      std::string portname,
@@ -92,14 +120,7 @@ PyObject* pyvle_atomic_model_conditions_list(vle::vpz::Vpz* file,
 		std::string name);
 PyObject* pyvle_dynamic_conditions_list(vle::vpz::Vpz* file,
 		std::string name);
-void pyvle_experiment_set_duration(vle::vpz::Vpz* file,
-				   double value);
-PyObject* pyvle_experiment_get_duration(vle::vpz::Vpz* file);
-void pyvle_experiment_set_seed(vle::vpz::Vpz* file,
-				   double value);
-PyObject* pyvle_experiment_get_seed(vle::vpz::Vpz* file);
-void pyvle_save(vle::vpz::Vpz* file,
-		std::string filename);
+
 PyObject* pyvle_dynamics_list(vle::vpz::Vpz* file);
 PyObject* pyvle_dynamic_get_name(vle::vpz::Vpz* file,
 				std::string dynamicname);
