@@ -409,6 +409,42 @@ int rvle_experiment_total_combination(rvle_t handle, uint32_t seed,
     }
 }
 
+int rvle_set_output_plugin(rvle_t handle,
+                              const char* viewname,
+                              const char* pluginname)
+{
+    assert(handle && viewname && pluginname);
+    try {
+        vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
+        vpz::Views& vle_views = file->project().experiment().views();
+        vpz::Output& out = vle_views.outputs().get(
+            vle_views.get(viewname).output());
+        out.setLocalStream("", pluginname);
+    } catch(const std::exception& e) {
+        return 0;
+    }
+    return -1;
+}
+
+char* rvle_get_output_plugin(rvle_t handle,
+                              const char* viewname)
+{
+    assert(handle && viewname);
+    char* result;
+    try {
+        vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
+        vpz::Views& vle_views = file->project().experiment().views();
+        vpz::Output& out = vle_views.outputs().get(
+            vle_views.get(viewname).output());
+        std::string pluginname = out.plugin();
+        result = (char*)malloc(pluginname.length() * sizeof(char));
+        strcpy(result, pluginname.c_str());
+        return result;
+    } catch(const std::exception& e) {
+        return NULL;
+    }
+}
+
 int rvle_save(rvle_t handle, const char* filename)
 {
     assert(handle and filename);
@@ -443,3 +479,4 @@ void rvle_clear(rvle_output_t out)
 
     delete lst;
 }
+

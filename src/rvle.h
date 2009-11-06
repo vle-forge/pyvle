@@ -244,6 +244,27 @@ int rvle_experiment_linear_combination(rvle_t handle, uint32_t seed,
 int rvle_experiment_total_combination(rvle_t handle, uint32_t seed,
                                       uint32_t repliquas);
 
+
+/**
+ * @brief Set the plugin output of a view
+ * @param handle The reference to the Vpz file.
+ * @param viewname The name of the view.
+ * @param pluginname The name of the plugin.
+ * @return 0 if failed, -1 otherwise.
+ */
+int rvle_set_output_plugin(rvle_t handle,
+                              const char* viewname,
+                              const char* pluginname);
+
+/**
+ * @brief Set the plugin output of a view
+ * @param handle The reference to the Vpz file.
+ * @param viewname The name of the view.
+ * @return the output plugin of the view viewname
+ */
+char* rvle_get_output_plugin(rvle_t handle,
+                              const char* viewname);
+
 /**
  * @brief Save the current file under the specified filename.
  * @param handle The reference to the Vpz file.

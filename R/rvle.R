@@ -280,6 +280,26 @@ rvle.setTotalCombination <- function(self, seed, repliquas)
     return (invisible(NULL))
 }
 
+rvle.setOutputPlugin <- function(self, viewname, pluginname)
+{
+	stopifnot(is.rvle(self))
+	stopifnot(is.character(viewname))
+	stopifnot(is.character(pluginname))
+    
+	.Call("set_output_plugin", self, viewname,
+			pluginname, PACKAGE="rvle")
+    
+	return (invisible(NULL))
+}
+
+rvle.getOutputPlugin <- function(self, viewname)
+{
+	stopifnot(is.rvle(self))
+	stopifnot(is.character(viewname))
+	
+	.Call("get_output_plugin", self, viewname, PACKAGE="rvle")
+}
+
 rvle.save <- function(self, file)
 {
     stopifnot(is.rvle(self))

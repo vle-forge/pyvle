@@ -56,7 +56,7 @@ rvle.setDuration(f, 123.321)
 duration = rvle.getDuration(f)
 checkEqualsNumeric(duration, 123.321, tolerance=1e-5)
 
-# check the exeprimental frames
+# check the experimental frames
 rvle.setDuration(f, 0.25)
 rvle.setLinearCombination(f, 1, 5)
 result = rvle.runManager(f)
@@ -76,3 +76,9 @@ result = rvle.runManager(f)
 result
 checkEqualsNumeric(dim(result)[1], 5)
 checkEqualsNumeric(dim(result)[2], 4)
+
+#check the output plugin setting
+checkEquals(rvle.getOutputPlugin(f,"sirview"), "storage")
+rvle.setOutputPlugin(f,"sirview","text")
+checkEquals(rvle.getOutputPlugin(f,"sirview"), "text")
+rvle.setOutputPlugin(f,"sirview","storage")

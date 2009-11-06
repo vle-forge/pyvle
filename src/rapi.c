@@ -63,6 +63,8 @@ static void r_rvle_experiment_linear_combination(SEXP rvle, SEXP seed, SEXP
                 replicas);
 static void r_rvle_experiment_total_combination(SEXP rvle, SEXP seed, SEXP
                 replicas);
+static void r_rvle_set_output_plugin(SEXP rvle, SEXP viewname, SEXP pluginname);
+static SEXP r_rvle_get_output_plugin(SEXP rvle, SEXP viewname);
 static void r_rvle_save(SEXP rvle, SEXP file);
 
 /*
@@ -102,6 +104,10 @@ R_CallMethodDef callMethods[] = {
                 r_rvle_experiment_linear_combination, 3},
         { "experiment_total_combination", (DL_FUNC)
                 r_rvle_experiment_total_combination, 3},
+        { "set_output_plugin", (DL_FUNC)
+                r_rvle_set_output_plugin, 3},
+        { "get_output_plugin", (DL_FUNC)
+                    r_rvle_get_output_plugin, 2},
         { "save", (DL_FUNC) r_rvle_save, 2},
         { NULL, NULL, 0}
 };
@@ -521,6 +527,37 @@ void r_rvle_experiment_total_combination(SEXP rvle, SEXP seed, SEXP
 {
         rvle_experiment_total_combination(R_ExternalPtrAddr(rvle),
                         INTEGER(seed)[0], INTEGER(replicas)[0]);
+}
+
+
+void r_rvle_set_output_plugin(SEXP rvle, SEXP viewname, SEXP pluginname)
+{
+    int result = rvle_set_output_plugin(R_ExternalPtrAddr(rvle),
+        CHAR(STRING_ELT(viewname, 0)),
+        CHAR(STRING_ELT(pluginname, 0)));
+
+    if (!result) {
+        Rf_error("RVLE: cannot set plugin %s to view %s",
+            CHAR(STRING_ELT(pluginname, 0)), CHAR(STRING_ELT(viewname, 0)));
+    }
+}
+
+SEXP r_rvle_get_output_plugin(SEXP rvle, SEXP viewname)
+{
+    char* result = rvle_get_output_plugin(R_ExternalPtrAddr(rvle),
+        CHAR(STRING_ELT(viewname, 0)));
+    if (result == NULL) {
+        Rf_error("RVLE: cannot get plugin of view %s",
+            CHAR(STRING_ELT(viewname, 0)));
+    }
+
+    SEXP r;
+    PROTECT(r = allocVector(STRSXP, 1));
+    SET_STRING_ELT(r, 0, mkChar(result));
+    free(result);
+    UNPROTECT(1);
+
+    return r;
 }
 
 void r_rvle_save(SEXP rvle, SEXP file)
