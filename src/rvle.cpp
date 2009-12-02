@@ -65,7 +65,7 @@ rvle_t rvle_pkg_open(const char* pkgname, const char* filename)
 
     try {
         Package::package().select(pkgname);
-	std::string filepath = Path::path().getPackageExpFile(filename);
+        std::string filepath = Path::path().getPackageExpFile(filename);
         file = new vpz::Vpz(filepath);
         return file;
     } catch(const std::exception& e) {
@@ -93,7 +93,7 @@ rvle_output_t rvle_run(rvle_t handle)
 
     vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
     try {
-        manager::RunVerbose jrm(std::cerr);
+        manager::RunQuiet jrm;
         jrm.start(*file);
         const oov::OutputMatrixViewList& result(jrm.outputs());
         return new oov::OutputMatrixViewList(result);
@@ -109,8 +109,18 @@ rvle_output_t rvle_manager(rvle_t handle)
 
     vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
     try {
-        manager::ManagerRunMono jrm(std::cerr, false);
+        std::string filename = Trace::getLogFilename("rvle.log");
+        std::ofstream* logfile = new std::ofstream(filename.c_str());
+
+        (*logfile) << _("Start log at ") << DateTime::currentDate()
+            << "\n\n" << std::flush;
+
+
+        manager::ManagerRunMono jrm(*logfile, false);
         jrm.start(*file);
+
+        logfile->close();
+
         const manager::OutputSimulationMatrix& result(
             jrm.outputSimulationMatrix());
         return new manager::OutputSimulationMatrix(result);
@@ -126,8 +136,17 @@ rvle_output_t rvle_manager_thread(rvle_t handle, int th)
 
     vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
     try {
-        manager::ManagerRunThread jrm(std::cerr, false, th);
+        std::string filename = Trace::getLogFilename("rvle.log");
+        std::ofstream* logfile = new std::ofstream(filename.c_str());
+
+        (*logfile) << _("Start log at ") << DateTime::currentDate()
+            << "\n\n" << std::flush;
+
+        manager::ManagerRunThread jrm(*logfile, false, th);
         jrm.start(*file);
+
+        logfile->close();
+
         const manager::OutputSimulationMatrix& result(
             jrm.outputSimulationMatrix());
         return new manager::OutputSimulationMatrix(result);
@@ -143,8 +162,17 @@ rvle_output_t rvle_manager_cluster(rvle_t handle)
 
     vpz::Vpz*  file(reinterpret_cast < vpz::Vpz* >(handle));
     try {
-        manager::ManagerRunDistant jrm(std::cerr, false);
+        std::string filename = Trace::getLogFilename("rvle.log");
+        std::ofstream* logfile = new std::ofstream(filename.c_str());
+
+        (*logfile) << _("Start log at ") << DateTime::currentDate()
+            << "\n\n" << std::flush;
+
+        manager::ManagerRunDistant jrm(*logfile, false);
         jrm.start(*file);
+
+        logfile->close();
+
         const manager::OutputSimulationMatrix& result(
             jrm.outputSimulationMatrix());
         return new manager::OutputSimulationMatrix(result);
@@ -261,18 +289,18 @@ int rvle_condition_clear(rvle_t handle,
 }
 
 rvle_output_t rvle_condition_show(rvle_t handle,
-		                  const char* conditionname,
-				  const char* portname)
+                                  const char* conditionname,
+                                  const char* portname)
 {
     assert(handle && conditionname && portname);
 
     try {
-	vpz::Vpz* file(reinterpret_cast < vpz::Vpz* >(handle));
-	vpz::Condition& cnd(file->project().experiment().
-		conditions().get(conditionname));
-	return new value::VectorValue(cnd.getSetValues(portname).value());
+        vpz::Vpz* file(reinterpret_cast < vpz::Vpz* >(handle));
+        vpz::Condition& cnd(file->project().experiment().
+                            conditions().get(conditionname));
+        return new value::VectorValue(cnd.getSetValues(portname).value());
     } catch (const std::exception& e) {
-	return 0;
+        return 0;
     }
 }
 
@@ -410,8 +438,8 @@ int rvle_experiment_total_combination(rvle_t handle, uint32_t seed,
 }
 
 int rvle_set_output_plugin(rvle_t handle,
-                              const char* viewname,
-                              const char* pluginname)
+                           const char* viewname,
+                           const char* pluginname)
 {
     assert(handle && viewname && pluginname);
     try {
@@ -427,7 +455,7 @@ int rvle_set_output_plugin(rvle_t handle,
 }
 
 char* rvle_get_output_plugin(rvle_t handle,
-                              const char* viewname)
+                             const char* viewname)
 {
     assert(handle && viewname);
     char* result;
