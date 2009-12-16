@@ -90,7 +90,7 @@ class Vle:
         return libpyvle.condition_port_list(self.vpz, name)
 
     def clearConditionPort(self, name, port):
-        libpyvle.condition_clear_port(self.vpz, name, port);
+        libpyvle.condition_port_clear(self.vpz, name, port);
 
     def getConditionPortValues(self, name, port):
         return libpyvle.condition_show(self.vpz, name, port)
