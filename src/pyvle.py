@@ -299,7 +299,6 @@ class VleUtils:
         libpyvle.set_normal_mode()
 
 class VlePackage:
-
     def __init__(self, name):
         self.name = name
 

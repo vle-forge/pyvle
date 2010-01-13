@@ -1445,43 +1445,47 @@ PyObject* pyvle_trace_run_error(const char* file)
 PyObject* pyvle_get_installed_packages()
 {
     if (!thread_init) {
-	vle::manager::init();
-	thread_init = true;
+        vle::manager::init();
+        thread_init = true;
     }
 
     PyObject* r;
-    r = PyList_New(0);
-
     utils::PathList list = utils::Path::path().getInstalledPackages();
     utils::PathList::const_iterator it = list.begin();
+    int i = 0;
 
+    r = PyList_New(list.size());
     while (it != list.end()) {
-	PyList_Append(r,
-		      PyString_FromString(
-			  boost::filesystem::basename(*it).c_str()));
+	PyList_SetItem(r, i,
+                       PyString_FromString(
+                           boost::filesystem::basename(*it).c_str()));
 	++it;
+        ++i;
     }
-
     return r;
 }
 
 PyObject* pyvle_get_package_vpz_list(std::string name)
 {
-    PyObject* r;
-    r = PyList_New(0);
-
-    utils::Package::package().select(name);
-    utils::PathList list = utils::Path::path().getInstalledExperiments();
-
-    utils::PathList::const_iterator it = list.begin();
-
-    while (it != list.end()) {
-	PyList_Append(r,
-		      PyString_FromString(
-			  boost::filesystem::basename(*it).c_str()));
-	++it;
+    if (!thread_init) {
+        vle::manager::init();
+        thread_init = true;
     }
 
+    PyObject* r;
+    utils::Package::package().select(name);
+    utils::PathList list = utils::Path::path().getInstalledExperiments();
+    utils::PathList::const_iterator it = list.begin();
+    int i = 0;
+
+    r = PyList_New(list.size());
+    while (it != list.end()) {
+	PyList_SetItem(r, i,
+                       PyString_FromString(
+                           boost::filesystem::basename(*it).c_str()));
+	++it;
+        ++i;
+    }
     return r;
 }
 
@@ -1706,26 +1710,26 @@ PyObject* pyvle_run_combination(vle::vpz::Vpz* file,
 }
 
 void pyvle_set_nbreplicas(vle::vpz::Vpz* file,
-							int number)
+                          int number)
 {
-	assert(file);
+    assert(file);
 
-	file->project().experiment().replicas().setNumber(number);
+    file->project().experiment().replicas().setNumber(number);
 }
 
 PyObject* pyvle_get_seedreplicas(vle::vpz::Vpz* file)
 {
-	assert(file);
+    assert(file);
 
-	long seed = file->project().experiment().replicas().seed();
+    long seed = file->project().experiment().replicas().seed();
 
-	return PyInt_FromLong(seed);
+    return PyInt_FromLong(seed);
 }
 
 void pyvle_set_seedreplicas(vle::vpz::Vpz* file,
-							long number)
+                            long number)
 {
-	assert(file);
+    assert(file);
 
-	file->project().experiment().replicas().setSeed(number);
+    file->project().experiment().replicas().setSeed(number);
 }
