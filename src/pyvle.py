@@ -231,7 +231,8 @@ class Vle:
         libpyvle.observable_set_permanent(self.vpz, obsname, ispermanent)
 
     def getObservablePortAttachedViews(self, obsname, portname):
-    	return libpyvle.observable_port_attached_views(self.vpz, obsname, portname)
+    	return libpyvle.observable_port_attached_views(self.vpz, obsname,
+                                                       portname)
 
     def listDynamicObservables(self, name):
         return libpyvle.dynamic_observables_list(self.vpz, name)
