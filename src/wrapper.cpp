@@ -33,6 +33,7 @@ BOOST_PYTHON_MODULE(libpyvle)
     class_<vle::vpz::Vpz>("Vpz");
 
     def("open", pyvle_open, return_value_policy<manage_new_object>());
+    def("open_pkg", pyvle_open_pkg, return_value_policy<manage_new_object>());
     def("save", pyvle_save);
     def("delete", pyvle_delete);
     def("experiment_set_begin", pyvle_experiment_set_begin);

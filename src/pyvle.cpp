@@ -27,8 +27,8 @@
 #include <vle/manager/TotalExperimentGenerator.hpp>
 #include <vle/manager/LinearExperimentGenerator.hpp>
 #include <vle/value.hpp>
-#include <vle/utils.hpp>
 #include <vle/utils/Package.hpp>
+#include <vle/utils/Path.hpp>
 #include "convert.hpp"
 #include "pyvle.hpp"
 #include <boost/lexical_cast.hpp>
@@ -47,7 +47,27 @@ vpz::Vpz* pyvle_open(const char* filename)
 	    vle::manager::init();
 	    thread_init = true;
 	}
+        vle::utils::Package::package().select("");
         file = new vpz::Vpz(filename);
+        return file;
+    } catch(const std::exception& e) {
+        return NULL;
+    }
+}
+
+vpz::Vpz* pyvle_open_pkg(const char* pkgname, const char* filename)
+{
+    vpz::Vpz* file = 0;
+
+    try {
+	if (!thread_init) {
+            vle::manager::init();
+	    thread_init = true;
+	}
+        vle::utils::Package::package().select(pkgname);
+        std::string filepath = vle::utils::Path::path().getPackageExpFile(
+            filename);
+        file = new vpz::Vpz(filepath);
         return file;
     } catch(const std::exception& e) {
         return NULL;

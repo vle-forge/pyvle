@@ -30,6 +30,7 @@
 #include <vle/vpz.hpp>
 
 vle::vpz::Vpz* pyvle_open(const char* filename);
+vle::vpz::Vpz* pyvle_open_pkg(const char* pkgname, const char* filename);
 void pyvle_save(vle::vpz::Vpz* file,
 		std::string filename);
 void pyvle_delete(vle::vpz::Vpz* file);

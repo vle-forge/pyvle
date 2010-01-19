@@ -172,7 +172,8 @@ PyObject* pyvle_convert_dataframe(const vle::oov::OutputMatrixViewList& out)
     return plst;
 }
 
-PyObject* pyvle_convert_simulation_dataframe(const vle::manager::OutputSimulationMatrix& out)
+PyObject* pyvle_convert_simulation_dataframe(
+    const vle::manager::OutputSimulationMatrix& out)
 {
     PyObject* r;
     vle::manager::OutputSimulationMatrix::index i, j;
@@ -185,13 +186,12 @@ PyObject* pyvle_convert_simulation_dataframe(const vle::manager::OutputSimulatio
             const vle::oov::OutputMatrixViewList& lst(out[i][j]);
 	    vle::oov::OutputMatrixViewList::const_iterator it;
 	    PyObject* plst;
-            int n;
 
-	    plst = PyList_New(lst.size());
-            for (it = lst.begin(), n = 0; it != lst.end(); ++it, ++n) {
+	    plst = PyDict_New();
+            for (it = lst.begin(); it != lst.end(); ++it) {
 		PyObject* pdata = pyvle_build_data_frame(it->second);
 
-		PyList_SetItem(plst, n, pdata);
+                PyDict_SetItemString(plst, it->first.c_str(), pdata);
             }
 	    PyTuple_SetItem(column, j, plst);
         }

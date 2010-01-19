@@ -1,8 +1,11 @@
 import libpyvle
 
 class Vle:
-    def __init__(self, filename):
-        self.vpz = libpyvle.open(filename)
+    def __init__(self, filename, package = ""):
+        if package == "":
+            self.vpz = libpyvle.open(filename)
+        else:
+            self.vpz = libpyvle.open_pkg(package, filename)
         self.filename = filename;
 
     def save(self, filename):
@@ -284,23 +287,13 @@ class Vle:
     def runCombination(self, comb):
         return libpyvle.run_combination(self.vpz, comb)
 
-class VleUtils:
-    def __init__(self):
-        pass
-
-# packages
-    def getInstalledPackages(self):
-        return libpyvle.get_installed_packages()
-
-    def setPackageMode(self, name):
-        libpyvle.set_package_mode(name)
-
-    def setNormalMode(self):
-        libpyvle.set_normal_mode()
-
 class VlePackage:
     def __init__(self, name):
         self.name = name
+
+    @classmethod
+    def getInstalledPackages(cls):
+        return libpyvle.get_installed_packages()
 
     def getVpzList(self):
         return libpyvle.get_package_vpz_list(self.name)
