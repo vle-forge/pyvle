@@ -13,10 +13,10 @@ class Vle:
 
 # begin of experiments
     def setBegin(self, date):
-        libpyvle.experiment_set_begin(date)
+        libpyvle.experiment_set_begin(self.vpz, date)
 
-    def getBegin(self, date):
-        return libpyvle.experiment_get_begin()
+    def getBegin(self):
+        return libpyvle.experiment_get_begin(self.vpz)
 
 # duration of experiments
     def setDuration(self, value):
