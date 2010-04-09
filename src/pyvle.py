@@ -187,6 +187,11 @@ class Vle:
     def getOutputLocation(self, output):
         return libpyvle.output_get_location(self.vpz, output)
 
+    def listOutputs(self):
+        return libpyvle.outputs_list(self.vpz)
+
+
+
 # observables
     def listObservables(self):
         return libpyvle.observables_list(self.vpz)

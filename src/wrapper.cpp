@@ -127,4 +127,6 @@ BOOST_PYTHON_MODULE(libpyvle)
     def("set_nb_replicas",pyvle_set_nbreplicas);
     def("get_seed_replicas",pyvle_get_seedreplicas);
     def("set_seed_replicas",pyvle_set_seedreplicas);
+    def("outputs_list",pyvle_outputs_list);
+
 }

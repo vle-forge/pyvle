@@ -987,6 +987,30 @@ PyObject* pyvle_observables_list(vle::vpz::Vpz* file)
     return r;
 }
 
+PyObject* pyvle_outputs_list(vle::vpz::Vpz* file)
+{
+    assert(file);
+
+    PyObject* r;    /* outputs list result */
+    vpz::OutputList& lst(file->project().experiment().views().outputs().outputlist());
+    vpz::OutputList::iterator it;
+    int size;
+    int i;
+
+    size = lst.size();
+
+    r = PyList_New(size);
+    i = 0;
+
+    if (size > 0) {
+	for (it = lst.begin(); it != lst.end(); ++it, ++i) {
+	    PyList_SetItem(r, i, PyString_FromString(it->first.c_str()));
+	}
+    }
+    return r;
+}
+
+
 void pyvle_observable_add(vle::vpz::Vpz* file,
 			  std::string obsname)
 {
