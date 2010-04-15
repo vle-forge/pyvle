@@ -5,8 +5,8 @@
 
 /*
  * VLE Environment - the multimodeling and simulation environment
- * This file is a part of the VLE environment (http://vle.univ-littoral.fr)
- * Copyright (C) 2003 - 2008 The VLE Development Team
+ * This file is a part of the VLE environment (http://vle-project.org)
+ * Copyright (C) 2003 - 2010 The VLE Development Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 #include <boost/format.hpp>
 #include <vle/value.hpp>
 #include <cassert>
-#include "convert.hpp"
+#include <convert.hpp>
 
 PyObject* pyvle_convert_value(const vle::value::Value& value)
 {

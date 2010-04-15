@@ -6,8 +6,8 @@
 
 /*
  * VLE Environment - the multimodeling and simulation environment
- * This file is a part of the VLE environment (http://vle.univ-littoral.fr)
- * Copyright (C) 2003 - 2008 The VLE Development Team
+ * This file is a part of the VLE environment (http://vle-project)
+ * Copyright (C) 2003 - 2010 The VLE Development Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,8 +29,8 @@
 #include <vle/value.hpp>
 #include <vle/utils/Package.hpp>
 #include <vle/utils/Path.hpp>
-#include "convert.hpp"
-#include "pyvle.hpp"
+#include <convert.hpp>
+#include <pyvle.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/filesystem.hpp>
 

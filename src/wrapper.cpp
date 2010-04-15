@@ -6,8 +6,8 @@
 
 /*
  * VLE Environment - the multimodeling and simulation environment
- * This file is a part of the VLE environment (http://vle.univ-littoral.fr)
- * Copyright (C) 2003 - 2008 The VLE Development Team
+ * This file is a part of the VLE environment (http://vle-project.org)
+ * Copyright (C) 2003 - 2010 The VLE Development Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "pyvle.hpp"
+#include <pyvle.hpp>
 #include <boost/python.hpp>
 
 using namespace boost::python;
