@@ -52,6 +52,22 @@ PyObject* pyvle_convert_value(const vle::value::Value& value)
 	    vle::value::toString(value).c_str());
 	break;
     }
+    case vle::value::Value::SET: {
+        result = PyList_New(0);
+        for (vle::value::Set::const_iterator it = value.toSet().begin();
+            it != value.toSet().end(); ++it) {
+            PyList_Append(result, pyvle_convert_value(**it));
+        }
+        break;
+    }
+    case vle::value::Value::MAP: {
+        result = PyDict_New();
+        for (vle::value::Map::const_iterator it = value.toMap().begin();
+            it != value.toMap().end(); ++it) {
+            PyDict_SetItemString(result, it->first.c_str(), pyvle_convert_value(*(it->second)));
+        }
+        break;
+    }
     default: {
 	result = Py_None;
 	break;

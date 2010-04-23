@@ -96,6 +96,15 @@ void pyvle_condition_add_boolean(vle::vpz::Vpz* file,
 				std::string conditionname,
 				std::string portname,
 				std::string value);
+void pyvle_condition_add_value(vle::vpz::Vpz* file,
+				 std::string conditionname,
+				 std::string portname,
+				 vle::value::Value* value);
+void pyvle_condition_set_port_value(vle::vpz::Vpz* file,
+			       std::string conditionname,
+			       std::string portname,
+			       vle::value::Value* value,
+			       int i);
 void pyvle_condition_set_value(vle::vpz::Vpz* file,
 				std::string conditionname,
 				std::string portname,
@@ -247,4 +256,15 @@ void pyvle_set_nbreplicas(vle::vpz::Vpz* file,
 PyObject* pyvle_get_seedreplicas(vle::vpz::Vpz* file);
 void pyvle_set_seedreplicas(vle::vpz::Vpz* file,
 							long number);
+
+vle::value::Value* pyvle_create_map();
+vle::value::Value* pyvle_create_set();
+vle::value::Value* pyvle_int_to_value(long i);
+vle::value::Value* pyvle_real_to_value(float i);
+vle::value::Value* pyvle_string_to_value(std::string i);
+vle::value::Value* pyvle_bool_to_value(bool i);
+
+void pyvle_add_value_to_map(vle::value::Value* map, std::string key, vle::value::Value* val);
+void pyvle_add_value_to_set(vle::value::Value* set, vle::value::Value* val);
+
 #endif

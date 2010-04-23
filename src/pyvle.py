@@ -133,11 +133,27 @@ class Vle:
 
     def addBooleanCondition(self, name, port, value):
         libpyvle.condition_add_boolean(self.vpz, name, port, value)
+        
+    def addMapCondition(self, name, port, dic):
+        # dummy function : we can use addValueCondition()
+        if isinstance(dic, dict):
+            libpyvle.condition_add_value(self.vpz, name, port, to_value(dic))
+
+    def addSetCondition(self, name, port, lst):
+         # dummy function : we can use addValueCondition()
+        if isinstance(lst, list):
+            libpyvle.condition_add_value(self.vpz, name, port, to_value(lst))
+
+    def addValueCondition(self, name, port, val):
+        libpyvle.condition_add_value(self.vpz, name, port, to_value(val))
 
 #################
 ## pyvle specific
     def setConditionValue(self, name, port, value, type, i):
         libpyvle.condition_set_value(self.vpz, name, port, value, type, i)
+        
+    def setConditionPortValue(self, name, port, value, i):
+        libpyvle.condition_set_port_value(self.vpz, name, port, to_value(value), i)
 
     def getConditionSetValue(self, name, port):
         return libpyvle.condition_get_setvalue(self.vpz, name, port)
@@ -331,3 +347,25 @@ class VlePackage:
     def getVpz(self, vpz):
         return libpyvle.get_package_vpz(self.name, vpz)
 
+def to_value(x):
+    if isinstance(x, bool):
+        val = libpyvle.bool_to_value(x)
+    elif isinstance(x, int):
+        val = libpyvle.int_to_value(x)
+    elif isinstance(x, float):
+        val = libpyvle.real_to_value(x)
+    elif isinstance(x, str):
+        val = libpyvle.string_to_value(x)
+    elif isinstance(x, dict):
+        val = libpyvle.create_map()
+        for k,v in x.iteritems():
+            libpyvle.add_value_to_map(val, k, to_value(v))
+    elif isinstance(x, list):
+        val = libpyvle.create_set()
+        for v in x:
+            libpyvle.add_value_to_set(val, to_value(v))
+    elif isinstance(x, libpyvle.Value):
+        val = x
+    else:
+        raise ValueError(u'Can\'t convert type %s in vle::value::Value' % type(x))
+    return val

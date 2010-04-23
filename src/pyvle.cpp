@@ -464,6 +464,33 @@ void pyvle_condition_add_boolean(vpz::Vpz* file,
     cnd.addValueToPort(portname, value::Boolean::create(val));
 }
 
+void pyvle_condition_add_value(vpz::Vpz* file,
+				std::string conditionname,
+				std::string portname,
+				vle::value::Value* value)
+{
+    
+    assert(file);
+    
+    vpz::Condition& cnd(file->project().experiment().
+			conditions().get(conditionname));
+    
+    cnd.addValueToPort(portname, *value);
+}
+
+void pyvle_condition_set_port_value(vle::vpz::Vpz* file,
+			       std::string conditionname,
+			       std::string portname,
+			       vle::value::Value* value,
+			       int i)
+{
+    assert(file);
+    vpz::Condition& cnd(file->project().experiment().
+			conditions().get(conditionname));
+    vle::value::VectorValue& vector(cnd.getSetValues(portname).value());
+    vector.at(i) = value->clone();
+}
+
 void pyvle_condition_set_value(vle::vpz::Vpz* file,
 			       std::string conditionname,
 			       std::string portname,
@@ -570,6 +597,14 @@ PyObject* pyvle_condition_get_value_type(vle::vpz::Vpz* file,
     case vle::value::Value::BOOLEAN: {
 	r = PyString_FromString("boolean");
 	break;
+    }
+    case vle::value::Value::MAP: {
+    r = PyString_FromString("map");
+    break;
+    }
+    case vle::value::Value::SET: {
+    r = PyString_FromString("set");
+    break;
     }
     default : {
 	r = PyString_FromString("none");
@@ -1776,4 +1811,46 @@ void pyvle_set_seedreplicas(vle::vpz::Vpz* file,
     assert(file);
 
     file->project().experiment().replicas().setSeed(number);
+}
+
+/*  - - - - - - - - - - - - - --ooOoo-- - - - - - - - - - - -  */
+
+vle::value::Value* pyvle_create_map()
+{
+    return vle::value::Map::create();
+}
+
+vle::value::Value* pyvle_create_set()
+{
+    return vle::value::Set::create();
+}
+
+vle::value::Value* pyvle_int_to_value(long i)
+{
+    return vle::value::Integer::create(i);
+}
+
+vle::value::Value* pyvle_real_to_value(float i)
+{
+    return vle::value::Double::create(i);
+}
+
+vle::value::Value* pyvle_string_to_value(std::string i)
+{
+    return vle::value::String::create(i);
+}
+
+vle::value::Value* pyvle_bool_to_value(bool i)
+{
+    return vle::value::Boolean::create(i);
+}
+
+void pyvle_add_value_to_map(vle::value::Value* map, std::string key, vle::value::Value* val)
+{
+    map->toMap().addClone(key,*val);
+}
+
+void pyvle_add_value_to_set(vle::value::Value* set, vle::value::Value* val)
+{
+    set->toSet().addCloneValue(*val);
 }

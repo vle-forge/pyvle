@@ -31,6 +31,17 @@ using namespace boost::python;
 BOOST_PYTHON_MODULE(libpyvle)
 {
     class_<vle::vpz::Vpz>("Vpz");
+    class_<vle::value::Value>("Value");
+
+    def("create_map", pyvle_create_map, return_value_policy<manage_new_object>());
+    def("create_set", pyvle_create_set, return_value_policy<manage_new_object>());
+    def("int_to_value", pyvle_int_to_value, return_value_policy<manage_new_object>());
+    def("real_to_value", pyvle_real_to_value, return_value_policy<manage_new_object>());
+    def("string_to_value", pyvle_string_to_value, return_value_policy<manage_new_object>());
+    def("bool_to_value", pyvle_bool_to_value, return_value_policy<manage_new_object>());
+    def("add_value_to_map", pyvle_add_value_to_map);
+    def("add_value_to_set", pyvle_add_value_to_set);
+    
 
     def("open", pyvle_open, return_value_policy<manage_new_object>());
     def("open_pkg", pyvle_open_pkg, return_value_policy<manage_new_object>());
@@ -62,6 +73,8 @@ BOOST_PYTHON_MODULE(libpyvle)
     def("condition_add_integer", pyvle_condition_add_integer);
     def("condition_add_string", pyvle_condition_add_string);
     def("condition_add_boolean", pyvle_condition_add_boolean);
+    def("condition_add_value", pyvle_condition_add_value);
+    def("condition_set_port_value",pyvle_condition_set_port_value);
     def("condition_set_value",pyvle_condition_set_value);
     def("condition_get_setvalue",pyvle_condition_get_setvalue);
     def("condition_get_value",pyvle_condition_get_value);
