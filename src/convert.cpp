@@ -129,6 +129,17 @@ static void rvle_convert_vector_string(
     }
 }
 
+value::Value::type rvle_get_vector_type(const value::ConstVectorView& vec)
+{
+    for (value::ConstVectorView::const_iterator it = vec.begin();
+         it != vec.end(); ++it) {
+        if (*it) {
+            return (*it)->getType();
+        }
+    }
+    return value::Value::DOUBLE;
+}
+
 static SEXP rvle_build_data_frame(const oov::OutputMatrix& matrix)
 {
     value::ConstMatrixView view(matrix.values());
@@ -151,39 +162,37 @@ static SEXP rvle_build_data_frame(const oov::OutputMatrix& matrix)
                                          it->first.first %
                                          it->first.second).c_str()));
 
-        if (view[it->second][0] == 0) {
-            UNPROTECT(2);
-            error("empty value in (%d,0)\n", it->second);
-        } else {
-            switch(view[it->second][0]->getType()) {
-            case value::Value::BOOLEAN:
-                PROTECT(value = NEW_LOGICAL(view.shape()[1]));
-                rvle_convert_vector_boolean(matrix.getValue(it->second),
-                                            value);
-                break;
-            case value::Value::DOUBLE:
-                PROTECT(value = NEW_NUMERIC(view.shape()[1]));
-                rvle_convert_vector_double(matrix.getValue(it->second),
-                                           value);
-                break;
-            case value::Value::INTEGER:
-                PROTECT(value = NEW_INTEGER(view.shape()[1]));
-                rvle_convert_vector_integer(matrix.getValue(it->second),
-                                            value);
-                break;
-            case value::Value::STRING:
-                PROTECT(value = NEW_CHARACTER(view.shape()[1]));
-                rvle_convert_vector_string(matrix.getValue(it->second),
-                                           value);
-                break;
-            default:
-                UNPROTECT(2); // unprotect ret and names
-                error("not suppored type for (%s, %s), column (%d)",
-                      it->first.first.c_str(), it->first.second.c_str(),
-                      it->second);
-            }
-            SET_VECTOR_ELT(ret, it->second, value);
+        value::Value::type type = rvle_get_vector_type(
+            matrix.getValue(it->second));
+
+        switch (type) {
+        case value::Value::BOOLEAN:
+            PROTECT(value = NEW_LOGICAL(view.shape()[1]));
+            rvle_convert_vector_boolean(matrix.getValue(it->second),
+                                        value);
+            break;
+        case value::Value::DOUBLE:
+            PROTECT(value = NEW_NUMERIC(view.shape()[1]));
+            rvle_convert_vector_double(matrix.getValue(it->second),
+                                       value);
+            break;
+        case value::Value::INTEGER:
+            PROTECT(value = NEW_INTEGER(view.shape()[1]));
+            rvle_convert_vector_integer(matrix.getValue(it->second),
+                                        value);
+            break;
+        case value::Value::STRING:
+            PROTECT(value = NEW_CHARACTER(view.shape()[1]));
+            rvle_convert_vector_string(matrix.getValue(it->second),
+                                       value);
+            break;
+        default:
+            UNPROTECT(2); // unprotect ret and names
+            error("not suppored type for (%s, %s), column (%d)",
+                  it->first.first.c_str(), it->first.second.c_str(),
+                  it->second);
         }
+        SET_VECTOR_ELT(ret, it->second, value);
     }
 
     /* set the first column name's */
