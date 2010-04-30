@@ -33,15 +33,20 @@ BOOST_PYTHON_MODULE(libpyvle)
     class_<vle::vpz::Vpz>("Vpz");
     class_<vle::value::Value>("Value");
 
-    def("create_map", pyvle_create_map, return_value_policy<manage_new_object>());
-    def("create_set", pyvle_create_set, return_value_policy<manage_new_object>());
-    def("int_to_value", pyvle_int_to_value, return_value_policy<manage_new_object>());
-    def("real_to_value", pyvle_real_to_value, return_value_policy<manage_new_object>());
-    def("string_to_value", pyvle_string_to_value, return_value_policy<manage_new_object>());
-    def("bool_to_value", pyvle_bool_to_value, return_value_policy<manage_new_object>());
+    def("create_map",
+        pyvle_create_map, return_value_policy<manage_new_object>());
+    def("create_set",
+        pyvle_create_set, return_value_policy<manage_new_object>());
+    def("int_to_value",
+        pyvle_int_to_value, return_value_policy<manage_new_object>());
+    def("real_to_value",
+        pyvle_real_to_value, return_value_policy<manage_new_object>());
+    def("string_to_value",
+        pyvle_string_to_value, return_value_policy<manage_new_object>());
+    def("bool_to_value",
+        pyvle_bool_to_value, return_value_policy<manage_new_object>());
     def("add_value_to_map", pyvle_add_value_to_map);
     def("add_value_to_set", pyvle_add_value_to_set);
-    
 
     def("open", pyvle_open, return_value_policy<manage_new_object>());
     def("open_pkg", pyvle_open_pkg, return_value_policy<manage_new_object>());
@@ -141,5 +146,4 @@ BOOST_PYTHON_MODULE(libpyvle)
     def("get_seed_replicas",pyvle_get_seedreplicas);
     def("set_seed_replicas",pyvle_set_seedreplicas);
     def("outputs_list",pyvle_outputs_list);
-
 }

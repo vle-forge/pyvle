@@ -64,7 +64,8 @@ PyObject* pyvle_convert_value(const vle::value::Value& value)
         result = PyDict_New();
         for (vle::value::Map::const_iterator it = value.toMap().begin();
             it != value.toMap().end(); ++it) {
-            PyDict_SetItemString(result, it->first.c_str(), pyvle_convert_value(*(it->second)));
+            PyDict_SetItemString(result, it->first.c_str(),
+                                 pyvle_convert_value(*(it->second)));
         }
         break;
     }

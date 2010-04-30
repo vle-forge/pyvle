@@ -345,10 +345,12 @@ PyObject* pyvle_condition_size(vpz::Vpz* file)
 {
     assert(file);
 
-    return PyInt_FromLong(file->project().experiment().conditions().conditionlist().size());
+    return PyInt_FromLong(file->project().experiment().conditions().
+                          conditionlist().size());
 }
 
-PyObject* pyvle_condition_port_list_size(vpz::Vpz* file, std::string conditionname)
+PyObject* pyvle_condition_port_list_size(vpz::Vpz* file,
+                                         std::string conditionname)
 {
     assert(file);
 
@@ -469,12 +471,12 @@ void pyvle_condition_add_value(vpz::Vpz* file,
 				std::string portname,
 				vle::value::Value* value)
 {
-    
+
     assert(file);
-    
+
     vpz::Condition& cnd(file->project().experiment().
 			conditions().get(conditionname));
-    
+
     cnd.addValueToPort(portname, *value);
 }
 
@@ -993,7 +995,8 @@ PyObject* pyvle_get_output_plugin(vle::vpz::Vpz* file,
     assert(file);
 
     PyObject* r;
-    vpz::Output& out(file->project().experiment().views().outputs().get(outputname));
+    vpz::Output& out(file->project().experiment().views().outputs().
+                     get(outputname));
 
     r = PyString_FromString(out.plugin().c_str());
     return r;
@@ -1004,7 +1007,8 @@ PyObject* pyvle_observables_list(vle::vpz::Vpz* file)
     assert(file);
 
     PyObject* r;    /* observables list result */
-    vpz::ObservableList& obslst(file->project().experiment().views().observables().observablelist());
+    vpz::ObservableList& obslst(file->project().experiment().views().
+                                observables().observablelist());
     vpz::ObservableList::iterator it;
     int size;
     int i;
@@ -1027,7 +1031,8 @@ PyObject* pyvle_outputs_list(vle::vpz::Vpz* file)
     assert(file);
 
     PyObject* r;    /* outputs list result */
-    vpz::OutputList& lst(file->project().experiment().views().outputs().outputlist());
+    vpz::OutputList& lst(file->project().experiment().views().outputs().
+                         outputlist());
     vpz::OutputList::iterator it;
     int size;
     int i;
@@ -1137,7 +1142,8 @@ void pyvle_observable_add_port(vle::vpz::Vpz* file,
 {
     assert(file);
 
-    vpz::Observable& obs(file->project().experiment().views().observables().get(obsname));
+    vpz::Observable& obs(file->project().experiment().views().observables().
+                         get(obsname));
 
     if (!obs.exist(portname)) {
 	obs.add(portname);
@@ -1151,7 +1157,8 @@ void pyvle_observable_del_port(vle::vpz::Vpz* file,
 {
     assert(file);
 
-    vpz::Observable& obs(file->project().experiment().views().observables().get(obsname));
+    vpz::Observable& obs(file->project().experiment().views().observables().
+                         get(obsname));
 
     if (obs.exist(portname)) {
 	obs.del(portname);
@@ -1165,7 +1172,8 @@ PyObject* pyvle_observable_has_view(vle::vpz::Vpz* file,
 {
     assert(file);
 
-    vpz::Observable& obs(file->project().experiment().views().observables().get(obsname));
+    vpz::Observable& obs(file->project().experiment().views().observables().
+                         get(obsname));
 
     if (obs.hasView(viewname)) {
 	return Py_True;
@@ -1181,7 +1189,8 @@ PyObject* pyvle_observable_get_port_name(vle::vpz::Vpz* file,
     assert(file);
 
     PyObject* r;    /* port list result */
-    vpz::Observable& obs(file->project().experiment().views().observables().get(obsname));
+    vpz::Observable& obs(file->project().experiment().views().observables().
+                         get(obsname));
     vpz::PortNameList obsportlist = obs.getPortname(viewname);
     vpz::PortNameList::iterator it;
     int size;
@@ -1205,7 +1214,8 @@ PyObject* pyvle_observable_is_permanent(vle::vpz::Vpz* file,
 {
     assert(file);
 
-    vpz::Observable& obs(file->project().experiment().views().observables().get(obsname));
+    vpz::Observable& obs(file->project().experiment().views().observables().
+                         get(obsname));
 
     if (obs.isPermanent()) {
 	return Py_True;
@@ -1220,7 +1230,8 @@ void pyvle_observable_set_permanent(vle::vpz::Vpz* file,
 {
     assert(file);
 
-    vpz::Observable& obs(file->project().experiment().views().observables().get(obsname));
+    vpz::Observable& obs(file->project().experiment().views().observables().
+                         get(obsname));
 
     obs.permanent(ispermanent);
 }
@@ -1232,7 +1243,8 @@ PyObject* pyvle_observable_port_attached_views(vle::vpz::Vpz* file,
     assert(file);
 
     PyObject* r;
-    vpz::ObservablePort& port(file->project().experiment().views().observables().get(obsname).get(portname));
+    vpz::ObservablePort& port(file->project().experiment().views().
+                              observables().get(obsname).get(portname));
     vpz::ViewNameList list = port.viewnamelist();
     vpz::ViewNameList::iterator it;
 
@@ -1284,7 +1296,8 @@ PyObject* pyvle_export(vle::vpz::Vpz* file,
 
     vpz::View& v(file->project().experiment().views().get(view));
     std::string o_tmp_name(v.output());
-    file->project().experiment().views().outputs().get(o_tmp_name).setLocalStream(location,type);
+    file->project().experiment().views().outputs().get(o_tmp_name).
+        setLocalStream(location,type);
 
     manager::RunQuiet jrm;
 
@@ -1317,7 +1330,8 @@ PyObject* pyvle_export_manager(vle::vpz::Vpz* file,
 
     vpz::View& v(file->project().experiment().views().get(view));
     std::string o_tmp_name(v.output());
-    file->project().experiment().views().outputs().get(o_tmp_name).setLocalStream(location,type);
+    file->project().experiment().views().outputs().get(o_tmp_name).
+        setLocalStream(location,type);
 
     manager::ManagerRunMono jrm(std::cerr, false);
 
@@ -1845,7 +1859,8 @@ vle::value::Value* pyvle_bool_to_value(bool i)
     return vle::value::Boolean::create(i);
 }
 
-void pyvle_add_value_to_map(vle::value::Value* map, std::string key, vle::value::Value* val)
+void pyvle_add_value_to_map(vle::value::Value* map, std::string key,
+                            vle::value::Value* val)
 {
     map->toMap().addClone(key,*val);
 }

@@ -133,7 +133,7 @@ class Vle:
 
     def addBooleanCondition(self, name, port, value):
         libpyvle.condition_add_boolean(self.vpz, name, port, value)
-        
+
     def addMapCondition(self, name, port, dic):
         # dummy function : we can use addValueCondition()
         if isinstance(dic, dict):
@@ -151,7 +151,7 @@ class Vle:
 ## pyvle specific
     def setConditionValue(self, name, port, value, type, i):
         libpyvle.condition_set_value(self.vpz, name, port, value, type, i)
-        
+
     def setConditionPortValue(self, name, port, value, i):
         libpyvle.condition_set_port_value(self.vpz, name, port, to_value(value), i)
 
@@ -367,5 +367,6 @@ def to_value(x):
     elif isinstance(x, libpyvle.Value):
         val = x
     else:
-        raise ValueError(u'Can\'t convert type %s in vle::value::Value' % type(x))
+        raise ValueError(u'Can\'t convert type %s in vle::value::Value' %
+                         type(x))
     return val

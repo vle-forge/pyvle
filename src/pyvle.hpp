@@ -246,16 +246,16 @@ void pyvle_set_output_plugin(vle::vpz::Vpz* file,
 				  std::string format,
 				  std::string plugin);
 PyObject* pyvle_get_output_format(vle::vpz::Vpz* file,
-									std::string outputname);
+                                  std::string outputname);
 PyObject* pyvle_get_output_location(vle::vpz::Vpz* file,
-									std::string outputname);
+                                    std::string outputname);
 PyObject* pyvle_run_combination(vle::vpz::Vpz* file,
-								int comb);
+                                int comb);
 void pyvle_set_nbreplicas(vle::vpz::Vpz* file,
-							int number);
+                          int number);
 PyObject* pyvle_get_seedreplicas(vle::vpz::Vpz* file);
 void pyvle_set_seedreplicas(vle::vpz::Vpz* file,
-							long number);
+                            long number);
 
 vle::value::Value* pyvle_create_map();
 vle::value::Value* pyvle_create_set();
@@ -264,7 +264,8 @@ vle::value::Value* pyvle_real_to_value(float i);
 vle::value::Value* pyvle_string_to_value(std::string i);
 vle::value::Value* pyvle_bool_to_value(bool i);
 
-void pyvle_add_value_to_map(vle::value::Value* map, std::string key, vle::value::Value* val);
+void pyvle_add_value_to_map(vle::value::Value* map, std::string key,
+                            vle::value::Value* val);
 void pyvle_add_value_to_set(vle::value::Value* set, vle::value::Value* val);
 
 #endif

@@ -53,14 +53,15 @@ PyObject* pyvle_convert_matrix(const vle::oov::OutputMatrixViewList& out);
  *
  * @return A Python representation of: Matrix of List of Matrix.
 */
-PyObject* pyvle_convert_simulation_matrix(const vle::manager::OutputSimulationMatrix& out);
+PyObject* pyvle_convert_simulation_matrix(
+    const vle::manager::OutputSimulationMatrix& out);
 
 /**
  * @brief Build an output of simulations result into a Tuple (each cell is a
  * list of view) of Map. Values of type boolean, integer, double, string
  * conserve their type but by column. If in a column, different values are
- * returned, the value are set to None. Only the first value of the column is used
- * to get the type of the column.
+ * returned, the value are set to None. Only the first value of the
+ * column is used to get the type of the column.
  *
  * @param out The output of simulations.
  *
@@ -72,13 +73,15 @@ PyObject* pyvle_convert_dataframe(const vle::oov::OutputMatrixViewList& out);
  * @brief Build an output of simulations result into a Matrix (replicas x
  * conbination) of Tuple (each cell is a list of view) of Map. Values of
  * type boolean, integer, double, string conserve their type but by column. If
- * in a column, different values are returned, the value are set to None. Only the
- * first value of the column is used to get the type of the column.
+ * in a column, different values are returned, the value are set to
+ * None. Only the first value of the column is used to get the type of
+ * the column.
  *
  * @param out The output of simulations.
  *
  * @return A Python representation of: Matrix of List of Maps.
  */
-PyObject* pyvle_convert_simulation_dataframe(const vle::manager::OutputSimulationMatrix& out);
+PyObject* pyvle_convert_simulation_dataframe(
+    const vle::manager::OutputSimulationMatrix& out);
 
 #endif
