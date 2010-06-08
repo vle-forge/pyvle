@@ -237,6 +237,7 @@ PyObject* pyvle_trace_run_error(const char* file);
 PyObject* pyvle_get_installed_packages();
 PyObject* pyvle_get_package_vpz_list(std::string name);
 PyObject* pyvle_get_package_vpz_directory(std::string name);
+PyObject* pyvle_get_package_data_directory(std::string name);
 PyObject* pyvle_get_package_vpz(std::string name, std::string vpz);
 void pyvle_set_package_mode(std::string name);
 void pyvle_set_normal_mode();

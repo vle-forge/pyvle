@@ -344,6 +344,9 @@ class VlePackage:
     def getVpzDirectory(self):
         return libpyvle.get_package_vpz_directory(self.name)
 
+    def getDataDirectory(self):
+        return libpyvle.get_package_data_directory(self.name)
+
     def getVpz(self, vpz):
         return libpyvle.get_package_vpz(self.name, vpz)
 
