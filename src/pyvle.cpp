@@ -1584,6 +1584,11 @@ PyObject* pyvle_get_package_vpz_list(std::string name)
 
 PyObject* pyvle_get_package_vpz_directory(std::string name)
 {
+    if (!thread_init) {
+        vle::manager::init();
+        thread_init = true;
+    }
+    
     PyObject* r;
 
     utils::Package::package().select(name);
