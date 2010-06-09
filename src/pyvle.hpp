@@ -233,7 +233,7 @@ PyObject* pyvle_export_manager(vle::vpz::Vpz* file,
 PyObject* pyvle_nbreplicas(vle::vpz::Vpz* file);
 PyObject* pyvle_combinations(vle::vpz::Vpz* file);
 PyObject* pyvle_experiment_get_name(vle::vpz::Vpz* file);
-PyObject* pyvle_trace_run_error(const char* file);
+PyObject* pyvle_trace_run_error(vle::vpz::Vpz* file);
 PyObject* pyvle_get_installed_packages();
 PyObject* pyvle_get_package_vpz_list(std::string name);
 PyObject* pyvle_get_package_vpz_directory(std::string name);

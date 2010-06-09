@@ -1492,16 +1492,15 @@ PyObject* pyvle_experiment_get_name(vle::vpz::Vpz* file)
     return r;
 }
 
-PyObject* pyvle_trace_run_error(const char* file)
+PyObject* pyvle_trace_run_error(vle::vpz::Vpz* file)
 {
     std::string m_out = "";
     bool                    m_error = false;
     devs::RootCoordinator   m_root;
-    std::string filename(file);
     try {
 	{
 	    m_out+=" - Open file.....................: ";
-	    vpz::Vpz vpz(filename);
+	    vpz::Vpz vpz(*file);
 	    m_out+="ok<br/>";
 
 	    m_out+=" - Coordinator load models ......: ";

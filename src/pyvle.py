@@ -319,7 +319,7 @@ class Vle:
         return libpyvle.experiment_get_name(self.vpz)
 
     def traceRunError(self):
-        return libpyvle.trace_run_error(self.filename)
+        return libpyvle.trace_run_error(self.vpz)
 
     def setPackageMode(self, name):
         libpyvle.set_package_mode(name)
