@@ -91,6 +91,13 @@ void pyvle_delete(vle::vpz::Vpz* file)
 
 /*  - - - - - - - - - - - - - --ooOoo-- - - - - - - - - - - -  */
 
+void pyvle_experiment_set_name(vpz::Vpz* file,
+				   const std::string& name)
+{
+    assert(file);
+    file->project().experiment().setName(name);
+}
+
 void pyvle_experiment_set_begin(vpz::Vpz* file,
 				double value)
 {

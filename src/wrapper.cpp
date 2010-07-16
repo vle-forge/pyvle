@@ -52,6 +52,7 @@ BOOST_PYTHON_MODULE(libpyvle)
     def("open_pkg", pyvle_open_pkg, return_value_policy<manage_new_object>());
     def("save", pyvle_save);
     def("delete", pyvle_delete);
+    def("experiment_set_name", pyvle_experiment_set_name);
     def("experiment_set_begin", pyvle_experiment_set_begin);
     def("experiment_get_begin", pyvle_experiment_get_begin);
     def("experiment_set_duration", pyvle_experiment_set_duration);

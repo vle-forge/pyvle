@@ -32,6 +32,10 @@ class Vle:
     def save(self, filename):
         libpyvle.save(self.vpz, filename)
 
+# name of experiments
+    def setName(self, name):
+        libpyvle.experiment_set_name(self.vpz, name)
+
 # begin of experiments
     def setBegin(self, date):
         libpyvle.experiment_set_begin(self.vpz, date)

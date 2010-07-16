@@ -35,6 +35,10 @@ void pyvle_save(vle::vpz::Vpz* file,
 		std::string filename);
 void pyvle_delete(vle::vpz::Vpz* file);
 
+/* name of experiments */
+void pyvle_experiment_set_name(vle::vpz::Vpz* file,
+				   const std::string& name);
+
 /* begin of experiments */
 void pyvle_experiment_set_begin(vle::vpz::Vpz* file,
 				   double value);
