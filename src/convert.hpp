@@ -1,12 +1,17 @@
 /**
- * @file convert.hpp
- * @author The VLE Development Team
+ * @file pyvle/src/convert.hpp
+ * @author The VLE:Development Team
+ * See the AUTHORS or Authors.txt file
  */
 
 /*
- * VLE Environment - the multimodeling and simulation environment
- * This file is a part of the VLE environment (http://vle-project.org)
- * Copyright (C) 2003 - 2010 The VLE Development Team
+ * VLE - The Virtual Laboratory Environment
+ *       A multimodeling and simulation environment
+ *       http://www.vle-project.org
+ * This file is a part of VLE
+ *
+ * Copyright (C) 2003 - 2010 ULCO http://www.univ-littoral.fr
+ * Copyright (C) 2007 - 2010 INRA http://www.inra.fr
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +26,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 
 #ifndef VLE_PYVLE_CONVERT_H
 #define VLE_PYVLE_CONVERT_H
