@@ -1,19 +1,18 @@
 INCLUDE_DIRECTORIES(
-	${VLE_INCLUDE_DIRS}
-	${PYTHON_INCLUDE_PATH}
-	${Boost_INCLUDE_DIRS}
-	${pyvle_SOURCE_DIR}/src)
+  ${VLE_INCLUDE_DIRS}
+  ${PYTHON_INCLUDE_PATH}
+  ${Boost_INCLUDE_DIRS}
+  ${pyvle_SOURCE_DIR}/src)
 
 LINK_DIRECTORIES(
-	${VLE_LIBRARY_DIRS}
-	${Boost_LIBRARY_DIRS})
+  ${VLE_LIBRARY_DIRS}
+  ${Boost_LIBRARY_DIRS})
 
-ADD_LIBRARY(pyvle SHARED convert.cpp convert.hpp
-		  	 pyvle.cpp pyvle.hpp wrapper.cpp)
+ADD_LIBRARY(pyvle SHARED convert.cpp convert.hpp pyvle.cpp pyvle.hpp
+  wrapper.cpp)
 
-TARGET_LINK_LIBRARIES(pyvle ${VLE_LIBRARIES}
-			    ${PYTHON_LIBRARIES}
-			    ${Boost_LIBRARIES})
+TARGET_LINK_LIBRARIES(pyvle ${VLE_LIBRARIES} ${PYTHON_LIBRARIES}
+  ${Boost_LIBRARIES})
 
-INSTALL(TARGETS pyvle DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python${PYTHON_VERSION}/lib-dynload")
-INSTALL(FILES pyvle.py DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python${PYTHON_VERSION}")
+INSTALL(TARGETS pyvle DESTINATION lib/python${PYTHON_VERSION}/lib-dynload)
+INSTALL(FILES pyvle.py DESTINATION lib/python${PYTHON_VERSION})
