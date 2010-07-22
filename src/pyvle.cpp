@@ -667,8 +667,8 @@ PyObject* pyvle_atomic_model_conditions_list(vle::vpz::Vpz* file,
     while (it != atommods.end()) {
 	if (it->first->getName() == name) {
 	    vpz::AtomicModel& a = it->second;
-	    vpz::Strings s = a.conditions();
-	    vpz::Strings::iterator sit;
+	    std::vector < std::string > s = a.conditions();
+	    std::vector < std::string >::iterator sit;
 	    int size = s.size();
 	    r = PyList_New(size);
 	    int i = 0;
@@ -692,8 +692,8 @@ PyObject* pyvle_dynamic_conditions_list(vle::vpz::Vpz* file,
     while (it != atommods.end()) {
 	if (it->second.dynamics() == name) {
 	    vpz::AtomicModel& a = it->second;
-	    vpz::Strings s = a.conditions();
-	    vpz::Strings::iterator sit;
+	    std::vector < std::string > s = a.conditions();
+	    std::vector < std::string >::iterator sit;
 	    int size = s.size();
 	    r = PyList_New(size);
 	    int i = 0;
@@ -1450,10 +1450,10 @@ PyObject* pyvle_combinations(vle::vpz::Vpz* file)
 	for (size_t jcom = 0; jcom < conditions.size(); ++jcom) {
 	    if (not itOrig->second.conditionvalues().empty()) {
 		size_t index = conditions[jcom].pos;
-		value::Value& val = itValueOrig->second->get(index);
+		value::Value* val = itValueOrig->second->get(index);
 
 		PyList_SetItem(l, jcom, PyString_FromString(
-				   val.writeToString().c_str()));
+				   val->writeToString().c_str()));
 
 		itValueOrig++;
 		if (itValueOrig == itOrig->second.conditionvalues().end()) {
@@ -1696,8 +1696,7 @@ PyObject* pyvle_get_output_location(vle::vpz::Vpz* file,
     return PyString_FromString(out.location().c_str());
 }
 
-PyObject* pyvle_run_combination(vle::vpz::Vpz* file,
-								int comb)
+PyObject* pyvle_run_combination(vle::vpz::Vpz* file, int comb)
 {
     assert(file);
 
@@ -1781,7 +1780,7 @@ PyObject* pyvle_run_combination(vle::vpz::Vpz* file,
 	    if (not itOrig_o->second.conditionvalues().empty()) {
 		size_t index = conditions[jcom].pos;
 		if (nb == comb) {
-		    value::Value& val = itValueOrig_o->second->get(index);
+		    value::Value* val = itValueOrig_o->second->get(index);
 		    itValueOrig->second->add(val);
 		}
 		itValueOrig_o++;
@@ -1896,10 +1895,10 @@ vle::value::Value* pyvle_bool_to_value(bool i)
 void pyvle_add_value_to_map(vle::value::Value* map, std::string key,
                             vle::value::Value* val)
 {
-    map->toMap().addClone(key,*val);
+    map->toMap().add(key, val->clone());
 }
 
 void pyvle_add_value_to_set(vle::value::Value* set, vle::value::Value* val)
 {
-    set->toSet().addCloneValue(*val);
+    set->toSet().add(val->clone());
 }
