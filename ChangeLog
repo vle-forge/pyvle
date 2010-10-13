@@ -1,4 +1,10 @@
-pyvle-0.8.8
+pyvle-0.8.9
+
+commit fb8d8c18049a434c92fba8c34b2c41cab89c37ae
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Tue Sep 28 20:15:20 2010 +0200
+
+    pyvle-0.8.8
 
 commit 8c15d3c466db8bb2109c11a5911fd6e11afa9f41
 Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
