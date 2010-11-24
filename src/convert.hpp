@@ -1,17 +1,15 @@
-/**
- * @file pyvle/src/convert.hpp
- * @author The VLE:Development Team
- * See the AUTHORS or Authors.txt file
- */
-
 /*
- * VLE - The Virtual Laboratory Environment
- *       A multimodeling and simulation environment
- *       http://www.vle-project.org
- * This file is a part of VLE
+ * @file src/convert.hpp
  *
- * Copyright (C) 2003 - 2010 ULCO http://www.univ-littoral.fr
- * Copyright (C) 2007 - 2010 INRA http://www.inra.fr
+ * This file is part of VLE, a framework for multi-modeling, simulation
+ * and analysis of complex dynamical systems
+ * http://www.vle-project.org
+ *
+ * Copyright (c) 2003-2007 Gauthier Quesnel <quesnel@users.sourceforge.net>
+ * Copyright (c) 2003-2010 ULCO http://www.univ-littoral.fr
+ * Copyright (c) 2007-2010 INRA http://www.inra.fr
+ *
+ * See the AUTHORS or Authors.txt file for copyright owners and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,8 +26,8 @@
  */
 
 
-#ifndef VLE_PYVLE_CONVERT_H
-#define VLE_PYVLE_CONVERT_H
+#ifndef VLE_PORT_PYVLE_CONVERT_H
+#define VLE_PORT_PYVLE_CONVERT_H 1
 
 #include <Python.h>
 #include <vle/manager.hpp>
