@@ -1,0 +1,421 @@
+pyvle-1.0.0-alpha1
+
+commit 44119f25a0e16558a5a26b92af5072a408b39e92
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Wed Nov 24 22:56:26 2010 +0100
+
+    Update headers of source file
+    
+    Replace the headers with the headers of the VLE framework.
+
+commit 2be24cb64703bc5504de22c5ea47f13a06ba6b5f
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Wed Nov 24 22:50:52 2010 +0100
+
+    Bump to VLE 1.0
+
+commit 2398809deaa092f67ed25993760a7ffc0506254e
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Thu Jul 22 21:35:24 2010 +0200
+
+    Update the CMakeLists.txt install script
+
+commit dfe9891bfb92be1476fbfa11abbbd4cbaf93ca2b
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Thu Jul 22 21:30:26 2010 +0200
+
+    Update Pyvle to the API of VLE 0.9
+
+commit 798674c20af89654c2a5f2426922cc9de8cdf29d
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Thu Jul 22 21:22:31 2010 +0200
+
+    Add CPack script genererator
+
+commit 9838e6b00ae49ba8f106fec384f2a7e0fba72123
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Thu Jul 22 13:44:37 2010 +0200
+
+    Bump to 0.9
+
+commit 26d5098dce2066f4da965241f70c720d0f706fff
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Thu Jul 22 17:26:24 2010 +0200
+
+    Update headers
+
+commit dc16425f0b134aa31fa9f5a8b3e4518f5ae9a0d6
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Wed Jul 21 11:25:43 2010 +0200
+
+    Update the file README
+
+commit 5c85213ac4916a118ff0898bc23dfee87fd68e8e
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Tue Jul 20 15:32:24 2010 +0200
+
+    Update the file AUTHORS
+
+commit cab8aabca72d8aeeff1338c0011355a7d3660337
+Author: Jerome Thiard <jerome.thiard@toulouse.inra.fr>
+Date:   Fri Jul 16 18:06:01 2010 +0200
+
+    Add new setName method in class Vle
+    
+    Allow the user to change the experiment name
+
+commit ae0373e3ce33108de50fd177ca835d89ecbb1722
+Author: Jerome Thiard <jerome.thiard@toulouse.inra.fr>
+Date:   Wed Jun 9 15:36:50 2010 +0200
+
+    Fix bug in traceRunError
+    
+    this function now use the Vle.vpz instead of Vle.filename. Using the
+    filename, it didn't use changes made in the experiment.
+
+commit 894b3c64b7a8ef0ff2c300e28e93d13cffe2a137
+Author: Jerome Thiard <jerome.thiard@toulouse.inra.fr>
+Date:   Tue Jun 8 11:22:19 2010 +0200
+
+    Fix bug in pyvle_get_package_vpz_directory
+
+commit 4d7dac006ef5f67970855fcc0d2151d6fe5caf48
+Author: Jerome Thiard <jerome.thiard@toulouse.inra.fr>
+Date:   Tue Jun 8 11:25:03 2010 +0200
+
+    Add getDataDirectory method in class VlePackage
+
+commit 661e577d8486c0bf3a223e32c04d01c7cecc28e2
+Author: Eric Ramat <ramat@lil.univ-littoral.fr>
+Date:   Fri Apr 30 17:18:02 2010 +0200
+
+    Coding style ans update Authors
+
+commit 9dcf7d25dbd2a758817eb240a75bfbbe36a610a2
+Author: Jerome Thiard <jerome.thiard@toulouse.inra.fr>
+Date:   Fri Apr 23 15:35:53 2010 +0200
+
+    add map and set support, and bases for Value support
+    
+    * new functions to add map (from python dict) or set (from python list) or Value in condition
+    * new function to set a condition port value from a python dict or list
+    * getConditionPortValue can return a python dict or a python list if the
+    value is a map or a set
+
+commit 90acf1f7ba11d0a01939b8e1c89e8a1e7be43335
+Author: Eric Ramat <ramat@lil.univ-littoral.fr>
+Date:   Thu Apr 15 17:11:04 2010 +0200
+
+    Fix python version for correct installation
+
+commit bfdd10c797732f62d7f2951aa5e6c72b3645aaa8
+Author: Eric Ramat <ramat@lil.univ-littoral.fr>
+Date:   Thu Apr 15 14:30:58 2010 +0200
+
+    Update copyright.
+
+commit 5b46dba192fd6ca62b3b4c04a32981b549a3a4b3
+Author: Eric Ramat <ramat@lil.univ-littoral.fr>
+Date:   Fri Apr 9 14:30:08 2010 +0200
+
+    Update authors
+
+commit 0b1cabc2c4e75d81fad06833860ec0d63b385252
+Author: Sauvage David <davidsauvage8@gmail.com>
+Date:   Fri Apr 9 09:48:42 2010 +0200
+
+    Add a new method listOutputs in class Vle
+    
+    Allows user to see the outputs
+
+commit 127885f07d697f5560c44993b7e211d05349df3a
+Author: Eric Ramat <ramat@lil.univ-littoral.fr>
+Date:   Fri Jan 22 11:39:10 2010 +0100
+
+    Fix bug in getBegin and setBegin
+
+commit b462a03a799ff722ac8fa4598f8c9d4c7a7f80a4
+Author: Eric Ramat <ramat@lil.univ-littoral.fr>
+Date:   Tue Jan 19 13:45:42 2010 +0100
+
+    Change the structure of result
+
+commit 8cc772eaca724d033bce286e25716fe7b611c9cd
+Author: Eric Ramat <ramat@lil.univ-littoral.fr>
+Date:   Tue Jan 19 12:24:27 2010 +0100
+
+    Coding style
+
+commit 9ea290704ee9bb1719d5d18d09136e04ed3d24a2
+Author: Eric Ramat <ramat@lil.univ-littoral.fr>
+Date:   Tue Jan 19 12:04:14 2010 +0100
+
+    Remove VleUtils class and change runManager result
+
+commit 15720cc2d8795f9be10f96091168bcd131bd28f0
+Author: Eric Ramat <ramat@lil.univ-littoral.fr>
+Date:   Wed Jan 13 10:16:13 2010 +0100
+
+    fix bug on getVpzFile
+
+commit d3cf10e27ee44e0ab8264f2603b195408d6e5301
+Author: Eric Ramat <ramat@lil.univ-littoral.fr>
+Date:   Wed Dec 16 16:49:40 2009 +0100
+
+    Fix bug on name of clearConditionPort method.
+
+commit 1f458ece1ef78fec7a112c644d633c6d8e6c435c
+Author: Eric Ramat <ramat@lil.univ-littoral.fr>
+Date:   Mon Oct 5 09:38:13 2009 +0200
+
+    Unify method names of pyvle and rvle
+
+commit dc744ddb030936935917f2ee0b0354e43877b943
+Author: Daniel Salome <dansal62@users.sourceforge.net>
+Date:   Fri Jul 17 10:09:00 2009 +0200
+
+    Edition of replicas and replicas seed
+    
+    Now users can edit replicas number and replicas seed if vpz is compatible
+    Compatibility can be enabled while importing
+
+commit 71c63b7e391de1b7b96348a0386a5fa5ad2620ba
+Author: Daniel Salome <dansal62@users.sourceforge.net>
+Date:   Wed Jul 15 15:54:44 2009 +0200
+
+    Combination run mode
+    
+    Now experiments can be run for one combination only
+
+commit 31cc4dd1f65a13861655dfb5ac907748985a4636
+Author: Daniel Salome <dansal62@users.sourceforge.net>
+Date:   Fri Jul 10 17:28:59 2009 +0200
+
+    Make vpz compatible with vle-web while import
+    
+    Now vpz output plugins are set to storage while importing if user decide it
+
+commit a699d1e2335de5f343cd9f6208ccc1050533b327
+Author: Daniel Salome <dansal62@users.sourceforge.net>
+Date:   Thu Jul 9 17:00:33 2009 +0200
+
+    VLE packages management
+    
+    Now vle-web can manage VLE packages
+    
+    All the functionalities are provided in normal and package mode
+
+commit 3038d36b52586d04759d9c1add7e4dd3607ee74b
+Author: Daniel Salome <dansal62@users.sourceforge.net>
+Date:   Fri Jul 3 11:52:38 2009 +0200
+
+    Displaying multiple models conditions in preview mode
+    
+    Now if a dynamic owns multiple atomic models, all condition ports are displayed instead of random condition ports
+
+commit 75d30f898ec2058a313b84d42e2ec79e77f9765a
+Author: Daniel Salome <dansal62@users.sourceforge.net>
+Date:   Tue Jun 30 15:18:08 2009 +0200
+
+    Run error management
+    
+    When an execution fails, error trace details is displayed
+
+commit afeb070aa88ba203b6e4b925e6b1a57157134bcc
+Author: Daniel Salome <dansal62@users.sourceforge.net>
+Date:   Tue Jun 16 16:52:28 2009 +0200
+
+    New functions for exportation
+    
+    * Needed functions for exporting experiment results
+
+commit 3ad78a439b161d5ed397f5958f4da9903935bcfe
+Author: Eric Ramat <ramat@lil.univ-littoral.fr>
+Date:   Mon Jun 8 19:35:24 2009 +0200
+
+    Add combinaisons method
+
+commit b0a995f55ee0b93a3f75507d47262f9a9bcb9c3d
+Author: Daniel Salome <dansal62@users.sourceforge.net>
+Date:   Fri Jun 5 15:17:42 2009 +0200
+
+    Functions for graphical plan execution
+    
+    * Count the number of experiment replicas
+
+commit e71704ae45d268aed2729dec4ec0959a58c78bb0
+Author: Daniel Salome <dansal62@users.sourceforge.net>
+Date:   Wed Jun 3 09:37:31 2009 +0200
+
+    Port Attached Views Listing
+    
+    * Adding a function to get a list of attached views from a port
+
+commit 5792bc084563b387620934f5e778561a1cb43c7a
+Author: Daniel Salome <dansal62@users.sourceforge.net>
+Date:   Wed May 27 09:59:35 2009 +0200
+
+    Management of boolean parameters
+    
+    * Now boolean parameters can be set or added
+
+commit a1541bf92c8711f875edb6ee228892992c5a47e7
+Author: Daniel Salomé <dansal62@users.sourceforge.net>
+Date:   Fri May 22 11:51:13 2009 +0200
+
+    Experiment export
+    
+    Experiment export into csv, text, and rdata
+
+commit 4a47bc11b6a46f34f07aece6af4b8f95ac991445
+Author: Daniel Salomé <dansal62@users.sourceforge.net>
+Date:   Tue May 19 10:28:57 2009 +0200
+
+    Correction of seed and duration set functions
+    
+    * Function name for setting a duration or seed is wrong
+
+commit cb15c683b0f5b4994e42ec3fc393730acdac00ae
+Author: Daniel Salomé <dansal62@users.sourceforge.net>
+Date:   Fri May 15 16:24:47 2009 +0200
+
+    Functions for experiment graphical run
+    
+    * Some functions in order to parameter graphical experiment
+    run have been added
+
+commit 5e65d453608c1f88616644a1ffc71447be965295
+Author: Daniel Salomé <dansal62@users.sourceforge.net>
+Date:   Wed May 6 09:53:51 2009 +0200
+
+    Condition parameter value management
+    
+    * Parameter value can be set
+    * Parameter value type can be got
+    * Parameter value can be deleted
+    * Parameter value set can be got
+
+commit 4d24316e87e8a69b569926460ca4dd7aff8aecb6
+Author: Daniel Salomé <dansal62@users.sourceforge.net>
+Date:   Mon May 4 17:53:13 2009 +0200
+
+    Adding prefix to seed and duration methods in pyvle.py
+    
+    "experiment_" prefix was missing in get_seed, set_seed,
+    get_duration and set_duration methods in pyvle.py
+
+commit cdc1f7ba22a6a3dfcaa421b3fe45002b488ff5f8
+Author: Daniel Salomé <dansal62@users.sourceforge.net>
+Date:   Wed Apr 29 10:15:30 2009 +0200
+
+    Vpz observables management
+    
+    * Observables can be listed
+    * Observables list can be cleared
+    * Observables can be added or deleted
+    * Observable views can be listed
+    * Observable port name can be shown
+    * Observable ports can be added or deleted
+    * Observable permanent status can be shown or set
+
+commit 7b56cc169ba71d0c731c00436a25bc0b8350773d
+Author: Eric Ramat <ramat@lil.univ-littoral.fr>
+Date:   Tue Apr 28 12:18:37 2009 +0200
+
+    Migration to vle 0.8
+
+commit 2e7e5b63ec8867d8a0f97264550b83d93100117e
+Author: Daniel Salomé <dansal62@users.sourceforge.net>
+Date:   Fri Apr 24 10:54:20 2009 +0200
+
+    Vpz view management
+    
+    * Views can be listed
+    * View name, type, output, data, timestep can be shown
+    * View name, type, data, timestep can be set
+    * Views can be added : timed, event or finish views
+
+commit eb26d9ab7d19e5ee3586aa31924e6a781e560311
+Author: Daniel Salomé <dansal62@users.sourceforge.net>
+Date:   Mon Apr 20 14:32:44 2009 +0200
+
+    Management of vpz dynamics
+    
+    * Dynamics can be listed
+    * Dynamic name can be viewed
+    * Dynamic model can be viewed/set
+    * Dynamic library can be viewed/set
+    * Dynamic language can be viewed/set
+
+commit 9adef4d0ebb7d911195bb5440a491faf82f69989
+Author: Eric Ramat <ramat@lil.univ-littoral.fr>
+Date:   Mon Mar 2 11:22:32 2009 +0100
+
+    Fix: the thread system not initialized
+
+commit 7633b849c141645c188ad734cd24378b89239f4b
+Author: Eric Ramat <ramat@lil.univ-littoral.fr>
+Date:   Fri Jan 30 17:13:54 2009 +0100
+
+    Change separator in column name of result
+
+commit ba56d2b308129ae14f73af28a81727702e471238
+Author: Eric Ramat <ramat@lil.univ-littoral.fr>
+Date:   Wed Jan 28 18:41:55 2009 +0100
+
+    Add pyvle.py with a class Vle and add some new methods
+
+commit 62f0ee0be697925a03ed2e6df17c5b211bc32d25
+Author: Eric Ramat <ramat@lil.univ-littoral.fr>
+Date:   Wed Jan 28 12:06:31 2009 +0100
+
+    Fix: wrong time in matrix result
+
+commit 34b751ae854746dccbd1ff104684a01877263385
+Author: Grégory Wisniewski <codidex@gmail.com>
+Date:   Fri Jan 23 00:29:49 2009 +0100
+
+    Migration to vle 0.7
+    
+    * ValueBase renamed as Value
+    * MatrixFactory renamed as Matrix
+    * vle::value::MatrixFactory::ConstMatrixView moved to vle::value::ConstMatrixView
+    * DoubleFactory renamed as Double
+    * IntegerFactory renamed as Integer
+    * Some arguments are passed with references instead to pointers
+
+commit 0c45340ac88b79624b32412ae4c3d0a326b73f2c
+Author: Eric Ramat <ramat@lil.univ-littoral.fr>
+Date:   Sat Jun 7 19:28:54 2008 +0200
+
+    Bug fix: init thread
+
+commit 16b23cf71023b20cd3ab495a88723c630f11e654
+Author: Eric Ramat <ramat@lil.univ-littoral.fr>
+Date:   Sat Jun 7 09:20:44 2008 +0200
+
+    Bug fix: wrong line
+
+commit 21058473cbe336e2f5666aa5609f5375d272317a
+Author: Eric Ramat <ramat@lil.univ-littoral.fr>
+Date:   Sat Jun 7 09:10:19 2008 +0200
+
+    Add time column into map
+
+commit 2babf8250743d137b25826dad442765a0ef17250
+Author: Eric Ramat <ramat@lil.univ-littoral.fr>
+Date:   Sat Jun 7 09:03:57 2008 +0200
+
+    Modify comment of convert functions
+
+commit 4c47f15837015a2f6f02682d0858c55e8382d453
+Author: Eric Ramat <ramat@lil.univ-littoral.fr>
+Date:   Sat Jun 7 08:56:44 2008 +0200
+
+    Add files to project.
+
+commit db0dc9e74f7f9609cd7c043764d3ed9b7daf94b7
+Author: Eric Ramat <ramat@lil.univ-littoral.fr>
+Date:   Fri Jun 6 15:58:56 2008 +0200
+
+    Initial commit
