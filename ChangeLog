@@ -1,4 +1,19 @@
-pyvle-1.0.0-alpha1
+pyvle-1.0.0-alpha2
+
+commit 3e106b84f8d3327eb71149625399ea1aa33b078e
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Tue Dec 7 15:43:45 2010 +0100
+
+    Update package generation
+    
+    Fix the VLE_EXTRA variable from `-rc1' or `-alpha1' to `rc1' or `alpha1'
+    to greatly increase the binary and source packages.
+
+commit 6a72e7d5d05979bb777d7d6b189a0dc5e5fc195e
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Tue Dec 7 08:28:34 2010 +0100
+
+    pyvle-1.0.0-alpha1
 
 commit 44119f25a0e16558a5a26b92af5072a408b39e92
 Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
