@@ -1,4 +1,28 @@
-pyvle-1.0.0-alpha2
+pyvle-1.0.0-alpha3
+
+commit c901f7b97bdae0d5f64802c07cc494e7b740bd66
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Mon Jan 17 12:09:42 2011 +0100
+
+    Fix boost::python wrapper with latest VLE's API
+    
+    Value is now a pure virtual class. The boost::python::class_ needs a new
+    parameters boost::python::no_init to avoid compilation error.
+    
+    - fix boost::python::class_ error.
+    - remove the using boost::python instructions.
+
+commit c580d7635e1bfbeaa6909601410b08c1aaec95bc
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Fri Jan 14 15:02:13 2011 +0100
+
+    Update AUTHORS
+
+commit df23ccd045c25ab6147d74d5d2ad4698adb82c57
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Tue Dec 7 21:39:49 2010 +0100
+
+    pyvle-1.0.0-alpha2
 
 commit 3e106b84f8d3327eb71149625399ea1aa33b078e
 Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
