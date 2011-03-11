@@ -1,4 +1,28 @@
-pyvle-1.0.0-alpha3
+pyvle-1.0.0-alpha4
+
+commit d1e2bfabee9055c569f8bd4910805ea8674edaa5
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Fri Mar 11 10:27:39 2011 +0100
+
+    cpack: fix the default rpm and deb package name
+    
+    The RPM and Deb package follow the VLE package name: pyvle-1-0 instead
+    of pyvle-1.0.0-alpha-1.0.
+
+commit cc977375a336ed625559a6cd15d0226f75f3154a
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Tue Mar 8 15:07:41 2011 +0100
+
+    cpack: rewrite packaging system
+    
+    - use the CMake strip option to reduce dynamic library file size.
+    - build the Debian and RPM packages
+
+commit 4d50d6e230ae63d4affde2e6a208baa75541826e
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Tue Jan 18 08:44:57 2011 +0100
+
+    pyvle-1.0.0-alpha3
 
 commit c901f7b97bdae0d5f64802c07cc494e7b740bd66
 Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
