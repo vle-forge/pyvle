@@ -32,6 +32,7 @@
 #include <vle/value.hpp>
 #include <vle/utils/Package.hpp>
 #include <vle/utils/Path.hpp>
+#include <vle/utils/Module.hpp>
 #include <convert.hpp>
 #include <pyvle.hpp>
 #include <boost/lexical_cast.hpp>
@@ -183,6 +184,7 @@ PyObject* pyvle_run(vpz::Vpz* file)
 
         jrm.start(*file);
         const oov::OutputMatrixViewList& result(jrm.outputs());
+        utils::ModuleCache::instance().clear();
 
 	return pyvle_convert_dataframe(result);
     } catch(const std::exception& e) {
@@ -199,6 +201,7 @@ PyObject* pyvle_run_matrix(vpz::Vpz* file)
 
         jrm.start(*file);
         const oov::OutputMatrixViewList& result(jrm.outputs());
+        utils::ModuleCache::instance().clear();
 
 	return pyvle_convert_matrix(result);
     } catch(const std::exception& e) {
@@ -215,6 +218,7 @@ PyObject* pyvle_run_manager(vpz::Vpz* file)
         jrm.start(*file);
         const manager::OutputSimulationMatrix& result(
             jrm.outputSimulationMatrix());
+        utils::ModuleCache::instance().clear();
 	return pyvle_convert_simulation_dataframe(result);
     } catch(const std::exception& e) {
         return NULL;
@@ -231,6 +235,7 @@ PyObject* pyvle_run_manager_matrix(vpz::Vpz* file)
         jrm.start(*file);
         const manager::OutputSimulationMatrix& result(
             jrm.outputSimulationMatrix());
+        utils::ModuleCache::instance().clear();
 	return pyvle_convert_simulation_matrix(result);
     } catch(const std::exception& e) {
         return NULL;
@@ -247,6 +252,7 @@ PyObject* pyvle_run_manager_thread(vpz::Vpz* file, int th)
         jrm.start(*file);
         const manager::OutputSimulationMatrix& result(
             jrm.outputSimulationMatrix());
+        utils::ModuleCache::instance().clear();
 	return pyvle_convert_simulation_dataframe(result);
     } catch(const std::exception& e) {
         return NULL;
@@ -263,6 +269,7 @@ PyObject* pyvle_run_manager_thread_matrix(vpz::Vpz* file, int th)
         jrm.start(*file);
         const manager::OutputSimulationMatrix& result(
             jrm.outputSimulationMatrix());
+        utils::ModuleCache::instance().clear();
 	return pyvle_convert_simulation_matrix(result);
     } catch(const std::exception& e) {
         return NULL;
@@ -279,6 +286,7 @@ PyObject* pyvle_run_manager_cluster(vpz::Vpz* file)
         jrm.start(*file);
         const manager::OutputSimulationMatrix& result(
             jrm.outputSimulationMatrix());
+        utils::ModuleCache::instance().clear();
 	return pyvle_convert_simulation_dataframe(result);
     } catch(const std::exception& e) {
         return NULL;
@@ -295,6 +303,7 @@ PyObject* pyvle_run_manager_cluster_matrix(vpz::Vpz* file)
         jrm.start(*file);
         const manager::OutputSimulationMatrix& result(
             jrm.outputSimulationMatrix());
+        utils::ModuleCache::instance().clear();
 	return pyvle_convert_simulation_matrix(result);
     } catch(const std::exception& e) {
         return NULL;
