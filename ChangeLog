@@ -1,4 +1,21 @@
-pyvle-1.0.0-alpha4
+pyvle-1.0.0-alpha5
+
+commit e19071ff23d332a227cdc039e1d34fb02342a86b
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Mon Apr 18 16:17:48 2011 +0200
+
+    Fix load/unload of simulators plug-ins
+    
+    Since the latest VLE 1.0.0-alpha-4 version, the utils::ModuleCache build a
+    cache of simulators, outputs, plug-ins. However, users recommend to clear the
+    cache after running a simulation or an experimental design to enable them to
+    load another versions of the same plug-ins.
+
+commit 47a812693927f5eac06118b5e6686b1965031445
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Fri Mar 11 11:16:30 2011 +0100
+
+    pyvle-1.0.0-alpha4
 
 commit d1e2bfabee9055c569f8bd4910805ea8674edaa5
 Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
