@@ -80,6 +80,7 @@ BOOST_PYTHON_MODULE(libpyvle)
     bp::def("run_manager_cluster_matrix", pyvle_run_manager_cluster_matrix);
     bp::def("condition_list", pyvle_condition_list);
     bp::def("condition_show", pyvle_condition_show);
+    bp::def("condition_create", pyvle_condition_create);
     bp::def("condition_port_list", pyvle_condition_port_list);
     bp::def("condition_port_clear", pyvle_condition_port_clear);
     bp::def("condition_add_real", pyvle_condition_add_real);

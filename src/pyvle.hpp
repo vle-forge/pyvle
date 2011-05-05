@@ -80,6 +80,8 @@ PyObject* pyvle_condition_list(vle::vpz::Vpz* file);
 PyObject* pyvle_condition_show(vle::vpz::Vpz* file,
 			       std::string conditionname,
 			       std::string portname);
+void pyvle_condition_create(vle::vpz::Vpz* file,
+                    const std::string name);
 PyObject* pyvle_condition_port_list_size(vle::vpz::Vpz* file,
 					 std::string conditionname);
 PyObject* pyvle_condition_port_list(vle::vpz::Vpz* file,
