@@ -153,6 +153,14 @@ class Vle:
 
 #################
 ## pyvle specific
+    def createCondition(self, name, **ports):
+        # ports is an optional list a keyworgs args :
+        # portname = value, ...
+        libpyvle.condition_create(self.vpz, name)
+        for portname, val in ports.iteritems():
+            libpyvle.condition_add_value(self.vpz, name,
+                                        portname, to_value(val))
+
     def setConditionValue(self, name, port, value, type, i):
         libpyvle.condition_set_value(self.vpz, name, port, value, type, i)
 

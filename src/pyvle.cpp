@@ -360,6 +360,16 @@ PyObject* pyvle_condition_show(vle::vpz::Vpz* file,
     return r;
 }
 
+void pyvle_condition_create(vle::vpz::Vpz* file,
+            const std::string name)
+{
+    assert(file);
+
+    vpz::Condition newCond(name);
+    vpz::Conditions& listConditions(file->project().experiment().conditions());
+    listConditions.add(newCond);
+}
+
 PyObject* pyvle_condition_size(vpz::Vpz* file)
 {
     assert(file);
