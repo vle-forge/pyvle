@@ -90,11 +90,16 @@ PyObject* pyvle_convert_view_matrix(const vle::oov::OutputMatrix& matrix)
     PyObject* out = PyTuple_New(view.shape()[0]);
 
     for (i = 0; i < view.shape()[0]; ++i) {
-	PyObject* column = PyTuple_New(view.shape()[1]);
+        PyObject* column = PyTuple_New(view.shape()[1]);
 
-        for (j = 0; j < view.shape()[1]; ++j)
-	    PyTuple_SetItem(column, j, pyvle_convert_value(*view[i][j]));
-	PyTuple_SetItem(out, i, column);
+        for (j = 0; j < view.shape()[1]; ++j) {
+            if (view[i][j]) {
+                PyTuple_SetItem(column, j, pyvle_convert_value(*view[i][j]));
+            } else {
+                PyTuple_SetItem(column, j, Py_None);
+            }
+        }
+        PyTuple_SetItem(out, i, column);
     }
     return out;
 }
@@ -109,22 +114,27 @@ PyObject* pyvle_build_data_frame(const vle::oov::OutputMatrix& matrix)
     vle::value::ConstVectorView t = matrix.getValue(0);
 
     for (i = 0; i < view.shape()[1]; ++i)
-	PyTuple_SetItem(time, i, pyvle_convert_value(*t[i]));
+        PyTuple_SetItem(time, i, pyvle_convert_value(*t[i]));
     PyDict_SetItemString(out, "time", time);
 
     const vle::oov::OutputMatrix::MapPairIndex& index(matrix.index());
     for (vle::oov::OutputMatrix::MapPairIndex::const_iterator it =
-	     index.begin();
+         index.begin();
          it != index.end(); ++it) {
 
-	PyObject* column = PyTuple_New(view.shape()[1]);
+        PyObject* column = PyTuple_New(view.shape()[1]);
 
-	i = it->second;
-        for (j = 0; j < view.shape()[1]; ++j)
-	    PyTuple_SetItem(column, j, pyvle_convert_value(*view[i][j]));
-	PyDict_SetItemString(out, boost::str(boost::format("%1%.%2%") %
-					     it->first.first %
-					     it->first.second).c_str(), column);
+        i = it->second;
+        for (j = 0; j < view.shape()[1]; ++j) {
+            if (view[i][j]) {
+                PyTuple_SetItem(column, j, pyvle_convert_value(*view[i][j]));
+            } else {
+                PyTuple_SetItem(column, j, Py_None);
+            }
+        }
+        PyDict_SetItemString(out, boost::str(boost::format("%1%.%2%") %
+                                             it->first.first %
+                                             it->first.second).c_str(), column);
     }
     return out;
 }
