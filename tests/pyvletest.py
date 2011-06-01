@@ -7,6 +7,7 @@ Loads and runs all the tests.
 
 import unittest as ut
 import pyvle
+import sys
 
 def main():
 
@@ -21,4 +22,5 @@ def main():
     ut.TextTestRunner(verbosity=1).run(suite)
 
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) >= 2:
+        main()
