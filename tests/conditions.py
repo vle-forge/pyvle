@@ -3,11 +3,14 @@
 
 import unittest as ut
 import pyvle
+import sys
+
+filename = sys.argv[1]
 
 class TestConditions(ut.TestCase):
 
     def setUp(self):
-        self.exp = pyvle.Vle("dummy.vpz")
+        self.exp = pyvle.Vle(filename)
 
     def testCreateConditionStillExists(self):
         name = "test"

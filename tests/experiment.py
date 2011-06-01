@@ -3,11 +3,14 @@
 
 import unittest as ut
 import pyvle
+import sys
+
+filename = sys.argv[1]
 
 class TestExperiment(ut.TestCase):
 
     def setUp(self):
-        self.exp = pyvle.Vle("dummy.vpz")
+        self.exp = pyvle.Vle(filename)
 
     def testGetBegin(self):
         self.assertEqual(0, self.exp.getBegin())
