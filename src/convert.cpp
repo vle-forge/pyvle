@@ -48,7 +48,7 @@ PyObject* pyvle_convert_value(const vle::value::Value& value)
     }
     case vle::value::Value::INTEGER: {
 	result = PyInt_FromLong(
-	    vle::value::toLong(value));
+	    vle::value::toInteger(value));
 	break;
     }
     case vle::value::Value::STRING: {
