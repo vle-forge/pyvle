@@ -26,10 +26,10 @@
  */
 
 
+#include <convert.hpp>
 #include <boost/format.hpp>
 #include <vle/value.hpp>
 #include <cassert>
-#include <convert.hpp>
 
 PyObject* pyvle_convert_value(const vle::value::Value& value)
 {

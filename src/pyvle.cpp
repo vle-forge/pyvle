@@ -26,6 +26,8 @@
  */
 
 
+#include <convert.hpp>
+#include <pyvle.hpp>
 #include <vle/manager.hpp>
 #include <vle/manager/TotalExperimentGenerator.hpp>
 #include <vle/manager/LinearExperimentGenerator.hpp>
@@ -33,8 +35,6 @@
 #include <vle/utils/Package.hpp>
 #include <vle/utils/Path.hpp>
 #include <vle/utils/Module.hpp>
-#include <convert.hpp>
-#include <pyvle.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/filesystem.hpp>
 
@@ -1616,7 +1616,7 @@ PyObject* pyvle_get_package_vpz_directory(std::string name)
         vle::manager::init();
         thread_init = true;
     }
-    
+
     PyObject* r;
 
     utils::Package::package().select(name);
@@ -1636,13 +1636,13 @@ PyObject* pyvle_get_package_data_directory(std::string name)
     }
 
     PyObject* r;
-    
+
     utils::Package::package().select(name);
-    
+
     r = PyString_FromString(utils::Path::path().getPackageDataDir().c_str());
-    
+
     utils::Package::package().select("");
-    
+
     return r;
 }
 
