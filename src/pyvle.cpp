@@ -32,7 +32,7 @@
 #include <vle/value.hpp>
 #include <vle/utils/Package.hpp>
 #include <vle/utils/Path.hpp>
-#include <vle/utils/Module.hpp>
+#include <vle/utils/ModuleManager.hpp>
 #include <convert.hpp>
 #include <pyvle.hpp>
 #include <boost/lexical_cast.hpp>
@@ -180,11 +180,11 @@ PyObject* pyvle_run(vpz::Vpz* file)
     assert(file);
 
     try {
-        manager::RunQuiet jrm;
+        utils::ModuleManager man;
+        manager::RunQuiet jrm(man);
 
         jrm.start(*file);
         const oov::OutputMatrixViewList& result(jrm.outputs());
-        utils::ModuleCache::instance().clear();
 
 	return pyvle_convert_dataframe(result);
     } catch(const std::exception& e) {
@@ -197,11 +197,11 @@ PyObject* pyvle_run_matrix(vpz::Vpz* file)
     assert(file);
 
     try {
-        manager::RunQuiet jrm;
+        utils::ModuleManager man;
+        manager::RunQuiet jrm(man);
 
         jrm.start(*file);
         const oov::OutputMatrixViewList& result(jrm.outputs());
-        utils::ModuleCache::instance().clear();
 
 	return pyvle_convert_matrix(result);
     } catch(const std::exception& e) {
@@ -218,7 +218,6 @@ PyObject* pyvle_run_manager(vpz::Vpz* file)
         jrm.start(*file);
         const manager::OutputSimulationMatrix& result(
             jrm.outputSimulationMatrix());
-        utils::ModuleCache::instance().clear();
 	return pyvle_convert_simulation_dataframe(result);
     } catch(const std::exception& e) {
         return NULL;
@@ -235,7 +234,6 @@ PyObject* pyvle_run_manager_matrix(vpz::Vpz* file)
         jrm.start(*file);
         const manager::OutputSimulationMatrix& result(
             jrm.outputSimulationMatrix());
-        utils::ModuleCache::instance().clear();
 	return pyvle_convert_simulation_matrix(result);
     } catch(const std::exception& e) {
         return NULL;
@@ -252,7 +250,6 @@ PyObject* pyvle_run_manager_thread(vpz::Vpz* file, int th)
         jrm.start(*file);
         const manager::OutputSimulationMatrix& result(
             jrm.outputSimulationMatrix());
-        utils::ModuleCache::instance().clear();
 	return pyvle_convert_simulation_dataframe(result);
     } catch(const std::exception& e) {
         return NULL;
@@ -269,7 +266,6 @@ PyObject* pyvle_run_manager_thread_matrix(vpz::Vpz* file, int th)
         jrm.start(*file);
         const manager::OutputSimulationMatrix& result(
             jrm.outputSimulationMatrix());
-        utils::ModuleCache::instance().clear();
 	return pyvle_convert_simulation_matrix(result);
     } catch(const std::exception& e) {
         return NULL;
@@ -286,7 +282,6 @@ PyObject* pyvle_run_manager_cluster(vpz::Vpz* file)
         jrm.start(*file);
         const manager::OutputSimulationMatrix& result(
             jrm.outputSimulationMatrix());
-        utils::ModuleCache::instance().clear();
 	return pyvle_convert_simulation_dataframe(result);
     } catch(const std::exception& e) {
         return NULL;
@@ -303,7 +298,6 @@ PyObject* pyvle_run_manager_cluster_matrix(vpz::Vpz* file)
         jrm.start(*file);
         const manager::OutputSimulationMatrix& result(
             jrm.outputSimulationMatrix());
-        utils::ModuleCache::instance().clear();
 	return pyvle_convert_simulation_matrix(result);
     } catch(const std::exception& e) {
         return NULL;
@@ -1305,7 +1299,8 @@ PyObject* pyvle_export(vle::vpz::Vpz* file,
     file->project().experiment().views().outputs().get(o_tmp_name).
         setLocalStream(location,type);
 
-    manager::RunQuiet jrm;
+    utils::ModuleManager man;
+    manager::RunQuiet jrm(man);
 
     jrm.start(*file);
 
@@ -1500,9 +1495,10 @@ PyObject* pyvle_experiment_get_name(vle::vpz::Vpz* file)
 
 PyObject* pyvle_trace_run_error(vle::vpz::Vpz* file)
 {
-    std::string m_out = "";
-    bool                    m_error = false;
-    devs::RootCoordinator   m_root;
+    std::string m_out;
+    bool m_error = false;
+    utils::ModuleManager m_modulemgr;
+    devs::RootCoordinator m_root(m_modulemgr);
     try {
 	{
 	    m_out+=" - Open file.....................: ";
@@ -1818,7 +1814,8 @@ PyObject* pyvle_run_combination(vle::vpz::Vpz* file, int comb)
     } while (nb < combinationNumber);
 
     try {
-	manager::RunQuiet jrm;
+        utils::ModuleManager man;
+	manager::RunQuiet jrm(man);
 
 	jrm.start(tmp_file);
 	const oov::OutputMatrixViewList& result(jrm.outputs());
