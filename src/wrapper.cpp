@@ -98,10 +98,8 @@ BOOST_PYTHON_MODULE(libpyvle)
     bp::def("dynamic_conditions_list", pyvle_dynamic_conditions_list);
     bp::def("dynamics_list", pyvle_dynamics_list);
     bp::def("dynamic_get_name", pyvle_dynamic_get_name);
-    bp::def("dynamic_get_model", pyvle_dynamic_get_model);
     bp::def("dynamic_get_library", pyvle_dynamic_get_library);
     bp::def("dynamic_get_language", pyvle_dynamic_get_language);
-    bp::def("dynamic_set_model", pyvle_dynamic_set_model);
     bp::def("dynamic_set_library", pyvle_dynamic_set_library);
     bp::def("dynamic_set_language", pyvle_dynamic_set_language);
     bp::def("dynamic_get_model_list", pyvle_dynamic_get_model_list);

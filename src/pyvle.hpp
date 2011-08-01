@@ -143,15 +143,10 @@ PyObject* pyvle_dynamic_conditions_list(vle::vpz::Vpz* file,
 PyObject* pyvle_dynamics_list(vle::vpz::Vpz* file);
 PyObject* pyvle_dynamic_get_name(vle::vpz::Vpz* file,
 				std::string dynamicname);
-PyObject* pyvle_dynamic_get_model(vle::vpz::Vpz* file,
-				std::string dynamicname);
 PyObject* pyvle_dynamic_get_library(vle::vpz::Vpz* file,
 				std::string dynamicname);
 PyObject* pyvle_dynamic_get_language(vle::vpz::Vpz* file,
 				std::string dynamicname);
-void pyvle_dynamic_set_model(vle::vpz::Vpz* file,
-				std::string dynamicname,
-				std::string model);
 void pyvle_dynamic_set_library(vle::vpz::Vpz* file,
 				std::string dynamicname,
 				std::string library);

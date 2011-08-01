@@ -761,19 +761,6 @@ PyObject* pyvle_dynamic_get_name(vle::vpz::Vpz* file,
     return r;
 }
 
-PyObject* pyvle_dynamic_get_model(vle::vpz::Vpz* file,
-				  std::string dynamicname)
-{
-    assert(file);
-
-    PyObject* r;    /* dynamic model result */
-    vpz::Dynamic& dyn(file->project().dynamics().get(dynamicname));
-
-    r = PyString_FromString(dyn.model().c_str());
-
-    return r;
-}
-
 PyObject* pyvle_dynamic_get_library(vle::vpz::Vpz* file,
 				    std::string dynamicname)
 {
@@ -798,16 +785,6 @@ PyObject* pyvle_dynamic_get_language(vle::vpz::Vpz* file,
     r = PyString_FromString(dyn.language().c_str());
 
     return r;
-}
-
-void pyvle_dynamic_set_model(vle::vpz::Vpz* file,
-			     std::string dynamicname,
-			     std::string model)
-{
-    assert(file);
-
-    vpz::Dynamic& dyn(file->project().dynamics().get(dynamicname));
-    dyn.setModel(model);
 }
 
 void pyvle_dynamic_set_library(vle::vpz::Vpz* file,
