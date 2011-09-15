@@ -1,4 +1,80 @@
-pyvle-1.0.0-alpha6
+pyvle-1.0.0
+
+commit 79a1a66c048f2d79b77e3dd99b389e8cbc72f644
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Mon Aug 1 10:20:02 2011 +0200
+
+    Updating the includes' positions to reduce warnings
+    
+    As required by the header `Python.h', we make sure that `Python.h' was
+    int the first include position when building object.
+    (cherry picked from commit 8baab586f1f847f0c0efbd9765f554986bd1780d)
+    
+    Conflicts:
+    
+    	src/pyvle.cpp
+
+commit cb629ed36206ca319fa9bc63d15484fc7b758613
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Mon Aug 1 09:35:23 2011 +0200
+
+    Enabling of the unit tests directory
+    
+    We activate the unit tests by adding the CMakeLists.txt file which
+    activates the unit tests and ctest.
+    (cherry picked from commit b9c63e4c1436bcbd9662581f7b2a8f12edbd5b19)
+
+commit 22a8d9eceee9618ac52b05c01cc122977d4a40e4
+Author: Jerome Thiard <jerome.thiard@toulouse.inra.fr>
+Date:   Mon May 30 17:01:08 2011 +0200
+
+    Fix segfault with NULL pointer conversion
+    
+    When in a storage view, some values are missing, we get a NULL pointer.
+    In that case we store a `None` value in the results instead of calling
+    pyvle_convert_value on the pointer.
+    
+    Signed-off-by: Gauthier Quesnel <quesnel@users.sourceforge.net>
+    (cherry picked from commit 4b89bd8deef4726dd785e5acb9f83dd65beb0225)
+
+commit 8724860d7608507f46121abfd4927b54a3044754
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Wed Jun 1 12:09:42 2011 +0200
+
+    Enable ctest for PyVLE port
+    
+    We enable for PyVLE project, the CTest program. The filename of the VPZ
+    is now given by the command line interface to the program pyvletest.py
+
+commit ab1b157dd6b0420b8569b37bba0f7bb22c73636b
+Author: Jerome Thiard <jerome.thiard@toulouse.inra.fr>
+Date:   Thu May 5 16:21:28 2011 +0200
+
+    Add unit testing in pyvle
+    
+    The unit tests are in the `tests' directory, and uses the `unittest'
+    python module (builtin since python 2.0). All tests can be ran by
+    executing `pyvletest.py'. For now just some are done, more work
+    needed...
+    
+    Signed-off-by: Gauthier Quesnel <quesnel@users.sourceforge.net>
+
+commit 0b088dfb4cd781945fb167ba5dac66b2383ab5c2
+Author: Jerome Thiard <jerome.thiard@toulouse.inra.fr>
+Date:   Thu May 5 13:56:37 2011 +0200
+
+    Add new createCondition method in class Vle
+    
+    Allow the user to create a new condition, and optionally giving its
+    ports and values as keywords arguments.
+    
+    Signed-off-by: Gauthier Quesnel <quesnel@users.sourceforge.net>
+
+commit f09a026f51aa786d40db528aebacbb66eea5de81
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Wed May 18 10:53:38 2011 +0200
+
+    pyvle-1.0.0-alpha6
 
 commit 5419ffa927fed7971b851daa4327094f56432707
 Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
