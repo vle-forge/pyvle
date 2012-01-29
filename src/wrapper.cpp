@@ -53,6 +53,20 @@ BOOST_PYTHON_MODULE(libpyvle)
     bp::def("add_value_to_map", pyvle_add_value_to_map);
     bp::def("add_value_to_set", pyvle_add_value_to_set);
 
+    bp::def("create_table",
+            pyvle_create_table, bp::return_value_policy < bp::manage_new_object > ());
+    bp::def("create_matrix",
+            pyvle_create_matrix, bp::return_value_policy < bp::manage_new_object > ());
+    bp::def("create_tuple",
+            pyvle_create_tuple, bp::return_value_policy < bp::manage_new_object > ());
+    bp::def("create_table",
+            pyvle_create_table, bp::return_value_policy < bp::manage_new_object > ());
+    bp::def("set_value_to_tuple", pyvle_set_value_to_tuple);
+    bp::def("set_value_to_table", pyvle_set_value_to_table);
+    bp::def("set_value_to_matrix", pyvle_set_value_to_matrix);
+    bp::def("str_to_xml", pyvle_str_to_xml,
+            bp::return_value_policy < bp::manage_new_object > ());
+
     bp::def("open", pyvle_open,
             bp::return_value_policy < bp::manage_new_object > ());
     bp::def("open_pkg", pyvle_open_pkg,

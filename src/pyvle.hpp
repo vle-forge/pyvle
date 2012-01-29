@@ -269,13 +269,25 @@ void pyvle_set_seedreplicas(vle::vpz::Vpz* file,
 
 vle::value::Value* pyvle_create_map();
 vle::value::Value* pyvle_create_set();
+vle::value::Value* pyvle_create_tuple(unsigned int size);
+vle::value::Value* pyvle_create_table(unsigned int width, unsigned int height);
+vle::value::Value* pyvle_create_matrix(unsigned int width, unsigned int height);
+
+
+
 vle::value::Value* pyvle_int_to_value(long i);
 vle::value::Value* pyvle_real_to_value(float i);
 vle::value::Value* pyvle_string_to_value(std::string i);
 vle::value::Value* pyvle_bool_to_value(bool i);
+vle::value::Value* pyvle_str_to_xml(std::string i);
 
 void pyvle_add_value_to_map(vle::value::Value* map, std::string key,
                             vle::value::Value* val);
 void pyvle_add_value_to_set(vle::value::Value* set, vle::value::Value* val);
+void pyvle_set_value_to_tuple(vle::value::Value* set, unsigned int i, double v);
+void pyvle_set_value_to_table(vle::value::Value* set, unsigned int i,
+        unsigned int j, double v);
+void pyvle_set_value_to_matrix(vle::value::Value* set, unsigned int i,
+        unsigned int j, vle::value::Value* v);
 
 #endif

@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
 # File:   pyvle.py
 # Author: The VLE Development Team.
 # Brief:  Python wrapper of VLE
@@ -19,7 +22,62 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+##
+## pyvalue to vlevalue
+## fonction (if specified types vleTUPLE, vleTABLE, vleXML):
+##  bool                                    -> BOOLEAN
+##  int                                     -> INTEGER
+##  float                                   -> DOUBLE
+##  str                                     -> STRING
+##  VleXML (embeds str)                     -> XMLTYPE
+##  list                                    -> SET
+##  dict (with str keys)                    -> MAP
+##  VleTuple (embeds list of float)         -> TUPLE
+##  VleTable (embeds list of list of float) -> TABLE
+##  VleMatrix (embeds list of list)         -> MATRIX
+##
+##
+##  BOOLEAN  -> bool
+##  INTEGER  -> int
+##  DOUBLE   -> float
+##  STRING   -> str
+##  XMLTYPE  -> VleXML
+##  SET      -> list
+##  MAP      -> dict
+##  TUPLE    -> VleTuple
+##  TABLE    -> VleTable
+##  MATRIX   -> VleMatrix
+##
+
 import libpyvle
+
+class VleValue:
+    _val_type = None
+    
+    def __init__(self, x):
+        if self._val_type is None:
+            raise NotImplementedError
+        if isinstance(x, self._val_type):
+			self.val = x
+        else:
+            raise ValueError(u'Can\'t embed type %s in %s' % (type(x)),
+                                                    self.__class__.__name__)
+
+    def __repr__(self):
+        return "<%s(%r)>" % (self.__class__.__name__, self.val)
+
+class VleXML(VleValue):
+    _val_type = str
+
+class VleTuple(VleValue):
+	_val_type = list
+
+class VleTable(VleValue):
+	_val_type = list
+
+class VleMatrix(VleValue):
+	_val_type = list
+
 
 class Vle:
     def __init__(self, filename, package = ""):
@@ -126,30 +184,36 @@ class Vle:
     def getConditionPortValue(self, name, port, i):
         return libpyvle.condition_get_value(self.vpz, name, port, i)
 
-    def addRealCondition(self, name, port, value):
-        libpyvle.condition_add_real(self.vpz, name, port, value)
+# conditions add
+    def addRealCondition(self, name, port, v):
+        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
 
-    def addIntegerCondition(self, name, port, value):
-        libpyvle.condition_add_integer(self.vpz, name, port, value)
+	def addIntegerCondition(self, name, port, v):
+		libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
 
-    def addStringCondition(self, name, port, value):
-        libpyvle.condition_add_string(self.vpz, name, port, value)
+    def addIntegerCondition(self, name, port, v):
+        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
 
-    def addBooleanCondition(self, name, port, value):
-        libpyvle.condition_add_boolean(self.vpz, name, port, value)
+    def addStringCondition(self, name, port, v):
+        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
 
-    def addMapCondition(self, name, port, dic):
-        # dummy function : we can use addValueCondition()
-        if isinstance(dic, dict):
-            libpyvle.condition_add_value(self.vpz, name, port, to_value(dic))
+    def addBooleanCondition(self, name, port, v):
+        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
 
-    def addSetCondition(self, name, port, lst):
-         # dummy function : we can use addValueCondition()
-        if isinstance(lst, list):
-            libpyvle.condition_add_value(self.vpz, name, port, to_value(lst))
+    def addMapCondition(self, name, port, v):
+        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
 
-    def addValueCondition(self, name, port, val):
-        libpyvle.condition_add_value(self.vpz, name, port, to_value(val))
+    def addSetCondition(self, name, port, v):
+        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+
+    def addMatrixCondition(self, name, port, v):
+        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+
+    def addTableCondition(self, name, port, v):
+        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+
+    def addTupleCondition(self, name, port, v):
+        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
 
 #################
 ## pyvle specific
@@ -363,25 +427,73 @@ class VlePackage:
         return libpyvle.get_package_vpz(self.name, vpz)
 
 def to_value(x):
-    if isinstance(x, bool):
-        val = libpyvle.bool_to_value(x)
-    elif isinstance(x, int):
-        val = libpyvle.int_to_value(x)
-    elif isinstance(x, float):
-        val = libpyvle.real_to_value(x)
-    elif isinstance(x, str):
-        val = libpyvle.string_to_value(x)
-    elif isinstance(x, dict):
-        val = libpyvle.create_map()
-        for k,v in x.iteritems():
-            libpyvle.add_value_to_map(val, k, to_value(v))
-    elif isinstance(x, list):
-        val = libpyvle.create_set()
-        for v in x:
-            libpyvle.add_value_to_set(val, to_value(v))
-    elif isinstance(x, libpyvle.Value):
-        val = x
-    else:
-        raise ValueError(u'Can\'t convert type %s in vle::value::Value' %
-                         type(x))
-    return val
+	if isinstance(x, bool):
+		val = libpyvle.bool_to_value(x)
+	elif isinstance(x, int):
+		val = libpyvle.int_to_value(x)
+	elif isinstance(x, float):
+		val = libpyvle.real_to_value(x)
+	elif isinstance(x, str):
+		val = libpyvle.string_to_value(x)
+	elif isinstance(x, dict):
+		val = libpyvle.create_map()
+		for k,v in x.iteritems():
+			libpyvle.add_value_to_map(val, k, to_value(v))
+	elif isinstance(x, list):
+		val = libpyvle.create_set()
+		for v in x:
+			libpyvle.add_value_to_set(val, to_value(v))
+	elif isinstance(x, VleTuple):
+		if isinstance(x.val,list):
+			val = libpyvle.create_tuple(len(x.val))
+			i = 0
+			for v in x.val:
+				if isinstance(v,float):
+					libpyvle.set_value_to_tuple(val, i, v)
+					i = i+1
+				else:
+					raise ValueError(u'Can\'t convert type %s to float' % type(v))
+		else:
+			raise ValueError(u'Can\'t convert type %s to list' % type(x.val))
+	elif isinstance(x, VleTable):
+		val = None
+		i = 0
+		for v in x.val:
+			if isinstance(v,list):
+				j = 0
+				for v1 in v:
+					if isinstance(v1,float):
+						if (val == None):
+							val = libpyvle.create_table(len(v),len(x.val))
+						libpyvle.set_value_to_table(val, j,i,v1)
+						j = j+1
+					else:
+						raise ValueError(u'Can\'t convert type %s to float' % type(v1))
+				i = i+1
+			else:
+				raise ValueError(u'Can\'t convert type %s to list' % type(v))
+	elif isinstance(x, VleMatrix):
+		val = None
+		i = 0
+		for v in x.val:
+			if isinstance(v,list):
+				j = 0
+				for v1 in v:
+					if (val == None):
+						val = libpyvle.create_matrix(len(v),len(x.val))
+					libpyvle.set_value_to_matrix(val,j,i,to_value(v1))
+					j = j+1
+				i = i+1
+			else:
+				raise ValueError(u'Can\'t convert type %s to list' % type(v))
+	elif isinstance(x, VleXML):
+		if isinstance(x.val,str):
+			val = libpyvle.str_to_xml(x.val)
+		else:
+			raise ValueError(u'Can\'t convert type %s to str' % type(x.val))
+	elif isinstance(x, libpyvle.Value):
+		val = x
+	else:
+		raise ValueError(u'Can\'t convert type %s in vle::value::Value' %
+						 type(x))
+	return val

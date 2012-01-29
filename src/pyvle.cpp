@@ -519,6 +519,7 @@ void pyvle_condition_set_port_value(vle::vpz::Vpz* file,
     vpz::Condition& cnd(file->project().experiment().
 			conditions().get(conditionname));
     vle::value::VectorValue& vector(cnd.getSetValues(portname).value());
+
     vector.at(i) = value->clone();
 }
 
@@ -1889,6 +1890,21 @@ vle::value::Value* pyvle_create_set()
     return vle::value::Set::create();
 }
 
+vle::value::Value* pyvle_create_matrix(unsigned int width, unsigned int height)
+{
+    return vle::value::Matrix::create(width, height);
+}
+
+vle::value::Value* pyvle_create_table(unsigned int width, unsigned int height)
+{
+    return vle::value::Table::create(width, height);
+}
+
+vle::value::Value* pyvle_create_tuple(unsigned int size)
+{
+    return vle::value::Tuple::create(size,0);
+}
+
 vle::value::Value* pyvle_int_to_value(long i)
 {
     return vle::value::Integer::create(i);
@@ -1898,6 +1914,12 @@ vle::value::Value* pyvle_real_to_value(float i)
 {
     return vle::value::Double::create(i);
 }
+
+vle::value::Value* pyvle_str_to_xml(std::string i)
+{
+    return vle::value::Xml::create(i);
+}
+
 
 vle::value::Value* pyvle_string_to_value(std::string i)
 {
@@ -1913,6 +1935,23 @@ void pyvle_add_value_to_map(vle::value::Value* map, std::string key,
                             vle::value::Value* val)
 {
     map->toMap().add(key, val->clone());
+}
+
+void pyvle_set_value_to_table(vle::value::Value* table, unsigned int i,
+                              unsigned int j, double v)
+{
+    table->toTable().value()[i][j] = v;
+}
+
+void pyvle_set_value_to_matrix(vle::value::Value* mat, unsigned int i,
+                              unsigned int j, vle::value::Value* v)
+{
+    mat->toMatrix().set(i,j,v->clone());
+}
+
+void pyvle_set_value_to_tuple(vle::value::Value* tuple, unsigned int i, double v)
+{
+    tuple->toTuple().value()[i] = v;
 }
 
 void pyvle_add_value_to_set(vle::value::Value* set, vle::value::Value* val)
