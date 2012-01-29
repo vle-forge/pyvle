@@ -33,28 +33,38 @@
 
 PyObject* pyvle_convert_value(const vle::value::Value& value)
 {
+    PyObject *pyvle = PyImport_ImportModule("pyvle");
     PyObject* result;
 
     switch (value.getType()) {
     case vle::value::Value::BOOLEAN: {
-	result = PyBool_FromLong(
-	    vle::value::toBoolean(value));
-	break;
-    }
-    case vle::value::Value::DOUBLE: {
-	result = PyFloat_FromDouble(
-	    vle::value::toDouble(value));
-	break;
+        result = PyBool_FromLong(
+                vle::value::toBoolean(value));
+        break;
     }
     case vle::value::Value::INTEGER: {
 	result = PyInt_FromLong(
 	    vle::value::toInteger(value));
 	break;
     }
+    case vle::value::Value::DOUBLE: {
+        result = PyFloat_FromDouble(
+                vle::value::toDouble(value));
+        break;
+    }
     case vle::value::Value::STRING: {
-	result = PyString_FromString(
-	    vle::value::toString(value).c_str());
-	break;
+        result = PyString_FromString(
+                vle::value::toString(value).c_str());
+        break;
+    }
+    case vle::value::Value::XMLTYPE: {
+        PyObject *class_ = PyObject_GetAttrString(pyvle, "VleXML");
+        PyObject* val = PyString_FromString(
+                vle::value::toXml(value).c_str());
+        PyObject* args = PyTuple_New(1);
+        PyTuple_SetItem(args, 0, val);
+        result = PyInstance_New(class_, args, NULL);
+        break;
     }
     case vle::value::Value::SET: {
         result = PyList_New(0);
@@ -73,9 +83,58 @@ PyObject* pyvle_convert_value(const vle::value::Value& value)
         }
         break;
     }
+    case vle::value::Value::TUPLE: {
+        PyObject *class_ = PyObject_GetAttrString(pyvle, "VleTuple");
+        PyObject* val = PyList_New(0);
+        std::vector<double>::const_iterator itb =
+                value.toTuple().value().begin();
+        std::vector<double>::const_iterator ite =
+                value.toTuple().value().end();
+        for(;itb!=ite;itb++){
+            PyList_Append(val, PyFloat_FromDouble(*itb));
+        }
+        PyObject* args = PyTuple_New(1);
+        PyTuple_SetItem(args, 0, val);
+        result = PyInstance_New(class_, args, NULL);
+        break;
+    }
+    case vle::value::Value::TABLE: {
+        PyObject *class_ = PyObject_GetAttrString(pyvle, "VleTable");
+        PyObject* val = PyList_New(0);
+        PyObject* r=0;
+        const vle::value::Table& t = value.toTable();
+        for(unsigned int i=0; i<t.height(); i++){
+            r = PyList_New(0);
+            for(unsigned int j=0; j<t.width(); j++){
+                PyList_Append(r,PyFloat_FromDouble(t.get(j,i)));
+            }
+            PyList_Append(val,r);
+        }
+        PyObject* args = PyTuple_New(1);
+        PyTuple_SetItem(args, 0, val);
+        result = PyInstance_New(class_, args, NULL);
+        break;
+    }
+    case vle::value::Value::MATRIX: {
+        PyObject *class_ = PyObject_GetAttrString(pyvle, "VleMatrix");
+        PyObject* val = PyList_New(0);
+        PyObject* r=0;
+        const vle::value::Matrix& t = value.toMatrix();
+        for(unsigned int i=0; i<t.rows(); i++){
+            r = PyList_New(0);
+            for(unsigned int j=0; j<t.columns(); j++){
+                PyList_Append(r,pyvle_convert_value(*t.get(j,i)));
+            }
+            PyList_Append(val,r);
+        }
+        PyObject* args = PyTuple_New(1);
+        PyTuple_SetItem(args, 0, val);
+        result = PyInstance_New(class_, args, NULL);
+        break;
+    }
     default: {
-	result = Py_None;
-	break;
+        result = Py_None;
+        break;
     }
     }
     return result;
