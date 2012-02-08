@@ -355,6 +355,9 @@ class Vle:
     def listDynamicObservables(self, name):
         return libpyvle.dynamic_observables_list(self.vpz, name)
 
+    def listViewsEntries(self):
+        return libpyvle.list_view_entries(self.vpz)
+
 # dynamics
     def listDynamics(self):
         return libpyvle.dynamics_list(self.vpz)

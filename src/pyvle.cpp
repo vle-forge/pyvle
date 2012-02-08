@@ -26,6 +26,7 @@
  */
 
 
+#include <sstream>
 #include <convert.hpp>
 #include <pyvle.hpp>
 #include <vle/manager.hpp>
@@ -35,6 +36,7 @@
 #include <vle/utils/Package.hpp>
 #include <vle/utils/Path.hpp>
 #include <vle/utils/Module.hpp>
+#include <vle/graph/CoupledModel.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/filesystem.hpp>
 
@@ -1032,6 +1034,61 @@ void pyvle_views_add_finishview(vle::vpz::Vpz* file,
     assert(file);
 
     file->project().experiment().views().addFinishView(viewname,output);
+}
+
+PyObject* pyvle_list_view_entries(vle::vpz::Vpz* file)
+{
+    //key = name of a view, value = list of complete port names
+    typedef std::map<std::string, std::list<std::string> > ViewEntries;
+    ViewEntries viewEntries;
+
+    const vle::vpz::AtomicModels& atoms =
+            file->project().model().atomicModels().atomicmodels();
+    const vle::vpz::Observables& observables=
+            file->project().experiment().views().observables();
+    vle::vpz::AtomicModels::const_iterator itb = atoms.begin();
+    vle::vpz::AtomicModels::const_iterator ite = atoms.end();
+    for(;itb!=ite;itb++){
+        const vle::vpz::AtomicModel& atom = itb->second;
+        const std::string& obs = atom.observables();
+        if(obs != ""){
+            const vpz::ObservablePortList& obsportlst =
+                    observables.get(obs).observableportlist();
+            const graph::Model& mod = *(itb->first);
+            vpz::ObservablePortList::const_iterator ibo = obsportlst.begin() ;
+            vpz::ObservablePortList::const_iterator ieo = obsportlst.end();
+            for(;ieo!=ibo;ibo++){
+                const vpz::ObservablePort& port =
+                        observables.get(obs).get(ibo->first);
+                vpz::ViewNameList list = port.viewnamelist();
+                vpz::ViewNameList::iterator ibl = list.begin();
+                vpz::ViewNameList::iterator iel = list.end();
+                for(;ibl!=iel;ibl++){
+                    std::list<std::string>& ll = viewEntries[*ibl];
+                    std::stringstream ss;
+                    ss << mod.getParent()->getCompleteName()<<":"
+                            <<mod.getName() << "." << ibo->first;
+                    ll.push_back(ss.str());
+                }
+            }
+        }
+    }
+
+    PyObject* result = PyDict_New();
+    ViewEntries::iterator ibv = viewEntries.begin();
+    ViewEntries::iterator iev = viewEntries.end();
+    for (;ibv!=iev;ibv++) {
+        std::list<std::string>& completePorts = ibv->second;
+        unsigned int size = completePorts.size();
+        PyObject* r = PyList_New(completePorts.size());
+        std::list<std::string>::iterator ibp = completePorts.begin();
+        std::list<std::string>::iterator iep = completePorts.end();
+        for(unsigned int i =0; i<size; i++, ibp++){
+            PyList_SetItem(r, i, PyString_FromString(ibp->c_str()));
+        }
+        PyDict_SetItem(result, PyString_FromString(ibv->first.c_str()),r);
+    }
+    return result;
 }
 
 PyObject* pyvle_get_output_plugin(vle::vpz::Vpz* file,

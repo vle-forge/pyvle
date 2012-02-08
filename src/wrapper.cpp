@@ -132,6 +132,7 @@ BOOST_PYTHON_MODULE(libpyvle)
     bp::def("views_add_eventview", pyvle_views_add_eventview);
     bp::def("views_add_timedview", pyvle_views_add_timedview);
     bp::def("views_add_finishview", pyvle_views_add_finishview);
+    bp::def("list_view_entries", pyvle_list_view_entries);
     bp::def("output_get_plugin", pyvle_get_output_plugin);
     bp::def("observables_list", pyvle_observables_list);
     bp::def("observable_add", pyvle_observable_add);
@@ -170,4 +171,5 @@ BOOST_PYTHON_MODULE(libpyvle)
     bp::def("get_seed_replicas", pyvle_get_seedreplicas);
     bp::def("set_seed_replicas", pyvle_set_seedreplicas);
     bp::def("outputs_list", pyvle_outputs_list);
+
 }
