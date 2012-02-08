@@ -1371,20 +1371,20 @@ PyObject* pyvle_dynamic_observables_list(vle::vpz::Vpz* file,
 					 std::string name)
 {
     assert(file);
-
-    PyObject* r;
+    PyObject* r = NULL;
     vpz::AtomicModelList& atommods(file->project().model().atomicModels());
     vpz::AtomicModelList::iterator it=atommods.begin();
 
     while (it != atommods.end()) {
-	if (it->second.dynamics() == name) {
-	    vpz::AtomicModel& a = it->second;
-	    std::string s = a.observables();
-	    r = PyString_FromString(s.c_str());
-	    return r;
-	}
-	++it;
+        if (it->second.dynamics() == name) {
+            vpz::AtomicModel& a = it->second;
+            std::string s = a.observables();
+            r = PyString_FromString(s.c_str());
+            return r;
+        }
+        ++it;
     }
+    return PyString_FromString("dynamic not found");
 }
 
 PyObject* pyvle_export(vle::vpz::Vpz* file,
