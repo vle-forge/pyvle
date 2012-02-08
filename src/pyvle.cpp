@@ -178,137 +178,152 @@ void pyvle_experiment_set_total_combination(vpz::Vpz* file,
 PyObject* pyvle_run(vpz::Vpz* file)
 {
     assert(file);
-
+    PyObject* res = NULL;
     try {
         manager::RunQuiet jrm;
-
         jrm.start(*file);
-        const oov::OutputMatrixViewList& result(jrm.outputs());
-        utils::ModuleCache::instance().clear();
-
-	return pyvle_convert_dataframe(result);
+        if(jrm.haveError()){
+            res = PyString_FromString(jrm.error().c_str());
+        } else {
+            const oov::OutputMatrixViewList& result(jrm.outputs());
+            res = pyvle_convert_dataframe(result);
+        }
     } catch(const std::exception& e) {
-	return NULL;
+        res = NULL;
     }
+    utils::ModuleCache::instance().clear();
+    return res;
 }
 
 PyObject* pyvle_run_matrix(vpz::Vpz* file)
 {
     assert(file);
+    PyObject* res = NULL;
 
     try {
         manager::RunQuiet jrm;
-
         jrm.start(*file);
-        const oov::OutputMatrixViewList& result(jrm.outputs());
-        utils::ModuleCache::instance().clear();
-
-	return pyvle_convert_matrix(result);
+        if(jrm.haveError()){
+            res = PyString_FromString(jrm.error().c_str());
+        } else {
+            const oov::OutputMatrixViewList& result(jrm.outputs());
+            res= pyvle_convert_matrix(result);
+        }
     } catch(const std::exception& e) {
-	return NULL;
+        res = NULL;
     }
+    utils::ModuleCache::instance().clear();
+    return res;
 }
 
 PyObject* pyvle_run_manager(vpz::Vpz* file)
 {
     assert(file);
+    PyObject* res = NULL;
 
     try {
         manager::ManagerRunMono jrm(std::cerr, false);
         jrm.start(*file);
         const manager::OutputSimulationMatrix& result(
-            jrm.outputSimulationMatrix());
-        utils::ModuleCache::instance().clear();
-	return pyvle_convert_simulation_dataframe(result);
+                jrm.outputSimulationMatrix());
+        res = pyvle_convert_simulation_dataframe(result);
+
     } catch(const std::exception& e) {
-        return NULL;
+        res = NULL;
     }
-    return NULL;
+    utils::ModuleCache::instance().clear();
+    return res;
 }
 
 PyObject* pyvle_run_manager_matrix(vpz::Vpz* file)
 {
     assert(file);
+    PyObject* res = NULL;
 
     try {
         manager::ManagerRunMono jrm(std::cerr, false);
         jrm.start(*file);
         const manager::OutputSimulationMatrix& result(
             jrm.outputSimulationMatrix());
-        utils::ModuleCache::instance().clear();
-	return pyvle_convert_simulation_matrix(result);
+        res = pyvle_convert_simulation_matrix(result);
     } catch(const std::exception& e) {
-        return NULL;
+        res = NULL;
     }
-    return NULL;
+    utils::ModuleCache::instance().clear();
+    return res;
 }
 
 PyObject* pyvle_run_manager_thread(vpz::Vpz* file, int th)
 {
     assert(file);
+    PyObject* res = NULL;
 
     try {
         manager::ManagerRunThread jrm(std::cerr, false, th);
         jrm.start(*file);
         const manager::OutputSimulationMatrix& result(
             jrm.outputSimulationMatrix());
-        utils::ModuleCache::instance().clear();
-	return pyvle_convert_simulation_dataframe(result);
+	    res = pyvle_convert_simulation_dataframe(result);
     } catch(const std::exception& e) {
-        return NULL;
+        res = NULL;
     }
-    return NULL;
+    utils::ModuleCache::instance().clear();
+    return res;
 }
 
 PyObject* pyvle_run_manager_thread_matrix(vpz::Vpz* file, int th)
 {
     assert(file);
+    PyObject* res = NULL;
 
     try {
         manager::ManagerRunThread jrm(std::cerr, false, th);
         jrm.start(*file);
         const manager::OutputSimulationMatrix& result(
             jrm.outputSimulationMatrix());
-        utils::ModuleCache::instance().clear();
-	return pyvle_convert_simulation_matrix(result);
+
+        res = pyvle_convert_simulation_matrix(result);
     } catch(const std::exception& e) {
-        return NULL;
+        res = NULL;
     }
-    return NULL;
+    utils::ModuleCache::instance().clear();
+    return res;
 }
 
 PyObject* pyvle_run_manager_cluster(vpz::Vpz* file)
 {
     assert(file);
+    PyObject* res = NULL;
 
     try {
         manager::ManagerRunDistant jrm(std::cerr, false);
         jrm.start(*file);
         const manager::OutputSimulationMatrix& result(
             jrm.outputSimulationMatrix());
-        utils::ModuleCache::instance().clear();
-	return pyvle_convert_simulation_dataframe(result);
+        res = pyvle_convert_simulation_dataframe(result);
     } catch(const std::exception& e) {
-        return NULL;
+        res = NULL;
     }
-    return NULL;
+    utils::ModuleCache::instance().clear();
+    return res;
 }
 
 PyObject* pyvle_run_manager_cluster_matrix(vpz::Vpz* file)
 {
     assert(file);
+    PyObject* res = NULL;
 
     try {
         manager::ManagerRunDistant jrm(std::cerr, false);
         jrm.start(*file);
         const manager::OutputSimulationMatrix& result(
             jrm.outputSimulationMatrix());
-        utils::ModuleCache::instance().clear();
-	return pyvle_convert_simulation_matrix(result);
+        res = pyvle_convert_simulation_matrix(result);
     } catch(const std::exception& e) {
-        return NULL;
+        res = NULL;
     }
-    return NULL;
+    utils::ModuleCache::instance().clear();
+    return res;
 }
 
 /*  - - - - - - - - - - - - - --ooOoo-- - - - - - - - - - - -  */
@@ -1346,6 +1361,8 @@ PyObject* pyvle_export(vle::vpz::Vpz* file,
 
     r = PyString_FromString(filename.c_str());
 
+    utils::ModuleCache::instance().clear();
+
     return r;
 }
 
@@ -1369,16 +1386,18 @@ PyObject* pyvle_export_manager(vle::vpz::Vpz* file,
 
     std::string ext;
     if (type=="text") {
-	ext = ".dat";
+        ext = ".dat";
     } else if (type=="csv") {
-	ext = ".csv";
+        ext = ".csv";
     } else if (type=="rdata") {
-	ext = ".rdata";
+        ext = ".rdata";
     }
     std::string expname(file->project().experiment().name());
     std::string filename(expname + "_" + view + ext);
 
     r = PyString_FromString(filename.c_str());
+
+    utils::ModuleCache::instance().clear();
 
     return r;
 }
@@ -1841,16 +1860,19 @@ PyObject* pyvle_run_combination(vle::vpz::Vpz* file, int comb)
 	++nb;
     } while (nb < combinationNumber);
 
+    PyObject* res = NULL;
     try {
-	manager::RunQuiet jrm;
+        manager::RunQuiet jrm;
 
-	jrm.start(tmp_file);
-	const oov::OutputMatrixViewList& result(jrm.outputs());
+        jrm.start(tmp_file);
+        const oov::OutputMatrixViewList& result(jrm.outputs());
 
-	return pyvle_convert_dataframe(result);
+        res = pyvle_convert_dataframe(result);
     } catch(const std::exception& e) {
-	return NULL;
+        res = NULL;
     }
+    utils::ModuleCache::instance().clear();
+    return res;
 }
 
 void pyvle_set_nbreplicas(vle::vpz::Vpz* file,
