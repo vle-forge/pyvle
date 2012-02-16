@@ -1,4 +1,63 @@
-pyvle-1.0.1
+pyvle-1.0.2
+
+commit 9cde99a2cebc5fcc840e6f44df98e5ea01ae5afa
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Thu Feb 16 11:54:29 2012 +0100
+
+    Update NEWS
+
+commit f0b01365a9f22a981220c3ac57ec2ffccbe1d60c
+Author: Ronan Trépos <rtrepos@toulouse.inra.fr>
+Date:   Wed Feb 8 14:09:57 2012 +0100
+
+    fix default return on listDynamicObservables
+    
+    If dynamic is not found, there was no return statement,
+    which leads to a seg fault.
+
+commit 9d2460389075fc6b63e1555c0d8ae715ab38f998
+Author: Ronan Trépos <rtrepos@toulouse.inra.fr>
+Date:   Wed Feb 8 16:14:48 2012 +0100
+
+    Add function listViewEntries
+    
+    This function associates the list of complete names of ports
+    to the view names; ie. it gives column names for all views
+    (Closes 3475367)
+
+commit fa542f4bcfd4f76d290bcb168ce3a5346c0696a2
+Author: Ronan Trépos <rtrepos@toulouse.inra.fr>
+Date:   Wed Feb 8 09:38:46 2012 +0100
+
+    fix location of module cache clear
+    
+    When we clear the module cache, plugins attached to modules should be
+    deleted first. On simulation error whith simple runs, errors are now
+    communicated on python prompt. (Closes: 3313030)
+
+commit e919bce77cfe05db975e0bc43ba7c39e13b7df91
+Author: Jerome Thiard <jerome.thiard@toulouse.inra.fr>
+Date:   Sun Jan 29 15:06:21 2012 +0100
+
+    Add all vle value types management
+    
+    All value types can be converted from python to vle
+    and vice versa. Specific python classes vleXML, vleTUPLE, vleTABLE,
+    vleMATRIX that embed classical python structures are added
+    in order to remove ambiguity in conversion form python to vle.
+    (Closes: 3474408, 3474406)
+
+commit e6e6514bb65b75f859819374d50cc4da7cb29969
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Tue Jan 3 10:51:01 2012 +0100
+
+    Switch to 2012
+
+commit c2b44811ec0fb790e1c9a4017af79c40425e5e76
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Tue Nov 15 15:21:28 2011 +0100
+
+    pyvle-1.0.1
 
 commit 9bf7922245378b29fe5d03326d4a4038947b7f44
 Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
