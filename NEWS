@@ -1,0 +1,20 @@
+pyvle 1.0.2
+===========
+
+- Fix default return on listDynamicObservables: If dynamic is not
+  found, there was no return statement, which leads to a seg fault.
+
+- Add function listViewEntries: This function associates the list of
+  complete names of ports to the view names; ie. it gives column names
+  for all views (Closes #3475367).
+
+- Fix location of module cache clear: When we clear the module cache,
+  plugins attached to modules should be deleted first. On simulation
+  error whith simple runs, errors are now communicated on python
+  prompt. (Closes: #3313030).
+
+- Add all vle value types management: All value types can be converted
+  from python to vle and vice versa. Specific python classes vleXML,
+  vleTUPLE, vleTABLE, vleMATRIX that embed classical python structures
+  are added in order to remove ambiguity in conversion form python to
+  vle.  (Closes: #3474408, #3474406).
