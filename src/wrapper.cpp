@@ -71,7 +71,12 @@ BOOST_PYTHON_MODULE(libpyvle)
             bp::return_value_policy < bp::manage_new_object > ());
     bp::def("open_pkg", pyvle_open_pkg,
             bp::return_value_policy < bp::manage_new_object > ());
+    bp::def("from_buffer", pyvle_from_buffer,
+            bp::return_value_policy < bp::manage_new_object > ());
+    bp::def("from_buffer_pkg", pyvle_from_buffer_pkg,
+            bp::return_value_policy < bp::manage_new_object > ());
     bp::def("save", pyvle_save);
+    bp::def("save_buffer", pyvle_save_buffer);
     bp::def("delete", pyvle_delete);
     bp::def("experiment_set_name", pyvle_experiment_set_name);
     bp::def("experiment_set_begin", pyvle_experiment_set_begin);
