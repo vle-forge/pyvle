@@ -186,34 +186,61 @@ class Vle:
 
 # conditions add
     def addRealCondition(self, name, port, v):
-        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
-
-	def addIntegerCondition(self, name, port, v):
-		libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        if isinstance(v,float):
+            libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        else:
+            raise ValueError(u'Can\'t convert type %s to float' % type(v))
 
     def addIntegerCondition(self, name, port, v):
-        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        if isinstance(v,int):
+            libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        else:
+            raise ValueError(u'Can\'t convert type %s to int' % type(v))
 
     def addStringCondition(self, name, port, v):
-        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        if isinstance(v,str):
+            libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        else:
+            raise ValueError(u'Can\'t convert type %s to str' % type(v))
 
     def addBooleanCondition(self, name, port, v):
-        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        if isinstance(v,bool):
+            libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        else:
+            raise ValueError(u'Can\'t convert type %s to bool' % type(v))
 
     def addMapCondition(self, name, port, v):
-        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        if isinstance(v,dict):
+            libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        else:
+            raise ValueError(u'Can\'t convert type %s to dict' % type(v))
 
     def addSetCondition(self, name, port, v):
-        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        if isinstance(v,list):
+            libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        else:
+            raise ValueError(u'Can\'t convert type %s to list' % type(v))
 
     def addMatrixCondition(self, name, port, v):
-        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        if isinstance(v,VleMatrix):
+            libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        else:
+            raise ValueError(u'Can\'t convert type %s to VleMatrix' % type(v))
 
     def addTableCondition(self, name, port, v):
-        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        if isinstance(v,VleTable):
+            libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        else:
+            raise ValueError(u'Can\'t convert type %s to VleTable' % type(v))
 
     def addTupleCondition(self, name, port, v):
-        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        if isinstance(v,VleTuple):
+            libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        else:
+            raise ValueError(u'Can\'t convert type %s to VleTuple' % type(v))
+
+    def addValueCondition(self, name, port, v):
+            libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
 
 #################
 ## pyvle specific
