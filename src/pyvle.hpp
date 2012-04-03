@@ -34,8 +34,12 @@
 
 vle::vpz::Vpz* pyvle_open(const char* filename);
 vle::vpz::Vpz* pyvle_open_pkg(const char* pkgname, const char* filename);
+vle::vpz::Vpz* pyvle_from_buffer(const std::string& buffer);
+vle::vpz::Vpz* pyvle_from_buffer_pkg(const char* pkgname,
+                                     const std::string& buffer);
 void pyvle_save(vle::vpz::Vpz* file,
 		std::string filename);
+PyObject* pyvle_save_buffer(vle::vpz::Vpz* file);
 void pyvle_delete(vle::vpz::Vpz* file);
 
 /* name of experiments */

@@ -80,15 +80,31 @@ class VleMatrix(VleValue):
 
 
 class Vle:
-    def __init__(self, filename, package = ""):
-        if package == "":
-            self.vpz = libpyvle.open(filename)
+    
+    def __init__(self, file_, package = ""):
+        if isinstance(file_, basestring):
+            # assume file_ is a filename
+            if package == "":
+                self.vpz = libpyvle.open(file_)
+            else:
+                self.vpz = libpyvle.open_pkg(package, file_)
+            self.filename = file_
         else:
-            self.vpz = libpyvle.open_pkg(package, filename)
-        self.filename = filename;
+            # assume file_ is a file object
+            if package == "":
+                self.vpz = libpyvle.from_buffer(file_.read())
+            else:
+                self.vpz = libpyvle.from_buffer_pkg(package, file_.read())
+            self.filename = file_.name if hasattr(file_, "name") else None
 
-    def save(self, filename):
-        libpyvle.save(self.vpz, filename)
+    def save(self, file_):
+        if isinstance(file_, basestring):
+            # assume file_ is a filename
+            libpyvle.save(self.vpz, file_)
+        else:
+            # assume file_ is a file object
+            file_.write(libpyvle.save_buffer(self.vpz))
+
 
 # name of experiments
     def setName(self, name):

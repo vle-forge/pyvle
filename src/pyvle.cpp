@@ -80,12 +80,54 @@ vpz::Vpz* pyvle_open_pkg(const char* pkgname, const char* filename)
     }
 }
 
+vpz::Vpz* pyvle_from_buffer(const std::string& buffer)
+{
+    vpz::Vpz* file = 0;
+
+    try {
+	if (!thread_init) {
+	    vle::manager::init();
+	    thread_init = true;
+	}
+        vle::utils::Package::package().select("");
+        file = new vpz::Vpz();
+        file->parseMemory(buffer);
+        return file;
+    } catch(const std::exception& e) {
+        return NULL;
+    }
+}
+
+vpz::Vpz* pyvle_from_buffer_pkg(const char* pkgname, const std::string& buffer)
+{
+    vpz::Vpz* file = 0;
+
+    try {
+	if (!thread_init) {
+	    vle::manager::init();
+	    thread_init = true;
+	}
+        file = new vpz::Vpz();
+        file->parseMemory(buffer);
+        vle::utils::Package::package().select(pkgname);
+        return file;
+    } catch(const std::exception& e) {
+        return NULL;
+    }
+}
+
 void pyvle_save(vpz::Vpz* file,
 		std::string filename)
 {
     assert(file);
 
     file->write(filename);
+}
+
+PyObject* pyvle_save_buffer(vpz::Vpz* file)
+{
+    assert(file);
+    return PyString_FromString(file->writeToString().c_str());
 }
 
 void pyvle_delete(vle::vpz::Vpz* file)
