@@ -239,6 +239,12 @@ class Vle:
         else:
             raise ValueError(u'Can\'t convert type %s to VleTuple' % type(v))
 
+    def addXMLCondition(self, name, port, v):
+        if isinstance(v,VleXML):
+            libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        else:
+            raise ValueError(u'Can\'t convert type %s to VleXML' % type(v))
+
     def addValueCondition(self, name, port, v):
             libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
 
