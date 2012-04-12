@@ -611,32 +611,52 @@ PyObject* pyvle_condition_get_value_type(vle::vpz::Vpz* file,
 
     switch(v[i]->getType()) {
     case vle::value::Value::DOUBLE: {
-	r = PyString_FromString("double");
-	break;
+        r = PyString_FromString("double");
+        break;
     }
     case vle::value::Value::INTEGER: {
-	r = PyString_FromString("integer");
-	break;
+        r = PyString_FromString("integer");
+        break;
     }
     case vle::value::Value::STRING: {
-	r = PyString_FromString("string");
-	break;
+        r = PyString_FromString("string");
+        break;
     }
     case vle::value::Value::BOOLEAN: {
-	r = PyString_FromString("boolean");
-	break;
+        r = PyString_FromString("boolean");
+        break;
     }
     case vle::value::Value::MAP: {
-    r = PyString_FromString("map");
-    break;
+        r = PyString_FromString("map");
+        break;
     }
     case vle::value::Value::SET: {
-    r = PyString_FromString("set");
-    break;
+        r = PyString_FromString("set");
+        break;
+    }
+    case vle::value::Value::TUPLE : {
+        r = PyString_FromString("tuple");
+        break;
+    }
+    case vle::value::Value::TABLE : {
+        r = PyString_FromString("table");
+        break;
+    }
+    case vle::value::Value::XMLTYPE : {
+        r = PyString_FromString("xml");
+        break;
+    }
+    case vle::value::Value::MATRIX : {
+        r = PyString_FromString("matrix");
+        break;
+    }
+    case vle::value::Value::NIL : {
+        r = PyString_FromString("none");
+        break;
     }
     default : {
-	r = PyString_FromString("none");
-	break;
+        r = PyString_FromString("none");
+        break;
     }
     }
 
