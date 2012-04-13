@@ -14,6 +14,7 @@ def main():
     # add here the names of the unittest.TestCase
     # derived classes to use
     modules = (
+                'experiment.TestOpen',
                 'experiment.TestExperiment',
                 'conditions.TestConditions',
                 )

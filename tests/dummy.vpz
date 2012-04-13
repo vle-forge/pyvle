@@ -1,52 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://vle.univ-littoral.fr/vle-0.7.0.dtd">
-<vle_project version="0.6.0" date="ven, 16 jan 2009" author="Patrick Chabrier">
+<!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.0.0.dtd">
+<vle_project version="1.0" date="Fri, 13 Apr 2012" author="Gauthier Quesnel">
 <structures>
-<model name="Top model" type="coupled" x="0" y="0" height="305"  >
+<model name="Top model" type="coupled" x="0" y="0" width="484"  >
 <submodels>
 </submodels>
 <connections>
 </connections>
 </model>
 </structures>
-<experiment name="dummy" duration="2.22045e-16" combination="linear" seed="2147483648" >
-<replicas seed="2147483648" number="1" />
+<experiment name="test" duration="1.000000000000000" begin="0.000000000000000" combination="linear" seed="123456789" >
 <conditions>
 <condition name="test" >
- <port name="bool" >
-<boolean>false</boolean>
-</port>
- <port name="double" >
-<double>0.1</double>
-</port>
- <port name="int" >
-<integer>2</integer>
-</port>
- <port name="multi_bool" >
-<boolean>true</boolean>
-<boolean>false</boolean>
-</port>
- <port name="multi_double" >
-<double>0.1</double>
-<double>0.2</double>
-</port>
- <port name="multi_int" >
-<integer>1</integer>
-<integer>2</integer>
-</port>
- <port name="multi_string" >
-<string>aaa</string>
-<string>bbb</string>
-</port>
- <port name="notmanaged" >
-<map><key name="a"><double>0.1</double></key><key name="b"><double>0.2</double></key></map>
-</port>
- <port name="string" >
-<string>dummy</string>
-</port>
-<port name="tuple" >
- <tuple>1.0 2.0 3.0 4.0 5.0</tuple>
-</port>
 </condition>
 </conditions>
 <views>
