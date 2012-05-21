@@ -1,4 +1,60 @@
-pyvle-1.0.2
+pyvle-1.0.3
+
+commit c36c35d0639a0c6ee5d6b8107dd4096c1d04d62a
+Author: Jerome Thiard <jerome.thiard@toulouse.inra.fr>
+Date:   Fri Apr 13 18:06:08 2012 +0200
+
+    Add unittests for opening and saving vpz's
+
+commit 030ec63a0fd04e8862405d015a4afe3b78f0204c
+Author: Jerome Thiard <jerome.thiard@toulouse.inra.fr>
+Date:   Tue Apr 3 15:27:01 2012 +0200
+
+    Add python file objects support for opening and saving vpz's
+    
+    The Vle `__init__' and `save' methods now can deal with either
+    strings (representing filenames) or python file objects.
+    This allow the vpz's to be opened from and saved in every object
+    which looks like a file object, including buffers like the builtin
+    cStringIO python module.
+
+commit 94e1d6a45c8e7fc61671f5bb1c4b73c63e64d666
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Mon Apr 16 09:08:32 2012 +0200
+
+    update the file AUTHORS
+
+commit 79f1635dc7ee48f0d4b270ce18a65cc83cc1262d
+Author: Nathalie Rousse <nrousse@toulouse.inra.fr>
+Date:   Thu Apr 12 10:31:59 2012 +0200
+
+    function addXMLCondition added
+    
+    this function was missing
+
+commit 937a2f9f6ce7f02daea7cf8adfe3fa1bc3853eec
+Author: Nathalie Rousse <nrousse@toulouse.inra.fr>
+Date:   Thu Apr 12 10:17:23 2012 +0200
+
+    pyvle_condition_get_value_type completed
+    
+    For TUPLE TABLE XMLTYPE and MATRIX vle types, the function
+    pyvle_condition_get_value_type has been completed.
+
+commit 2e9cecb97f99d157eb6751c7485aaacd99e694ae
+Author: Ronan Trépos <rtrepos@toulouse.inra.fr>
+Date:   Tue Apr 3 18:35:27 2012 +0200
+
+    fix missing addValueCondition
+    
+    fix missing addValueCondition and check type on addRealCondition,
+    addStringCondition etc.. (Closes #3497691)
+
+commit d14f1f6a9d1d4cd9d286a2aae9bd42e1effa3f82
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Thu Feb 16 12:26:18 2012 +0100
+
+    pyvle-1.0.2
 
 commit 9cde99a2cebc5fcc840e6f44df98e5ea01ae5afa
 Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
