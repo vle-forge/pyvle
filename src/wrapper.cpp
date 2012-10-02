@@ -29,7 +29,6 @@
 #include <pyvle.hpp>
 #include <boost/python.hpp>
 #include <boost/noncopyable.hpp>
-#include <vle/value.hpp>
 
 BOOST_PYTHON_MODULE(libpyvle)
 {
@@ -95,8 +94,6 @@ BOOST_PYTHON_MODULE(libpyvle)
     bp::def("run_manager_matrix", pyvle_run_manager_matrix);
     bp::def("run_manager_thread", pyvle_run_manager_thread);
     bp::def("run_manager_thread_matrix", pyvle_run_manager_thread_matrix);
-    bp::def("run_manager_cluster", pyvle_run_manager_cluster);
-    bp::def("run_manager_cluster_matrix", pyvle_run_manager_cluster_matrix);
     bp::def("condition_list", pyvle_condition_list);
     bp::def("condition_show", pyvle_condition_show);
     bp::def("condition_create", pyvle_condition_create);
@@ -153,8 +150,6 @@ BOOST_PYTHON_MODULE(libpyvle)
     bp::def("observable_set_permanent", pyvle_observable_set_permanent);
     bp::def("observable_port_attached_views", pyvle_observable_port_attached_views);
     bp::def("dynamic_observables_list", pyvle_dynamic_observables_list);
-    bp::def("export", pyvle_export);
-    bp::def("export_manager", pyvle_export_manager);
     bp::def("nbreplicas", pyvle_nbreplicas);
     bp::def("combinations", pyvle_combinations);
     bp::def("experiment_get_name", pyvle_experiment_get_name);
@@ -174,5 +169,6 @@ BOOST_PYTHON_MODULE(libpyvle)
     bp::def("get_seed_replicas", pyvle_get_seedreplicas);
     bp::def("set_seed_replicas", pyvle_set_seedreplicas);
     bp::def("outputs_list", pyvle_outputs_list);
+    bp::def("__compileTestPackages", pyvle_compileTestPackages);
 
 }

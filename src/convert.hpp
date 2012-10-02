@@ -30,9 +30,22 @@
 #define VLE_PORT_PYVLE_CONVERT_H 1
 
 #include <Python.h>
-#include <vle/manager.hpp>
-#include <vle/oov.hpp>
+#include <vle/manager/Manager.hpp>
+#include <vle/value/Matrix.hpp>
+#include <vle/value/Map.hpp>
+#include <vle/value/Boolean.hpp>
+#include <vle/value/Double.hpp>
+#include <vle/value/Integer.hpp>
+#include <vle/value/String.hpp>
+#include <vle/value/XML.hpp>
 
+/**
+ * @brief Converts a simple vle::Value
+ *
+ * @param value, a vle Value.
+ *
+ * @return A Python representation of: a Matrix.
+ */
 PyObject* pyvle_convert_value(const vle::value::Value& value);
 
 /**
@@ -43,22 +56,9 @@ PyObject* pyvle_convert_value(const vle::value::Value& value);
  *
  * @param out The output of simulations.
  *
- * @return A Python representation of: Lst of Matrix.
+ * @return A Python representation of: List of Matrix.
  */
-PyObject* pyvle_convert_matrix(const vle::oov::OutputMatrixViewList& out);
-
-/**
- * @brief Build an output of simulations result into a Matrix (replicas x
- * combination) of Tuple (each cell is a list of view) of Matrix of real (the
- * result of the simulation). Values of type boolean, integer or double from the
- * vle are transformed into double value, other value return None.
- *
- * @param out The output of simulations.
- *
- * @return A Python representation of: Matrix of List of Matrix.
-*/
-PyObject* pyvle_convert_simulation_matrix(
-    const vle::manager::OutputSimulationMatrix& out);
+PyObject* pyvle_convert_matrix(const vle::value::Map& out);
 
 /**
  * @brief Build an output of simulations result into a Tuple (each cell is a
@@ -71,7 +71,19 @@ PyObject* pyvle_convert_simulation_matrix(
  *
  * @return A Python representation of: List of Maps.
  */
-PyObject* pyvle_convert_dataframe(const vle::oov::OutputMatrixViewList& out);
+PyObject* pyvle_convert_dataframe(const vle::value::Map& out);
+
+/**
+ * @brief Build an output of simulations result into a Matrix (replicas x
+ * combination) of Tuple (each cell is a list of view) of Matrix of real (the
+ * result of the simulation). Values of type boolean, integer or double from the
+ * vle are transformed into double value, other value return None.
+ *
+ * @param out The output of simulations.
+ *
+ * @return A Python representation of: Matrix of List of Matrix.
+*/
+PyObject* pyvle_convert_simulation_matrix(const vle::value::Matrix& out);
 
 /**
  * @brief Build an output of simulations result into a Matrix (replicas x
@@ -85,7 +97,8 @@ PyObject* pyvle_convert_dataframe(const vle::oov::OutputMatrixViewList& out);
  *
  * @return A Python representation of: Matrix of List of Maps.
  */
-PyObject* pyvle_convert_simulation_dataframe(
-    const vle::manager::OutputSimulationMatrix& out);
+PyObject* pyvle_convert_simulation_dataframe(const vle::value::Matrix& out);
+
+
 
 #endif
