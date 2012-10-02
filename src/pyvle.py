@@ -340,8 +340,8 @@ class Vle:
     def getOutputPlugin(self, output):
         return libpyvle.output_get_plugin(self.vpz, output)
 
-    def setOutputPlugin(self, output, location, format, plugin):
-        libpyvle.output_set_plugin(self.vpz, output, location, format, plugin)
+    def setOutputPlugin(self, output, location, format, plugin, package):
+        libpyvle.output_set_plugin(self.vpz, output, location, format, plugin, package)
 
     def getOutputFormat(self, output):
         return libpyvle.output_get_format(self.vpz, output)
@@ -549,3 +549,8 @@ def to_value(x):
 		raise ValueError(u'Can\'t convert type %s in vle::value::Value' %
 						 type(x))
 	return val
+	
+	
+def __compileTestPackages():
+    libpyvle.__compileTestPackages()
+    return None

@@ -30,7 +30,7 @@
 #define VLE_PORT_PYVLE_HPP 1
 
 #include <Python.h>
-#include <vle/vpz.hpp>
+#include <vle/vpz/Vpz.hpp>
 
 vle::vpz::Vpz* pyvle_open(const char* filename);
 vle::vpz::Vpz* pyvle_open_pkg(const char* pkgname, const char* filename);
@@ -140,7 +140,7 @@ void pyvle_condition_delete_value(vle::vpz::Vpz* file,
 				std::string portname,
 				int i);
 PyObject* pyvle_atomic_model_conditions_list(vle::vpz::Vpz* file,
-		std::string name);
+		    std::string name);
 PyObject* pyvle_dynamic_conditions_list(vle::vpz::Vpz* file,
 		std::string name);
 
@@ -254,7 +254,8 @@ void pyvle_set_output_plugin(vle::vpz::Vpz* file,
 				  std::string outputname,
 				  std::string location,
 				  std::string format,
-				  std::string plugin);
+				  std::string plugin,
+				  std::string package);
 PyObject* pyvle_get_output_format(vle::vpz::Vpz* file,
                                   std::string outputname);
 PyObject* pyvle_get_output_location(vle::vpz::Vpz* file,
@@ -273,8 +274,6 @@ vle::value::Value* pyvle_create_tuple(unsigned int size);
 vle::value::Value* pyvle_create_table(unsigned int width, unsigned int height);
 vle::value::Value* pyvle_create_matrix(unsigned int width, unsigned int height);
 
-
-
 vle::value::Value* pyvle_int_to_value(long i);
 vle::value::Value* pyvle_real_to_value(float i);
 vle::value::Value* pyvle_string_to_value(std::string i);
@@ -289,5 +288,7 @@ void pyvle_set_value_to_table(vle::value::Value* set, unsigned int i,
         unsigned int j, double v);
 void pyvle_set_value_to_matrix(vle::value::Value* set, unsigned int i,
         unsigned int j, vle::value::Value* v);
+
+void pyvle_compileTestPackages();
 
 #endif

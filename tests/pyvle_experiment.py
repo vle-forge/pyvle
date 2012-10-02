@@ -4,11 +4,10 @@
 import unittest as ut
 import pyvle
 import libpyvle
-import os
 import sys
+import os
 import tempfile as tmp
 
-filename = sys.argv[1]
 
 dummy_vpz = """<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.0.0.dtd">
@@ -36,15 +35,16 @@ class TestOpen(ut.TestCase):
     
     def testOpenFromFilename(self):
         # existing file
-        exp = pyvle.Vle(filename)
+        exp = pyvle.Vle("dummy.vpz", "test_port")
         self.assertIsInstance(exp.vpz, libpyvle.Vpz)
         # not existing file
         nfilename = "not_existing_file"
         exp = pyvle.Vle(nfilename)
         self.assertIsNone(exp.vpz)
-    
+
     def testOpenFromFileObject(self):
-        with open(filename, 'r') as f:
+        dummyPath = os.path.normpath(os.environ["VLE_HOME"]+"/pkgs-1.1/test_port/exp/dummy.vpz")
+        with open(dummyPath, 'r') as f:
             exp = pyvle.Vle(f)
             self.assertIsInstance(exp.vpz, libpyvle.Vpz)
     
@@ -62,7 +62,7 @@ class TestOpen(ut.TestCase):
 class TestExperiment(ut.TestCase):
 
     def setUp(self):
-        self.exp = pyvle.Vle(filename)
+        self.exp = pyvle.Vle("dummy.vpz", "test_port")
     
     def testSaveInFilename(self):
         with tmp.NamedTemporaryFile() as dumped:
@@ -96,6 +96,20 @@ class TestExperiment(ut.TestCase):
         self.exp.setBegin(1)
         self.assertEqual(1, self.exp.getBegin())
 
+class TestExperiment2(ut.TestCase):
+
+    def setUp(self):
+        self.exp = pyvle.Vle("test_simulation.vpz","test_port")
+
+    def testGetBegin(self):
+        self.assertEqual(0, self.exp.getBegin())
+
+    def testSetBeginBadInput(self):
+        self.assertRaises(Exception, self.exp.setBegin, 'a')
+
+    def testSetBegin(self):
+        self.exp.setBegin(1)
+        self.assertEqual(1, self.exp.getBegin())
 
 if __name__ == '__main__':
     ut.main()
