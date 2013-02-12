@@ -30,9 +30,10 @@ def main():
     ut.TextTestRunner(verbosity=1).run(suite)
 
 if __name__ == '__main__':
+    sourcevlehome = sys.argv[1]
     tmpvlehome = tempfile.mkdtemp()+"/vlehome"
     shutil.rmtree(tmpvlehome, ignore_errors=True)
-    shutil.copytree("vlehome", tmpvlehome)
+    shutil.copytree(sourcevlehome, tmpvlehome)
     os.environ['VLE_HOME']=tmpvlehome
     pyvle.__compileTestPackages()
     main()
