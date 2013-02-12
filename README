@@ -11,10 +11,10 @@ with the Discrete Event System Specification formalism (DEVS).
 Requirements
 ------------
 
-vle		0.8.0 http://www.vle-project.org
-boost		1.35  http://www.boost.org
-cmake		2.6.0 http://www.cmake.org
-python          2.5   http://www.python.org
+vle     1.1   http://www.vle-project.org
+boost   1.49  http://www.boost.org
+cmake   2.8.0 http://www.cmake.org
+python  2.7   http://www.python.org
 
 
 Getting the code
@@ -105,15 +105,13 @@ Usage
 -----
 
 $ python
-Python 2.5.4 (r254:67916, Sep 26 2009, 10:32:22)
-[GCC 4.3.4] on linux2
+Python 2.7.3 (default, Sep 26 2012, 21:51:14)
+[GCC 4.7.2] on linux2
 Type "help", "copyright", "credits" or "license" for more information.
 >>> import pyvle
 >>> from pyvle import Vle
 >>> dir(pyvle.Vle)
-
->>> from pyvle import Vle
->>> f = Vle("$HOME/usr/share/vle-0.8.0/examples/equation1.vpz")
+>>> f = Vle("my_vpz","my_package")
 >>> print(f)
 <pyvle.Vle instance at 0x7fe231515e60>
 >>> f.listConditions()
