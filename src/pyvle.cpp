@@ -41,6 +41,7 @@
 #include <vle/utils/Trace.hpp>
 #include <vle/utils/Tools.hpp>
 #include <vle/utils/ModuleManager.hpp>
+#include <glibmm/exception.h>
 #include <boost/lexical_cast.hpp>
 #include <boost/filesystem.hpp>
 
