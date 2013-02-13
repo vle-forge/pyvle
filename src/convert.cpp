@@ -28,7 +28,6 @@
 
 #include <convert.hpp>
 #include <boost/format.hpp>
-#include <vle/value.hpp>
 #include <cassert>
 
 PyObject* pyvle_convert_value(const vle::value::Value& value)
@@ -43,9 +42,9 @@ PyObject* pyvle_convert_value(const vle::value::Value& value)
         break;
     }
     case vle::value::Value::INTEGER: {
-	result = PyInt_FromLong(
-	    vle::value::toInteger(value));
-	break;
+        result = PyInt_FromLong(
+                vle::value::toInteger(value));
+        break;
     }
     case vle::value::Value::DOUBLE: {
         result = PyFloat_FromDouble(
@@ -139,11 +138,17 @@ PyObject* pyvle_convert_value(const vle::value::Value& value)
     }
     return result;
 }
-
-
-PyObject* pyvle_convert_view_matrix(const vle::oov::OutputMatrix& matrix)
+/**
+ * @brief Converts a view : lines represent time, columns represent
+ * obserrvation ports
+ *
+ * @param matrix, A matrix that is a view.
+ *
+ * @return A Python representation of: a Matrix.
+ */
+PyObject* pyvle_convert_view_matrix(const vle::value::Matrix& matrix)
 {
-    vle::value::ConstMatrixView view(matrix.values());
+    vle::value::ConstMatrixView view(matrix.value());
     vle::value::ConstMatrixView::index i, j;
 
     PyObject* out = PyTuple_New(view.shape()[0]);
@@ -163,125 +168,93 @@ PyObject* pyvle_convert_view_matrix(const vle::oov::OutputMatrix& matrix)
     return out;
 }
 
-PyObject* pyvle_build_data_frame(const vle::oov::OutputMatrix& matrix)
+/**
+ * @brief Converts a view : lines represent time, columns represent
+ * observation ports
+ *
+ * @param matrix, A matrix that is a view.
+ *
+ * @return A Python representation of: a Map.
+ */
+PyObject* pyvle_build_data_frame(const vle::value::Matrix& matrix)
 {
-    vle::value::ConstMatrixView view(matrix.values());
-    vle::value::ConstMatrixView::index i, j;
-
+    //assumption, first line contains name of the columns
     PyObject* out = PyDict_New();
-    PyObject* time = PyTuple_New(view.shape()[1]);
-    vle::value::ConstVectorView t = matrix.getValue(0);
+    vle::value::ConstMatrixView view(matrix.value());
 
-    for (i = 0; i < view.shape()[1]; ++i)
-        PyTuple_SetItem(time, i, pyvle_convert_value(*t[i]));
-    PyDict_SetItemString(out, "time", time);
+    unsigned int nbcol = matrix.columns();
+    unsigned int nbline = view.shape()[1];
 
-    const vle::oov::OutputMatrix::MapPairIndex& index(matrix.index());
-    for (vle::oov::OutputMatrix::MapPairIndex::const_iterator it =
-         index.begin();
-         it != index.end(); ++it) {
-
-        PyObject* column = PyTuple_New(view.shape()[1]);
-
-        i = it->second;
-        for (j = 0; j < view.shape()[1]; ++j) {
-            if (view[i][j]) {
-                PyTuple_SetItem(column, j, pyvle_convert_value(*view[i][j]));
+    for(unsigned int c = 0; c < nbcol; c++){
+        PyObject* col = PyTuple_New(nbline - 1);
+        vle::value::ConstVectorView t = matrix.column(c);
+        for (unsigned int i = 1; i < nbline; ++i) {
+            if (t[i]) {
+                PyTuple_SetItem(col, i-1, pyvle_convert_value(*t[i]));
             } else {
-                PyTuple_SetItem(column, j, Py_None);
+                PyTuple_SetItem(col, i-1, Py_None);
             }
         }
-        PyDict_SetItemString(out, boost::str(boost::format("%1%.%2%") %
-                                             it->first.first %
-                                             it->first.second).c_str(), column);
+        PyDict_SetItemString(out, matrix.getString(c,0).c_str(), col);
     }
     return out;
 }
 
-//
-// public part
-//
-
-PyObject* pyvle_convert_matrix(const vle::oov::OutputMatrixViewList& out)
+PyObject* pyvle_convert_matrix(const vle::value::Map& out)
 {
     PyObject* plst;
-    vle::oov::OutputMatrixViewList::const_iterator it;
-
     plst = PyDict_New();
-    for (it = out.begin(); it != out.end(); ++it) {
-	PyObject* pdata = pyvle_convert_view_matrix(it->second);
-
-	PyDict_SetItemString(plst, it->first.c_str(), pdata);
+    vle::value::Map::const_iterator itb = out.begin();
+    vle::value::Map::const_iterator ite = out.end();
+    for(;itb!=ite;itb++){
+        PyObject* pdata = pyvle_convert_view_matrix(itb->second->toMatrix());
+        PyDict_SetItemString(plst, itb->first.c_str(), pdata);
     }
     return plst;
 }
 
-PyObject* pyvle_convert_simulation_matrix(
-    const vle::manager::OutputSimulationMatrix& out)
+PyObject* pyvle_convert_dataframe(const vle::value::Map& out)
 {
-    PyObject* r;
-    vle::manager::OutputSimulationMatrix::index i, j;
 
-    r = PyTuple_New(out.shape()[0]);
-    for (i = 0; i < out.shape()[0]; ++i) {
-	PyObject* column = PyTuple_New(out.shape()[1]);
-
-        for (j = 0; j < out.shape()[1]; ++j) {
-            const vle::oov::OutputMatrixViewList& lst(out[i][j]);
-	    vle::oov::OutputMatrixViewList::const_iterator it;
-	    PyObject* plst;
-
-	    plst = PyDict_New();
-            for (it = lst.begin(); it != lst.end(); ++it) {
-		PyObject* pdata = pyvle_convert_view_matrix(it->second);
-
-		PyDict_SetItemString(plst, it->first.c_str(), pdata);
-            }
-	    PyTuple_SetItem(column, j, plst);
-        }
-	PyTuple_SetItem(r, i, column);
-    }
-    return r;
-}
-
-PyObject* pyvle_convert_dataframe(const vle::oov::OutputMatrixViewList& out)
-{
     PyObject* plst;
-    vle::oov::OutputMatrixViewList::const_iterator it;
-
     plst = PyDict_New();
-    for (it = out.begin(); it != out.end(); ++it) {
-	PyObject* pdata = pyvle_build_data_frame(it->second);
-
-	PyDict_SetItemString(plst, it->first.c_str(), pdata);
+    vle::value::Map::const_iterator itb = out.begin();
+    vle::value::Map::const_iterator ite = out.end();
+    for(;itb!=ite;itb++){
+        PyObject* pdata = pyvle_build_data_frame(itb->second->toMatrix());
+        PyDict_SetItemString(plst, itb->first.c_str(), pdata);
     }
     return plst;
 }
 
-PyObject* pyvle_convert_simulation_dataframe(
-    const vle::manager::OutputSimulationMatrix& out)
+PyObject* pyvle_convert_simulation_matrix(const vle::value::Matrix& out)
 {
-    PyObject* r;
-    vle::manager::OutputSimulationMatrix::index i, j;
-
-    r = PyTuple_New(out.shape()[0]);
-    for (i = 0; i < out.shape()[0]; ++i) {
-	PyObject* column = PyTuple_New(out.shape()[1]);
-
-        for (j = 0; j < out.shape()[1]; ++j) {
-            const vle::oov::OutputMatrixViewList& lst(out[i][j]);
-	    vle::oov::OutputMatrixViewList::const_iterator it;
-	    PyObject* plst;
-
-	    plst = PyDict_New();
-            for (it = lst.begin(); it != lst.end(); ++it) {
-		PyObject* pdata = pyvle_build_data_frame(it->second);
-
-                PyDict_SetItemString(plst, it->first.c_str(), pdata);
-            }
-	    PyTuple_SetItem(column, j, plst);
+    PyObject* line;
+    PyObject* columns = PyTuple_New(out.columns());
+    for (unsigned int j=0; j<out.columns();j++){
+        line = PyTuple_New(out.columns());
+        for (unsigned int i=0; i<out.column(0).size();i++){
+            PyObject* pdata = pyvle_convert_matrix(out.get(j,i)->toMap());
+            PyTuple_SetItem(line, i, pdata);
         }
-	PyTuple_SetItem(r, i, column);
+        PyTuple_SetItem(columns, j, line);
     }
-    return r;
+    return columns;
+}
+
+
+
+PyObject* pyvle_convert_simulation_dataframe(const vle::value::Matrix& out)
+{
+    PyObject* line;
+    PyObject* columns = PyTuple_New(out.columns());
+    for (unsigned int j=0; j<out.columns();j++){
+        line = PyTuple_New(out.columns());
+        for (unsigned int i=0; i<out.column(0).size();i++){
+            PyObject* pdata = pyvle_convert_dataframe(out.get(j,i)->toMap());
+            PyTuple_SetItem(line, i, pdata);
+        }
+        PyTuple_SetItem(columns, j, line);
+    }
+    return columns;
 }

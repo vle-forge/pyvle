@@ -80,15 +80,31 @@ class VleMatrix(VleValue):
 
 
 class Vle:
-    def __init__(self, filename, package = ""):
-        if package == "":
-            self.vpz = libpyvle.open(filename)
+    
+    def __init__(self, file_, package = ""):
+        if isinstance(file_, basestring):
+            # assume file_ is a filename
+            if package == "":
+                self.vpz = libpyvle.open(file_)
+            else:
+                self.vpz = libpyvle.open_pkg(package, file_)
+            self.filename = file_
         else:
-            self.vpz = libpyvle.open_pkg(package, filename)
-        self.filename = filename;
+            # assume file_ is a file object
+            if package == "":
+                self.vpz = libpyvle.from_buffer(file_.read())
+            else:
+                self.vpz = libpyvle.from_buffer_pkg(package, file_.read())
+            self.filename = file_.name if hasattr(file_, "name") else None
 
-    def save(self, filename):
-        libpyvle.save(self.vpz, filename)
+    def save(self, file_):
+        if isinstance(file_, basestring):
+            # assume file_ is a filename
+            libpyvle.save(self.vpz, file_)
+        else:
+            # assume file_ is a file object
+            file_.write(libpyvle.save_buffer(self.vpz))
+
 
 # name of experiments
     def setName(self, name):
@@ -186,34 +202,67 @@ class Vle:
 
 # conditions add
     def addRealCondition(self, name, port, v):
-        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
-
-	def addIntegerCondition(self, name, port, v):
-		libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        if isinstance(v,float):
+            libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        else:
+            raise ValueError(u'Can\'t convert type %s to float' % type(v))
 
     def addIntegerCondition(self, name, port, v):
-        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        if isinstance(v,int):
+            libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        else:
+            raise ValueError(u'Can\'t convert type %s to int' % type(v))
 
     def addStringCondition(self, name, port, v):
-        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        if isinstance(v,str):
+            libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        else:
+            raise ValueError(u'Can\'t convert type %s to str' % type(v))
 
     def addBooleanCondition(self, name, port, v):
-        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        if isinstance(v,bool):
+            libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        else:
+            raise ValueError(u'Can\'t convert type %s to bool' % type(v))
 
     def addMapCondition(self, name, port, v):
-        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        if isinstance(v,dict):
+            libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        else:
+            raise ValueError(u'Can\'t convert type %s to dict' % type(v))
 
     def addSetCondition(self, name, port, v):
-        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        if isinstance(v,list):
+            libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        else:
+            raise ValueError(u'Can\'t convert type %s to list' % type(v))
 
     def addMatrixCondition(self, name, port, v):
-        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        if isinstance(v,VleMatrix):
+            libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        else:
+            raise ValueError(u'Can\'t convert type %s to VleMatrix' % type(v))
 
     def addTableCondition(self, name, port, v):
-        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        if isinstance(v,VleTable):
+            libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        else:
+            raise ValueError(u'Can\'t convert type %s to VleTable' % type(v))
 
     def addTupleCondition(self, name, port, v):
-        libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        if isinstance(v,VleTuple):
+            libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        else:
+            raise ValueError(u'Can\'t convert type %s to VleTuple' % type(v))
+
+    def addXMLCondition(self, name, port, v):
+        if isinstance(v,VleXML):
+            libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
+        else:
+            raise ValueError(u'Can\'t convert type %s to VleXML' % type(v))
+
+    def addValueCondition(self, name, port, v):
+            libpyvle.condition_add_value(self.vpz, name, port, to_value(v))
 
 #################
 ## pyvle specific
@@ -291,8 +340,8 @@ class Vle:
     def getOutputPlugin(self, output):
         return libpyvle.output_get_plugin(self.vpz, output)
 
-    def setOutputPlugin(self, output, location, format, plugin):
-        libpyvle.output_set_plugin(self.vpz, output, location, format, plugin)
+    def setOutputPlugin(self, output, location, format, plugin, package):
+        libpyvle.output_set_plugin(self.vpz, output, location, format, plugin, package)
 
     def getOutputFormat(self, output):
         return libpyvle.output_get_format(self.vpz, output)
@@ -354,6 +403,9 @@ class Vle:
 
     def listDynamicObservables(self, name):
         return libpyvle.dynamic_observables_list(self.vpz, name)
+
+    def listViewsEntries(self):
+        return libpyvle.list_view_entries(self.vpz)
 
 # dynamics
     def listDynamics(self):
@@ -497,3 +549,8 @@ def to_value(x):
 		raise ValueError(u'Can\'t convert type %s in vle::value::Value' %
 						 type(x))
 	return val
+	
+	
+def __compileTestPackages():
+    libpyvle.__compileTestPackages()
+    return None

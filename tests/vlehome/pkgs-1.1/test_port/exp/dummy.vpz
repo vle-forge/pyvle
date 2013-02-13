@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE vle_project PUBLIC "-//VLE TEAM//DTD Strict//EN" "http://www.vle-project.org/vle-1.0.0.dtd">
+<vle_project version="1.0" date="Fri, 13 Apr 2012" author="Gauthier Quesnel">
+<structures>
+<model name="Top model" type="coupled" x="0" y="0" width="484"  >
+<submodels>
+</submodels>
+<connections>
+</connections>
+</model>
+</structures>
+<experiment name="test" duration="1.000000000000000" begin="0.000000000000000" combination="linear" seed="123456789" >
+<conditions>
+<condition name="test" >
+</condition>
+</conditions>
+<views>
+</views>
+</experiment>
+</vle_project>
