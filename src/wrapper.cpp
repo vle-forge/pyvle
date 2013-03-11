@@ -158,6 +158,7 @@ BOOST_PYTHON_MODULE(libpyvle)
     bp::def("get_package_vpz_list", pyvle_get_package_vpz_list);
     bp::def("get_package_vpz_directory", pyvle_get_package_vpz_directory);
     bp::def("get_package_data_directory", pyvle_get_package_data_directory);
+    bp::def("get_package_output_directory", pyvle_get_package_output_directory);
     bp::def("get_package_vpz", pyvle_get_package_vpz);
     bp::def("set_package_mode", pyvle_set_package_mode);
     bp::def("set_normal_mode", pyvle_set_normal_mode);
