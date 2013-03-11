@@ -1785,6 +1785,24 @@ PyObject* pyvle_get_package_data_directory(std::string name)
     return r;
 }
 
+PyObject* pyvle_get_package_output_directory(std::string name)
+{
+    if (!thread_init) {
+        vle::manager::init();
+        thread_init = true;
+    }
+
+    PyObject* r;
+
+    utils::Package::package().select(name);
+
+    r = PyString_FromString(utils::Path::path().getPackageOutputDir().c_str());
+
+    utils::Package::package().select("");
+
+    return r;
+}
+
 PyObject* pyvle_get_package_vpz(std::string name, std::string vpz)
 {
     PyObject* r;
