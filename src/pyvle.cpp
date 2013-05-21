@@ -51,21 +51,11 @@ static bool thread_init = false;
 
 vpz::Vpz* pyvle_open(const char* filename)
 {
-    vpz::Vpz* file = 0;
-
-    try {
-        if (!thread_init) {
-            vle::Init app;//TODO
-            thread_init = true;
-        }
-        vle::utils::Package::package().select("");
-        file = new vpz::Vpz(filename);
-        return file;
-
-    } catch(const std::exception& e) {
-        return NULL;
-    }
-    return NULL;
+    std::string logfilename = utils::Trace::getLogFilename("pyvle.log");
+    std::ofstream* logfile = new std::ofstream(logfilename.c_str());
+    (*logfile) << _("Error: pyvle_open whitout the specfication of a package "
+            "is not possible")
+                    << "\n\n" << std::flush;
 }
 
 vpz::Vpz* pyvle_open_pkg(const char* pkgname, const char* filename)
@@ -77,9 +67,8 @@ vpz::Vpz* pyvle_open_pkg(const char* pkgname, const char* filename)
             vle::Init app;//TODO
             thread_init = true;
         }
-        vle::utils::Package::package().select(pkgname);
-        std::string filepath = vle::utils::Path::path().getPackageExpFile(
-                filename);
+        vle::utils::Package pack(pkgname);
+        std::string filepath = pack.getExpFile(filename);
         file = new vpz::Vpz(filepath);
         return file;
     } catch(const std::exception& e) {
@@ -97,7 +86,6 @@ vpz::Vpz* pyvle_from_buffer(const std::string& buffer)
             vle::Init app;//TODO
             thread_init = true;
         }
-        vle::utils::Package::package().select("");
         file = new vpz::Vpz();
         file->parseMemory(buffer);
         return file;
@@ -118,7 +106,6 @@ vpz::Vpz* pyvle_from_buffer_pkg(const char* pkgname, const std::string& buffer)
         }
         file = new vpz::Vpz();
         file->parseMemory(buffer);
-        vle::utils::Package::package().select(pkgname);
         return file;
     } catch(const std::exception& e) {
         return NULL;
@@ -1760,7 +1747,7 @@ PyObject* pyvle_get_installed_packages()
     }
 
     PyObject* r;
-    utils::PathList list = utils::Path::path().getInstalledPackages();
+    utils::PathList list = utils::Path::path().getBinaryPackages();
     utils::PathList::const_iterator it = list.begin();
     int i = 0;
 
@@ -1783,8 +1770,8 @@ PyObject* pyvle_get_package_vpz_list(std::string name)
     }
 
     PyObject* r;
-    utils::Package::package().select(name);
-    utils::PathList list = utils::Path::path().getInstalledExperiments();
+    utils::Package pack(name);
+    utils::PathList list = pack.getExperiments();
     utils::PathList::const_iterator it = list.begin();
     int i = 0;
 
@@ -1808,11 +1795,9 @@ PyObject* pyvle_get_package_vpz_directory(std::string name)
 
     PyObject* r;
 
-    utils::Package::package().select(name);
+    utils::Package pack(name);
 
-    r = PyString_FromString(utils::Path::path().getPackageExpDir().c_str());
-
-    utils::Package::package().select("");
+    r = PyString_FromString(pack.getExpDir().c_str());
 
     return r;
 }
@@ -1826,11 +1811,9 @@ PyObject* pyvle_get_package_data_directory(std::string name)
 
     PyObject* r;
 
-    utils::Package::package().select(name);
+    utils::Package pack(name);
 
-    r = PyString_FromString(utils::Path::path().getPackageDataDir().c_str());
-
-    utils::Package::package().select("");
+    r = PyString_FromString(pack.getDataDir().c_str());
 
     return r;
 }
@@ -1844,11 +1827,9 @@ PyObject* pyvle_get_package_output_directory(std::string name)
 
     PyObject* r;
 
-    utils::Package::package().select(name);
+    utils::Package pack(name);
 
-    r = PyString_FromString(utils::Path::path().getPackageOutputDir().c_str());
-
-    utils::Package::package().select("");
+    r = PyString_FromString(pack.getOutputDir().c_str());
 
     return r;
 }
@@ -1857,11 +1838,9 @@ PyObject* pyvle_get_package_vpz(std::string name, std::string vpz)
 {
     PyObject* r;
 
-    utils::Package::package().select(name);
+    utils::Package pack(name);
+    r = PyString_FromString(pack.getExpFile(vpz).c_str());
 
-    r = PyString_FromString(utils::Path::path().getPackageExpFile(vpz).c_str());
-
-    utils::Package::package().select("");
 
     return r;
 }
@@ -1872,7 +1851,6 @@ void pyvle_set_package_mode(std::string name)
         vle::Init app;
         thread_init = true;
     }
-    utils::Package::package().select(name);
 }
 
 void pyvle_set_normal_mode()
@@ -1881,7 +1859,6 @@ void pyvle_set_normal_mode()
         vle::Init app;
         thread_init = true;
     }
-    utils::Package::package().select("");
 }
 
 void pyvle_set_output_plugin(vle::vpz::Vpz* file,
@@ -2208,33 +2185,32 @@ void pyvle_compileTestPackages()
             << "\n\n" << std::flush;
 
     try {
-        //homedir is set before calling this method
-        vle::utils::Package::package().refresh();
-        vu::Package::package().select("vle.output");
-        vu::Package::package().configure();
-        vu::Package::package().wait((*logfile), (*logfile));
-        if (vu::Package::package().isSuccess()) {
-            vu::Package::package().build();
-            vu::Package::package().wait((*logfile), (*logfile));
-            if (vu::Package::package().isSuccess()) {
-                vu::Package::package().install();
-                vu::Package::package().wait((*logfile), (*logfile));
+        //vlehome dir is set before calling this method
+        vu::Package pack("vle.output");
+        pack.configure();
+        pack.wait((*logfile), (*logfile));
+        if (pack.isSuccess()) {
+            pack.build();
+            pack.wait((*logfile), (*logfile));
+            if (pack.isSuccess()) {
+                pack.install();
+                pack.wait((*logfile), (*logfile));
             }
         }
-        vu::Package::package().select("test_port");
-        vu::Package::package().configure();
-        vu::Package::package().wait((*logfile), (*logfile));
-        if (vu::Package::package().isSuccess()) {
-            vu::Package::package().build();
-            vu::Package::package().wait((*logfile), (*logfile));
-            if (vu::Package::package().isSuccess()) {
-                vu::Package::package().install();
-                vu::Package::package().wait((*logfile), (*logfile));
+        pack.select("test_port");
+        pack.configure();
+        pack.wait((*logfile), (*logfile));
+        if (pack.isSuccess()) {
+            pack.build();
+            pack.wait((*logfile), (*logfile));
+            if (pack.isSuccess()) {
+                pack.install();
+                pack.wait((*logfile), (*logfile));
             }
         }
     }  catch(const std::exception& e) {
-        (*logfile) << _("Error while compiling test_port and vle.output")
-                << "\n\n" << std::flush;
+        (*logfile) << _("Error while compiling test_port and vle.output : \n")
+                <<  e.what() << "\n\n" << std::flush;
     }
     logfile->close();
 }
