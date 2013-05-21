@@ -31,9 +31,11 @@ def main():
 
 if __name__ == '__main__':
     sourcevlehome = sys.argv[1]
-    tmpvlehome = tempfile.mkdtemp()+"/vlehome"
+    tmpvlehome = "/tmp/vlehome"
+    #tmpvlehome = tempfile.mkdtemp()+"/vlehome"
     shutil.rmtree(tmpvlehome, ignore_errors=True)
-    shutil.copytree(sourcevlehome, tmpvlehome)
+    os.chdir(sourcevlehome)
+    shutil.copytree("vlehome", tmpvlehome)
     os.environ['VLE_HOME']=tmpvlehome
     pyvle.__compileTestPackages()
     main()
