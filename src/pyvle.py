@@ -84,10 +84,7 @@ class Vle:
     def __init__(self, file_, package = ""):
         if isinstance(file_, basestring):
             # assume file_ is a filename
-            if package == "":
-                self.vpz = libpyvle.open(file_)
-            else:
-                self.vpz = libpyvle.open_pkg(package, file_)
+            self.vpz = libpyvle.open_pkg(package, file_)
             self.filename = file_
         else:
             # assume file_ is a file object

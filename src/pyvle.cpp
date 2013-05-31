@@ -49,15 +49,6 @@ using namespace vle;
 
 static bool thread_init = false;
 
-vpz::Vpz* pyvle_open(const char* filename)
-{
-    std::string logfilename = utils::Trace::getLogFilename("pyvle.log");
-    std::ofstream* logfile = new std::ofstream(logfilename.c_str());
-    (*logfile) << _("Error: pyvle_open whitout the specfication of a package "
-            "is not possible")
-                    << "\n\n" << std::flush;
-}
-
 vpz::Vpz* pyvle_open_pkg(const char* pkgname, const char* filename)
 {
     vpz::Vpz* file = 0;

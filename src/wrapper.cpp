@@ -66,8 +66,6 @@ BOOST_PYTHON_MODULE(libpyvle)
     bp::def("str_to_xml", pyvle_str_to_xml,
             bp::return_value_policy < bp::manage_new_object > ());
 
-    bp::def("open", pyvle_open,
-            bp::return_value_policy < bp::manage_new_object > ());
     bp::def("open_pkg", pyvle_open_pkg,
             bp::return_value_policy < bp::manage_new_object > ());
     bp::def("from_buffer", pyvle_from_buffer,

@@ -32,7 +32,6 @@
 #include <Python.h>
 #include <vle/vpz/Vpz.hpp>
 
-vle::vpz::Vpz* pyvle_open(const char* filename);
 vle::vpz::Vpz* pyvle_open_pkg(const char* pkgname, const char* filename);
 vle::vpz::Vpz* pyvle_from_buffer(const std::string& buffer);
 vle::vpz::Vpz* pyvle_from_buffer_pkg(const char* pkgname,
