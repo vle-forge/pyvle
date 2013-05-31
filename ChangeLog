@@ -1,4 +1,288 @@
-pyvle-1.0.0-alpha4
+pyvle-1.1.0-beta1
+
+commit 3150bad78e275bbf856d0ede89fc8abd4e813bce
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Fri May 31 13:36:58 2013 +0200
+
+    Remove deprecated pyvle_open function
+    
+    The pvle_open() function is bad:
+    
+    vpz::Vpz* pyvle_open(const char* filename)
+    {
+      std::string logfilename = utils::Trace::getLogFilename("pyvle.log");
+      std::ofstream* logfile = new std::ofstream(logfilename.c_str());
+      (*logfile) << _("Error: pyvle_open whitout the specfication of a package "
+              "is not possible")
+                      << "\n\n" << std::flush;
+    }
+    
+    - Memory leaks with the logfile pointer.
+    - The message can be view for user only if he open the
+      $VLE_HOME/pyvle.log file.
+    - The return is missing.
+    
+    So, I remove this useless function.
+
+commit 99948858f2c5da286bb69107e10ac0cb91cb90cf
+Author: Ronan Trépos <rtrepos@toulouse.inra.fr>
+Date:   Tue May 21 21:06:33 2013 +0200
+
+    Update pyvle according the new API of Package
+    
+    - taking into account the version of VLE Without the Package singleton.
+    - disable pyvle_open without the specification of a package.
+
+commit b127866d8592d0e8b0a750c39d85d6b16e673939
+Author: Arezki Zerourou <zerourou@toulouse.inra.fr>
+Date:   Mon Mar 11 14:54:20 2013 +0100
+
+    Add function to get output directory package path
+    
+    Add missing getOutputDirectory function (closes #3).
+
+commit 25b7d58c8be90ab42c0ceecf7132074dd10778ef
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Wed Mar 6 14:42:55 2013 +0100
+
+    Upgrade packages with API changes
+    
+    The vle::devs::ExternalEventList is now a typedef to std::vector <
+    vle::devs::ExternalEvent* > instead of a class. The function addEvent is
+    missing. We replace with a call to push_back.
+
+commit a97862c6a422dfe16bde734802d6e1890e06e084
+Author: Ronan Trépos <rtrepos@toulouse.inra.fr>
+Date:   Tue Feb 12 15:04:09 2013 +0100
+
+    Update README
+
+commit 78e20fcd33d05f7d55b7fa401ce28c424b01ec08
+Author: Ronan Trépos <rtrepos@toulouse.inra.fr>
+Date:   Tue Feb 12 14:57:52 2013 +0100
+
+    Fix missing include of glibmm
+    
+    The file glibmm/exception.h was missing.
+
+commit d90666ded39f05c6c1dda9c787aad1cdfd6bab2b
+Author: Ronan Trépos <rtrepos@toulouse.inra.fr>
+Date:   Tue Feb 12 14:43:05 2013 +0100
+
+    Fix unit test call
+    
+    VLE_HOME is now given as argument to the unit test calling.
+
+commit c7ad3276adcb28056a7414cb74a6ef4294373dd4
+Author: Ronan Trépos <rtrepos@toulouse.inra.fr>
+Date:   Tue Oct 2 14:53:03 2012 +0200
+
+    Upgrade to vle-1.1
+    
+    - Test packages are dynamically compiled.
+    - Outputs are now Matrices.
+    - For now, no replicas.
+
+commit db36e7a70c18e7030111a754406962cd574c2d7d
+Author: Jerome Thiard <jerome.thiard@toulouse.inra.fr>
+Date:   Tue Apr 3 15:27:01 2012 +0200
+
+    Add python file objects support for vpz file
+    
+    The Vle `__init__' and `save' methods now can deal with either strings
+    (representing filenames) or python file objects. This allow the vpz's to
+    be opened from and saved in every object which looks like a file object,
+    including buffers like the builtin cStringIO python module.
+
+commit 2630bee0eade91075653fe32b314588773517ceb
+Author: Jerome Thiard <jerome.thiard@toulouse.inra.fr>
+Date:   Fri Apr 13 18:06:08 2012 +0200
+
+    Add unittests for opening and saving vpz's
+
+commit 4ab88c7f2e151d3901d991ee29b606157b7a0c79
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Mon Apr 16 09:08:32 2012 +0200
+
+    Update AUTHORS
+
+commit 7c046c20b0de15d356eb1dac68d3b7ea18d92d02
+Author: Nathalie Rousse <nrousse@toulouse.inra.fr>
+Date:   Thu Apr 12 10:31:59 2012 +0200
+
+    Add a function addXMLCondition
+    
+    This function was missing of pyvle.
+
+commit b8042d891c8b0bd658aa9143a41c4f8a166877df
+Author: Nathalie Rousse <nrousse@toulouse.inra.fr>
+Date:   Thu Apr 12 10:17:23 2012 +0200
+
+    Complete the pyvle_condition_get_value_type
+    
+    For TUPLE TABLE XMLTYPE and MATRIX vle types, the function
+    pyvle_condition_get_value_type has been completed.
+
+commit 9e8532a4848c2617f9c9fdd2db11a5a4564f6c34
+Author: Ronan Trépos <rtrepos@toulouse.inra.fr>
+Date:   Tue Apr 3 18:35:27 2012 +0200
+
+    Fix missing addValueCondition
+    
+    We fix missing addValueCondition and check type on addRealCondition,
+    addStringCondition etc. (Closes #3497691)
+
+commit 20fab7ff0419300aec2cc208e38a75a99775bf64
+Author: Ronan Trépos <rtrepos@toulouse.inra.fr>
+Date:   Wed Feb 8 14:09:57 2012 +0100
+
+    Fix default return on listDynamicObservables
+    
+    If dynamic is not found, there was no return statement,
+    which leads to a seg fault.
+
+commit 036fce3729555257c081335d6ae97fe6e08546af
+Author: Ronan Trépos <rtrepos@toulouse.inra.fr>
+Date:   Wed Feb 8 16:14:48 2012 +0100
+
+    Add function listViewEntries
+    
+    This function associates the list of complete names of ports
+    to the view names; ie. it gives column names for all views
+    (Closes 3475367)
+    
+    Conflicts:
+    
+    	src/pyvle.cpp
+
+commit e18f5c6b9d03d7496e5caceb30fea66e86ba45a7
+Author: Jerome Thiard <jerome.thiard@toulouse.inra.fr>
+Date:   Sun Jan 29 15:06:21 2012 +0100
+
+    Add all vle value types management
+    
+    All value types can be converted from python to vle
+    and vice versa. Specific python classes vleXML, vleTUPLE, vleTABLE,
+    vleMATRIX that embed classical python structures are added
+    in order to remove ambiguity in conversion form python to vle.
+    (Closes: 3474408, 3474406)
+
+commit 8baab586f1f847f0c0efbd9765f554986bd1780d
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Mon Aug 1 10:20:02 2011 +0200
+
+    Updating the includes' positions to reduce warnings
+    
+    As required by the header `Python.h', we make sure that `Python.h' was
+    int the first include position when building object.
+
+commit 75822291b86133a8d542ad7091c88518c77610ef
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Mon Aug 1 10:10:57 2011 +0200
+
+    Using the new plug-ins loading system
+    
+    We replace the utils::ModuleCache with the recent utils::ModuleManager
+    from VLE 1.1 development branch. We update source code. The
+    utils::ModuleCache uses a singleton system while utils::ModuleManager
+    uses a RAII idiom.
+
+commit b86db0090b194997eaccfb36e5adc239ed455483
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Mon Aug 1 10:10:06 2011 +0200
+
+    Replace toLong with toInteger function
+    
+    The recent changes in VLE 1.1 replace the `long' in value::Integer with
+    a `vle::int32_t' value.
+
+commit 4601179433d71100879733a03e470ef280fe2d20
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Mon Aug 1 10:05:19 2011 +0200
+
+    Remove references to the dynamic model attribute
+    
+    The vpz::Dynamic model attribute was removed from VLE 1.1 API. We remove
+    function which access to this attribute.
+
+commit b9c63e4c1436bcbd9662581f7b2a8f12edbd5b19
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Mon Aug 1 09:35:23 2011 +0200
+
+    Enabling of the unit tests directory
+    
+    We activate the unit tests by adding the CMakeLists.txt file which
+    activates the unit tests and ctest.
+
+commit 4b89bd8deef4726dd785e5acb9f83dd65beb0225
+Author: Jerome Thiard <jerome.thiard@toulouse.inra.fr>
+Date:   Mon May 30 17:01:08 2011 +0200
+
+    Fix segfault with NULL pointer conversion
+    
+    When in a storage view, some values are missing, we get a NULL pointer.
+    In that case we store a `None` value in the results instead of calling
+    pyvle_convert_value on the pointer.
+    
+    Signed-off-by: Gauthier Quesnel <quesnel@users.sourceforge.net>
+
+commit 633ea39e6f378c23d8cc750578d22f9e920475f3
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Wed Jun 1 12:09:42 2011 +0200
+
+    Enable ctest for PyVLE port
+    
+    We enable for PyVLE project, the CTest program. The filename of the VPZ
+    is now given by the command line interface to the program pyvletest.py
+
+commit 08114054e70e7bdb0f565a21ccdc41598e7cdd07
+Author: Jerome Thiard <jerome.thiard@toulouse.inra.fr>
+Date:   Thu May 5 16:21:28 2011 +0200
+
+    Add unit testing in pyvle
+    
+    The unit tests are in the `tests' directory, and uses the `unittest'
+    python module (builtin since python 2.0). All tests can be ran by
+    executing `pyvletest.py'. For now just some are done, more work
+    needed...
+    
+    Signed-off-by: Gauthier Quesnel <quesnel@users.sourceforge.net>
+    (cherry picked from commit ab1b157dd6b0420b8569b37bba0f7bb22c73636b)
+
+commit 0c4f7052c7c5751c6f9b07d273384f8b801545eb
+Author: Jerome Thiard <jerome.thiard@toulouse.inra.fr>
+Date:   Thu May 5 13:56:37 2011 +0200
+
+    Add new createCondition method in class Vle
+    
+    Allow the user to create a new condition, and optionally giving its
+    ports and values as keywords arguments.
+    
+    Signed-off-by: Gauthier Quesnel <quesnel@users.sourceforge.net>
+    (cherry picked from commit 0b088dfb4cd781945fb167ba5dac66b2383ab5c2)
+
+commit 2840e511b08002619a7ccc4e2253deb79c4b1a9d
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Wed Apr 20 12:58:08 2011 +0200
+
+    Bump to VLE 1.1
+
+commit e19071ff23d332a227cdc039e1d34fb02342a86b
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Mon Apr 18 16:17:48 2011 +0200
+
+    Fix load/unload of simulators plug-ins
+    
+    Since the latest VLE 1.0.0-alpha-4 version, the utils::ModuleCache build a
+    cache of simulators, outputs, plug-ins. However, users recommend to clear the
+    cache after running a simulation or an experimental design to enable them to
+    load another versions of the same plug-ins.
+
+commit 47a812693927f5eac06118b5e6686b1965031445
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Fri Mar 11 11:16:30 2011 +0100
+
+    pyvle-1.0.0-alpha4
 
 commit d1e2bfabee9055c569f8bd4910805ea8674edaa5
 Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
