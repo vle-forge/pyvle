@@ -1,4 +1,10 @@
-pyvle-1.1.0-beta1
+pyvle-1.1.0-beta2
+
+commit 3da58664d008b49f61a591a81bfca00f2578722a
+Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
+Date:   Fri May 31 14:02:57 2013 +0200
+
+    pyvle-1.1.0-beta1
 
 commit 3150bad78e275bbf856d0ede89fc8abd4e813bce
 Author: Gauthier Quesnel <quesnel@users.sourceforge.net>
