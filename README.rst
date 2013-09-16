@@ -6,6 +6,12 @@ A Python binding for the VFL.
 
 See AUTHORS and COPYRIGHT for the list of contributors.
 
+Changes from PyVLE 1.1.0-beta2
+------------------------------
+
+- README: switch to rst
+- fix cpack script
+
 Requirements
 ------------
 
