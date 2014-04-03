@@ -1,10 +1,15 @@
-====================================
-Virtual Laboratory Environment 1.1.0
-====================================
+==================================
+Virtual Laboratory Environment 1.1
+==================================
 
 A Python binding for the VFL.
 
 See AUTHORS and COPYRIGHT for the list of contributors.
+
+Changes from PyVLE 1.1.0
+------------------------
+
+Nothing
 
 Changes from PyVLE 1.1.0-beta2
 ------------------------------
