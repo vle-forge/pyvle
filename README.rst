@@ -1,23 +1,20 @@
-====================================
-Virtual Laboratory Environment 1.2.0
-====================================
+==================================
+Virtual Laboratory Environment 1.3
+==================================
 
 A Python binding for the VFL.
 
 See AUTHORS and COPYRIGHT for the list of contributors.
 
-Changes from PyVLE 1.1.0
-------------------------
+Changes from PyVLE 1.2
+----------------------
 
-Ronan Trépos (2):
-      tests: put begin and duration into conditions
-      switch to VLE 1.2
 
 Requirements
 ------------
 
 * python (>= 2.7 && < 3)
-* vle (>= 1.1)
+* vle (>= 1.3)
 * boost (>= 1.41)
 * cmake (>= 2.8.0)
 * make (>= 1.8)
