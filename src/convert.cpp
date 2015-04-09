@@ -232,7 +232,7 @@ PyObject* pyvle_convert_simulation_matrix(const vle::value::Matrix& out)
     PyObject* line;
     PyObject* columns = PyTuple_New(out.columns());
     for (unsigned int j=0; j<out.columns();j++){
-        line = PyTuple_New(out.columns());
+        line = PyTuple_New(out.column(0).size());
         for (unsigned int i=0; i<out.column(0).size();i++){
             PyObject* pdata = pyvle_convert_matrix(out.get(j,i)->toMap());
             PyTuple_SetItem(line, i, pdata);
@@ -249,7 +249,7 @@ PyObject* pyvle_convert_simulation_dataframe(const vle::value::Matrix& out)
     PyObject* line;
     PyObject* columns = PyTuple_New(out.columns());
     for (unsigned int j=0; j<out.columns();j++){
-        line = PyTuple_New(out.columns());
+        line = PyTuple_New(out.column(0).size());
         for (unsigned int i=0; i<out.column(0).size();i++){
             PyObject* pdata = pyvle_convert_dataframe(out.get(j,i)->toMap());
             PyTuple_SetItem(line, i, pdata);
