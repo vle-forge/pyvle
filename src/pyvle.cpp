@@ -248,6 +248,11 @@ PyObject* pyvle_run(vpz::Vpz* file)
             logfile->close();
             return PyString_FromString(error.message.c_str());
         }
+
+        if (res == NULL)
+            return PyString_FromString(
+                "Error in pyvle_run: empty result");
+
         resPython = pyvle_convert_dataframe(*res);
         delete(res);
         return resPython;
@@ -287,7 +292,6 @@ PyObject* pyvle_run_matrix(vpz::Vpz* file)
 
         res = sim.run(new vpz::Vpz(*file), man, &error);
 
-
         if (error.code != 0) {
             std::string filename = utils::Trace::getLogFilename("pyvle.log");
             std::ofstream* logfile = new std::ofstream(filename.c_str());
@@ -297,6 +301,11 @@ PyObject* pyvle_run_matrix(vpz::Vpz* file)
             logfile->close();
             return PyString_FromString(error.message.c_str());
         }
+
+        if (res == NULL)
+            return PyString_FromString(
+                "Error in pyvle_run_matrix: empty result");
+
         resPython = pyvle_convert_matrix(*res);
         delete res;
         return resPython;
@@ -346,6 +355,11 @@ PyObject* pyvle_run_manager(vpz::Vpz* file)
             logfile->close();
             return PyString_FromString(error.message.c_str());
         }
+
+        if (res == NULL)
+            return PyString_FromString(
+                "Error in pyvle_run_manager: empty result");
+
         resPython = pyvle_convert_simulation_dataframe(*res);
         delete res;
         return resPython;
@@ -395,6 +409,11 @@ PyObject* pyvle_run_manager_matrix(vpz::Vpz* file)
             logfile->close();
             return PyString_FromString(error.message.c_str());
         }
+
+        if (res == NULL)
+            return PyString_FromString(
+                "Error in pyvle_run_manager_matrix: empty result");
+
         resPython = pyvle_convert_simulation_matrix(*res);
         return resPython;
     } catch(const std::exception& e) {
@@ -444,6 +463,11 @@ PyObject* pyvle_run_manager_thread(vpz::Vpz* file, int th)
             logfile->close();
             return PyString_FromString(error.message.c_str());
         }
+
+        if (res == NULL)
+            return PyString_FromString(
+                "Error in pyvle_run_manager_thread: empty result");
+
         resPython = pyvle_convert_simulation_dataframe(*res);
         delete res;
         return resPython;
@@ -493,6 +517,11 @@ PyObject* pyvle_run_manager_thread_matrix(vpz::Vpz* file, int th)
             logfile->close();
             return PyString_FromString(error.message.c_str());
         }
+
+        if (res == NULL)
+            return PyString_FromString(
+                "Error in pyvle_run_manager_thread_matrix: empty result");
+
         resPython = pyvle_convert_simulation_matrix(*res);
         return resPython;
     } catch(const std::exception& e) {
