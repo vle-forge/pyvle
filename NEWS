@@ -1,0 +1,12 @@
+PyVLE 1.1
+=========
+
+Changes from pyvle-1.1.2
+------------------------
+
+Gauthier Quesnel (1):
+      Fix SIGSEGV when running simulation without storage
+
+Ronan Trépos (1):
+      fix run manager:
+
