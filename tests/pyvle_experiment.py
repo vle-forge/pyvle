@@ -43,7 +43,7 @@ class TestOpen(ut.TestCase):
         self.assertIsNone(exp.vpz)
 
     def testOpenFromFileObject(self):
-        dummyPath = os.path.normpath(os.environ["VLE_HOME"]+"/pkgs-1.3/test_port/exp/dummy.vpz")
+        dummyPath = os.path.normpath(os.environ["VLE_HOME"]+"/pkgs-2.0/test_port/exp/dummy.vpz")
         with open(dummyPath, 'r') as f:
             exp = pyvle.Vle(f)
             self.assertIsInstance(exp.vpz, libpyvle.Vpz)

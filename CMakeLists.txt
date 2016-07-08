@@ -49,7 +49,7 @@ endif()
 ##
 
 FIND_PACKAGE(PkgConfig)
-PKG_CHECK_MODULES(VLE vle-1.3)
+PKG_CHECK_MODULES(VLE vle-2.0)
 
 FIND_PACKAGE(Boost 1.35 COMPONENTS python)
 

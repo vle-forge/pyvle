@@ -1,5 +1,5 @@
 ==================================
-Virtual Laboratory Environment 1.3
+Virtual Laboratory Environment 2.0
 ==================================
 
 A Python binding for the VFL.
@@ -14,11 +14,11 @@ Requirements
 ------------
 
 * python (>= 2.7 && < 3)
-* vle (>= 1.3)
+* vle (>= 2.0)
 * boost (>= 1.41)
-* cmake (>= 2.8.0)
+* cmake (>= 3.0.0)
 * make (>= 1.8)
-* c++ compiler (gcc >= 4.4, clang >= 3.1, intel icc (>= 11.0)
+* c++ compiler (gcc >= 4.9, clang >= 3.1, intel icc (>= 11.0)
 
 Getting the code
 ----------------

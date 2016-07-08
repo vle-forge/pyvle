@@ -30,7 +30,6 @@
 #define VLE_PORT_PYVLE_CONVERT_H 1
 
 #include <Python.h>
-#include <vle/manager/Manager.hpp>
 #include <vle/value/Matrix.hpp>
 #include <vle/value/Map.hpp>
 #include <vle/value/Boolean.hpp>
