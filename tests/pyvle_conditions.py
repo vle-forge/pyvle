@@ -12,7 +12,9 @@ class TestConditions(ut.TestCase):
 
     def testCreateConditionStillExists(self):
         name = "cond"
-        self.assertRaises(Exception, self.exp.createCondition, name)
+        self.assertEqual(len(self.exp.listConditions()),2)#cond and simulation_engine
+        self.exp.createCondition(name)
+        self.assertEqual(len(self.exp.listConditions()),2)#no cond added
 
     def testCreateCondition(self):
         name = "condCreate"
@@ -153,7 +155,9 @@ class TestConditions2(ut.TestCase):
 
     def testCreateConditionStillExists(self):
         name = "test"
-        self.assertRaises(Exception, self.exp.createCondition, name)
+        self.assertEqual(len(self.exp.listConditions()),2)#test and simulation_engine
+        self.exp.createCondition(name)
+        self.assertEqual(len(self.exp.listConditions()),2)#no cond added
 
     def testCreateCondition(self):
         name = "CONFIG"

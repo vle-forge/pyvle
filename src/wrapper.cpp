@@ -129,7 +129,6 @@ BOOST_PYTHON_MODULE(libpyvle)
     bp::def("view_set_data", pyvle_view_set_data);
     bp::def("views_add_eventview", pyvle_views_add_eventview);
     bp::def("views_add_timedview", pyvle_views_add_timedview);
-    bp::def("views_add_finishview", pyvle_views_add_finishview);
     bp::def("list_view_entries", pyvle_list_view_entries);
     bp::def("output_get_plugin", pyvle_get_output_plugin);
     bp::def("observables_list", pyvle_observables_list);
@@ -151,7 +150,6 @@ BOOST_PYTHON_MODULE(libpyvle)
     bp::def("nbreplicas", pyvle_nbreplicas);
     bp::def("combinations", pyvle_combinations);
     bp::def("experiment_get_name", pyvle_experiment_get_name);
-    bp::def("trace_run_error", pyvle_trace_run_error);
     bp::def("get_installed_packages", pyvle_get_installed_packages);
     bp::def("get_package_vpz_list", pyvle_get_package_vpz_list);
     bp::def("get_package_vpz_directory", pyvle_get_package_vpz_directory);

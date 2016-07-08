@@ -27,7 +27,8 @@ def main():
               )
 
     suite = ut.TestLoader().loadTestsFromNames(modules)
-    ut.TextTestRunner(verbosity=1).run(suite)
+    ret = not ut.TextTestRunner(verbosity=1).run(suite).wasSuccessful()
+    sys.exit(ret)
 
 if __name__ == '__main__':
     sourcevlehome = sys.argv[1]

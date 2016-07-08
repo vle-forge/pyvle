@@ -28,22 +28,22 @@
 
 #include <sstream>
 #include <fstream>
+#include <string>
 #include <convert.hpp>
 #include <pyvle.hpp>
 #include <vle/vle.hpp>
-#include <vle/devs/RootCoordinator.hpp>
 #include <vle/vpz/AtomicModel.hpp>
 #include <vle/manager/Manager.hpp>
 #include <vle/manager/Simulation.hpp>
 #include <vle/value/Value.hpp>
+#include <vle/value/Table.hpp>
+#include <vle/value/Tuple.hpp>
+#include <vle/value/Matrix.hpp>
 #include <vle/utils/Package.hpp>
-#include <vle/utils/Path.hpp>
-#include <vle/utils/Trace.hpp>
 #include <vle/utils/Tools.hpp>
-#include <vle/utils/ModuleManager.hpp>
-#include <glibmm/exception.h>
-#include <boost/lexical_cast.hpp>
-#include <boost/filesystem.hpp>
+#include <vle/utils/Context.hpp>
+//#include <boost/lexical_cast.hpp>
+//#include <boost/filesystem.hpp>
 
 using namespace vle;
 
@@ -58,7 +58,8 @@ vpz::Vpz* pyvle_open_pkg(const char* pkgname, const char* filename)
             vle::Init app;//TODO
             thread_init = true;
         }
-        vle::utils::Package pack(pkgname);
+        auto ctx = vle::utils::make_context();
+        vle::utils::Package pack(ctx, pkgname);
         std::string filepath = pack.getExpFile(filename);
         file = new vpz::Vpz(filepath);
         return file;
@@ -213,13 +214,14 @@ void pyvle_experiment_set_total_combination(vpz::Vpz* file,
 PyObject* pyvle_run(vpz::Vpz* file)
 {
     assert(file);
-    value::Map* res = NULL;
+    std::unique_ptr<vle::value::Map> res(nullptr);
     PyObject* resPython = NULL;
+    auto ctx = vle::utils::make_context();
 
     try {
-        utils::ModuleManager man;
+
         manager::Error error;
-        manager::Simulation sim(manager::LOG_NONE,
+        manager::Simulation sim(ctx, manager::LOG_NONE,
                 manager::SIMULATION_NONE,
                 NULL);
         //configure output plugins for column names
@@ -231,18 +233,19 @@ PyObject* pyvle_run(vpz::Vpz* file)
             vpz::Output& output = itb->second;
             if((output.package() == "vle.output") &&
                     (output.plugin() == "storage")){
-                value::Map* configOutput = new value::Map();
+                std::unique_ptr<value::Map> configOutput(new value::Map());
                 configOutput->addString("header","top");
-                output.setData(configOutput);
+                output.setData(std::move(configOutput));
             }
         }
 
-        res = sim.run(new vpz::Vpz(*file), man, &error);
+        res = sim.run(std::unique_ptr<vle::vpz::Vpz>(new vle::vpz::Vpz(*file)),
+                &error);
 
         if (error.code != 0) {
-            std::string filename = utils::Trace::getLogFilename("pyvle.log");
+            std::string filename = ctx->getLogFile("pyvle").string();
             std::ofstream* logfile = new std::ofstream(filename.c_str());
-            (*logfile) << _("Error in pyvle_run: ")
+            (*logfile) << "Error in pyvle_run: "
                             << error.message
                             << "\n\n" << std::flush;
             logfile->close();
@@ -254,7 +257,6 @@ PyObject* pyvle_run(vpz::Vpz* file)
                 "Error in pyvle_run: empty result");
 
         resPython = pyvle_convert_dataframe(*res);
-        delete(res);
         return resPython;
     } catch(const std::exception& e) {
         return NULL;
@@ -266,13 +268,13 @@ PyObject* pyvle_run(vpz::Vpz* file)
 PyObject* pyvle_run_matrix(vpz::Vpz* file)
 {
     assert(file);
-    value::Map* res = NULL;
+    std::unique_ptr<vle::value::Map> res(nullptr);
     PyObject* resPython = NULL;
+    auto ctx = vle::utils::make_context();
 
     try {
-        utils::ModuleManager man;
         manager::Error error;
-        manager::Simulation sim(manager::LOG_NONE,
+        manager::Simulation sim(ctx, manager::LOG_NONE,
                 manager::SIMULATION_NONE,
                 NULL);
         //configure output plugins for column names
@@ -284,18 +286,19 @@ PyObject* pyvle_run_matrix(vpz::Vpz* file)
             vpz::Output& output = itb->second;
             if((output.package() == "vle.output") &&
                     (output.plugin() == "storage")){
-                value::Map* configOutput = new value::Map();
+                std::unique_ptr<value::Map> configOutput(new value::Map());
                 configOutput->addString("header","none");
-                output.setData(configOutput);
+                output.setData(std::move(configOutput));
             }
         }
 
-        res = sim.run(new vpz::Vpz(*file), man, &error);
+        res = sim.run(std::unique_ptr<vle::vpz::Vpz>(new vle::vpz::Vpz(*file)),
+                &error);
 
         if (error.code != 0) {
-            std::string filename = utils::Trace::getLogFilename("pyvle.log");
+            std::string filename = ctx->getLogFile("pyvle").string();
             std::ofstream* logfile = new std::ofstream(filename.c_str());
-            (*logfile) << _("Error in pyvle_run_matrix: ")
+            (*logfile) << "Error in pyvle_run_matrix: "
                             << error.message
                             << "\n\n" << std::flush;
             logfile->close();
@@ -307,7 +310,6 @@ PyObject* pyvle_run_matrix(vpz::Vpz* file)
                 "Error in pyvle_run_matrix: empty result");
 
         resPython = pyvle_convert_matrix(*res);
-        delete res;
         return resPython;
 
     } catch(const std::exception& e) {
@@ -319,13 +321,13 @@ PyObject* pyvle_run_matrix(vpz::Vpz* file)
 PyObject* pyvle_run_manager(vpz::Vpz* file)
 {
     assert(file);
-    value::Matrix* res = NULL;
+    std::unique_ptr<vle::value::Matrix> res(nullptr);
     PyObject* resPython = NULL;
+    auto ctx = vle::utils::make_context();
 
     try {
-        utils::ModuleManager man;
         manager::Error error;
-        manager::Manager sim(manager::LOG_NONE,
+        manager::Manager sim(ctx, manager::LOG_NONE,
                 manager::SIMULATION_NONE,
                 NULL);
 
@@ -338,18 +340,19 @@ PyObject* pyvle_run_manager(vpz::Vpz* file)
             vpz::Output& output = itb->second;
             if((output.package() == "vle.output") &&
                     (output.plugin() == "storage")){
-                value::Map* configOutput = new value::Map();
+                std::unique_ptr<value::Map> configOutput(new value::Map());
                 configOutput->addString("header","top");
-                output.setData(configOutput);
+                output.setData(std::move(configOutput));
             }
         }
 
-        res = sim.run(new vpz::Vpz(*file), man, 1, 0, 1, &error);
+        res = sim.run(std::unique_ptr<vle::vpz::Vpz>(new vle::vpz::Vpz(*file)),
+                1, 0, 1, &error);
 
         if (error.code != 0) {
-            std::string filename = utils::Trace::getLogFilename("pyvle.log");
+            std::string filename = ctx->getLogFile("pyvle").string();
             std::ofstream* logfile = new std::ofstream(filename.c_str());
-            (*logfile) << _("Error in pyvle_manager: ")
+            (*logfile) << "Error in pyvle_manager: "
                             << error.message
                             << "\n\n" << std::flush;
             logfile->close();
@@ -361,7 +364,6 @@ PyObject* pyvle_run_manager(vpz::Vpz* file)
                 "Error in pyvle_run_manager: empty result");
 
         resPython = pyvle_convert_simulation_dataframe(*res);
-        delete res;
         return resPython;
     } catch(const std::exception& e) {
         return NULL;
@@ -373,13 +375,13 @@ PyObject* pyvle_run_manager_matrix(vpz::Vpz* file)
 {
     assert(file);
 
-    value::Matrix* res = NULL;
+    std::unique_ptr<vle::value::Matrix> res(nullptr);
     PyObject* resPython = NULL;
+    auto ctx = vle::utils::make_context();
 
     try {
-        utils::ModuleManager man;
         manager::Error error;
-        manager::Manager sim(manager::LOG_NONE,
+        manager::Manager sim(ctx, manager::LOG_NONE,
                 manager::SIMULATION_NONE,
                 NULL);
 
@@ -392,19 +394,20 @@ PyObject* pyvle_run_manager_matrix(vpz::Vpz* file)
             vpz::Output& output = itb->second;
             if((output.package() == "vle.output") &&
                     (output.plugin() == "storage")){
-                value::Map* configOutput = new value::Map();
+                std::unique_ptr<value::Map> configOutput(new value::Map());
                 configOutput->addString("header","none");
-                output.setData(configOutput);
+                output.setData(std::move(configOutput));
             }
         }
 
-        res = sim.run(new vpz::Vpz(*file), man, 1, 0, 1, &error);
+        res = sim.run(std::unique_ptr<vle::vpz::Vpz>(new vle::vpz::Vpz(*file)),
+                1, 0, 1, &error);
 
         if (error.code != 0) {
-            std::string filename = utils::Trace::getLogFilename("pyvle.log");
+            std::string filename = ctx->getLogFile("pyvle").string();
             std::ofstream* logfile = new std::ofstream(filename.c_str());
-            (*logfile) << _("Error in pyvle_manager: ")
-                            << error.message
+            (*logfile) << "Error in pyvle_manager: "
+                       << error.message
                             << "\n\n" << std::flush;
             logfile->close();
             return PyString_FromString(error.message.c_str());
@@ -426,13 +429,13 @@ PyObject* pyvle_run_manager_thread(vpz::Vpz* file, int th)
 {
     assert(file);
 
-    value::Matrix* res = NULL;
+    std::unique_ptr<vle::value::Matrix> res(nullptr);
     PyObject* resPython = NULL;
+    auto ctx = vle::utils::make_context();
 
     try {
-        utils::ModuleManager man;
         manager::Error error;
-        manager::Manager sim(manager::LOG_NONE,
+        manager::Manager sim(ctx, manager::LOG_NONE,
                 manager::SIMULATION_NONE,
                 NULL);
 
@@ -445,19 +448,20 @@ PyObject* pyvle_run_manager_thread(vpz::Vpz* file, int th)
             vpz::Output& output = itb->second;
             if((output.package() == "vle.output") &&
                     (output.plugin() == "storage")){
-                value::Map* configOutput = new value::Map();
+                std::unique_ptr<value::Map> configOutput(new value::Map());
                 configOutput->addString("header","top");
 
-                output.setData(configOutput);
+                output.setData(std::move(configOutput));
             }
         }
 
-        res = sim.run(new vpz::Vpz(*file), man, th, 0,1, &error);
+        res = sim.run(std::unique_ptr<vle::vpz::Vpz>(new vle::vpz::Vpz(*file)),
+                th, 0,1, &error);
 
         if (error.code != 0) {
-            std::string filename = utils::Trace::getLogFilename("pyvle.log");
+            std::string filename = ctx->getLogFile("pyvle").string();
             std::ofstream* logfile = new std::ofstream(filename.c_str());
-            (*logfile) << _("Error in pyvle_manager_thread: ")
+            (*logfile) << "Error in pyvle_manager_thread: "
                             << error.message
                             << "\n\n" << std::flush;
             logfile->close();
@@ -469,7 +473,6 @@ PyObject* pyvle_run_manager_thread(vpz::Vpz* file, int th)
                 "Error in pyvle_run_manager_thread: empty result");
 
         resPython = pyvle_convert_simulation_dataframe(*res);
-        delete res;
         return resPython;
     } catch(const std::exception& e) {
         return NULL;
@@ -481,13 +484,13 @@ PyObject* pyvle_run_manager_thread_matrix(vpz::Vpz* file, int th)
 {
     assert(file);
 
-    value::Matrix* res = NULL;
+    std::unique_ptr<vle::value::Matrix> res(nullptr);
     PyObject* resPython = NULL;
+    auto ctx = vle::utils::make_context();
 
     try {
-        utils::ModuleManager man;
         manager::Error error;
-        manager::Manager sim(manager::LOG_NONE,
+        manager::Manager sim(ctx, manager::LOG_NONE,
                 manager::SIMULATION_NONE,
                 NULL);
 
@@ -500,18 +503,19 @@ PyObject* pyvle_run_manager_thread_matrix(vpz::Vpz* file, int th)
             vpz::Output& output = itb->second;
             if((output.package() == "vle.output") &&
                     (output.plugin() == "storage")){
-                value::Map* configOutput = new value::Map();
+                std::unique_ptr<value::Map> configOutput(new value::Map());
                 configOutput->addString("header","none");
-                output.setData(configOutput);
+                output.setData(std::move(configOutput));
             }
         }
 
-        res = sim.run(new vpz::Vpz(*file), man, th, 0,1, &error);
+        res = sim.run(std::unique_ptr<vle::vpz::Vpz>(new vle::vpz::Vpz(*file)),
+                th, 0,1, &error);
 
         if (error.code != 0) {
-            std::string filename = utils::Trace::getLogFilename("pyvle.log");
+            std::string filename = ctx->getLogFile("pyvle").string();
             std::ofstream* logfile = new std::ofstream(filename.c_str());
-            (*logfile) << _("Error in pyvle_manager_thread: ")
+            (*logfile) << "Error in pyvle_manager_thread: "
                             << error.message
                             << "\n\n" << std::flush;
             logfile->close();
@@ -543,11 +547,10 @@ PyObject* pyvle_condition_list(vpz::Vpz* file)
     size = file->project().experiment().conditions().conditionlist().size();
     r = PyList_New(size);
     if (size > 0) {
-        std::list < std::string > lst;
+        std::vector < std::string > lst =
+                file->project().experiment().conditions().conditionnames();
 
-        file->project().experiment().conditions().conditionnames(lst);
-
-        std::list < std::string >::const_iterator it;
+        std::vector < std::string >::const_iterator it;
 
         i = 0;
         for (it = lst.begin(); it != lst.end(); ++it, ++i)
@@ -627,11 +630,9 @@ PyObject* pyvle_condition_port_list(vpz::Vpz* file, std::string conditionname)
     size = cnd.conditionvalues().size();
     r = PyList_New(size);
     if (size > 0) {
-        std::list < std::string > lst;
+        std::vector < std::string > lst = cnd.portnames();
 
-        cnd.portnames(lst);
-
-        std::list < std::string >::const_iterator it;
+        std::vector < std::string >::const_iterator it;
 
         i = 0;
         for (it = lst.begin(); it != lst.end(); ++it, ++i)
@@ -722,7 +723,9 @@ void pyvle_condition_add_value(vpz::Vpz* file,
     vpz::Condition& cnd(file->project().experiment().
             conditions().get(conditionname));
 
-    cnd.addValueToPort(portname, *value);
+    cnd.addValueToPort(portname, value->clone());//TODO fuite memoire ?
+                                                 //la condition devrait prendre
+                                                 //l'ownership ?
 }
 
 void pyvle_condition_set_port_value(vle::vpz::Vpz* file,
@@ -753,9 +756,9 @@ void pyvle_condition_set_value(vle::vpz::Vpz* file,
     vle::value::VectorValue& vector(cnd.getSetValues(portname).value());
 
     if (type == "integer") {
-        vector[i]=value::Integer::create(boost::lexical_cast<int> (value));
+        vector[i]=value::Integer::create(std::stoi(value));
     } else if(type == "double") {
-        vector[i]=value::Double::create(boost::lexical_cast<double> (value));
+        vector[i]=value::Double::create(std::stod(value));
     } else if(type == "string") {
         vector[i]=value::String::create(value);
     } else if(type == "boolean") {
@@ -885,20 +888,7 @@ void pyvle_condition_delete_value(vle::vpz::Vpz* file,
     vpz::Condition& cnd(file->project().experiment().
             conditions().get(conditionname));
     vle::value::VectorValue& vector(cnd.getSetValues(portname).value());
-    vle::value::VectorValue::iterator it = vector.begin();
-
-    value::Value* base = vector[i];
-
-    while (it != vector.end()) {
-        if (&**it == base)
-            break;
-        ++it;
-    }
-
-    if (it != vector.end()) {
-        vector.erase(it);
-    }
-
+    vector.erase(vector.begin() + i);
 }
 
 PyObject* pyvle_atomic_model_conditions_list(vle::vpz::Vpz* file,
@@ -1166,10 +1156,18 @@ void pyvle_view_set_type(vle::vpz::Vpz* file,
 
     vpz::View& view(file->project().experiment().views().get(viewname));
 
-    if (viewtype=="TIMED")
+    if (viewtype=="NOTHING")
+        view.setType(vpz::View::NOTHING);
+    else if (viewtype=="TIMED")
         view.setType(vpz::View::TIMED);
-    else if (viewtype=="EVENT")
-        view.setType(vpz::View::EVENT);
+    else if (viewtype=="OUTPUT")
+        view.setType(vpz::View::OUTPUT);
+    else if (viewtype=="INTERNAL")
+        view.setType(vpz::View::INTERNAL);
+    else if (viewtype=="EXTERNAL")
+        view.setType(vpz::View::EXTERNAL);
+    else if (viewtype=="CONFLUENT")
+        view.setType(vpz::View::CONFLUENT);
     else if (viewtype=="FINISH")
         view.setType(vpz::View::FINISH);
 }
@@ -1197,14 +1195,6 @@ void pyvle_view_set_data(vle::vpz::Vpz* file,
     view.setData(data);
 }
 
-void pyvle_views_add_eventview(vle::vpz::Vpz* file,
-        std::string viewname,
-        std::string output)
-{
-    assert(file);
-
-    file->project().experiment().views().addEventView(viewname,output);
-}
 
 void pyvle_views_add_timedview(vle::vpz::Vpz* file,
         std::string viewname,
@@ -1216,13 +1206,16 @@ void pyvle_views_add_timedview(vle::vpz::Vpz* file,
     file->project().experiment().views().addTimedView(viewname,time,output);
 }
 
-void pyvle_views_add_finishview(vle::vpz::Vpz* file,
+void pyvle_views_add_eventview(vle::vpz::Vpz* file,
         std::string viewname,
+        std::string viewtype,
         std::string output)
 {
     assert(file);
 
-    file->project().experiment().views().addFinishView(viewname,output);
+    file->project().experiment().views().addEventView(viewname,
+            vpz::View::FINISH, output);
+    pyvle_view_set_type(file, viewname, viewtype);
 }
 
 PyObject* pyvle_list_view_entries(vle::vpz::Vpz* file)
@@ -1663,7 +1656,8 @@ PyObject* pyvle_combinations(vle::vpz::Vpz* file)
         for (size_t jcom = 0; jcom < conditions.size(); ++jcom) {
             if (not itOrig->second.conditionvalues().empty()) {
                 size_t index = conditions[jcom].pos;
-                value::Value* val = itValueOrig->second->get(index);
+                const std::unique_ptr<vle::value::Value>& val =
+                        itValueOrig->second->get(index);
 
                 PyList_SetItem(l, jcom, PyString_FromString(
                         val->writeToString().c_str()));
@@ -1716,66 +1710,22 @@ PyObject* pyvle_experiment_get_name(vle::vpz::Vpz* file)
     return r;
 }
 
-PyObject* pyvle_trace_run_error(vle::vpz::Vpz* file)
-{
-    std::string m_out;
-    bool m_error = false;
-    utils::ModuleManager m_modulemgr;
-    devs::RootCoordinator m_root(m_modulemgr);
-    try {
-        {
-            m_out+=" - Open file.....................: ";
-            vpz::Vpz vpz(*file);
-            m_out+="ok<br/>";
-
-            m_out+=" - Coordinator load models ......: ";
-            m_root.load(vpz);
-            m_out+="ok<br/>";
-
-            m_out+=" - Clean project file ...........: ";
-        }
-        m_out+="ok<br/>";
-
-        m_out+=" - Coordinator initializing .....: ";
-
-        m_out+="ok<br/>";
-
-        m_out+=" - Simulation run................: ";
-        while (m_root.run()) {}
-        m_out +="ok<br/>";
-
-        m_out+=" - Coordinator cleaning .........: ";
-        m_root.finish();
-        m_out+="ok<br/>";
-    } catch(const std::exception& e) {
-        m_out+="<br/>/!\\ vle error reported: " +
-                utils::demangle(typeid(e)) + "<br/>" + e.what();
-        m_error = true;
-    } catch(const Glib::Exception& e) {
-        m_out+="<br/>/!\\ vle Glib error reported: " +
-                utils::demangle(typeid(e)) + "<br/>" + e.what();
-        m_error = true;
-    }
-    return PyString_FromString(m_out.c_str());
-}
-
 PyObject* pyvle_get_installed_packages()
 {
     if (!thread_init) {
         vle::Init app;
         thread_init = true;
     }
-
+    auto ctx = vle::utils::make_context();
     PyObject* r;
-    utils::PathList list = utils::Path::path().getBinaryPackages();
-    utils::PathList::const_iterator it = list.begin();
+    std::vector<utils::Path> list = ctx->getBinaryPackages();
+    std::vector<utils::Path>::const_iterator it = list.begin();
     int i = 0;
 
     r = PyList_New(list.size());
     while (it != list.end()) {
         PyList_SetItem(r, i,
-                PyString_FromString(
-                        boost::filesystem::basename(*it).c_str()));
+                PyString_FromString(it->filename().c_str()));
         ++it;
         ++i;
     }
@@ -1790,7 +1740,8 @@ PyObject* pyvle_get_package_vpz_list(std::string name)
     }
 
     PyObject* r;
-    utils::Package pack(name);
+    auto ctx = vle::utils::make_context();
+    utils::Package pack(ctx, name);
     utils::PathList list = pack.getExperiments();
     utils::PathList::const_iterator it = list.begin();
     int i = 0;
@@ -1798,8 +1749,7 @@ PyObject* pyvle_get_package_vpz_list(std::string name)
     r = PyList_New(list.size());
     while (it != list.end()) {
         PyList_SetItem(r, i,
-                PyString_FromString(
-                        boost::filesystem::basename(*it).c_str()));
+                PyString_FromString(it->filename().c_str()));
         ++it;
         ++i;
     }
@@ -1815,7 +1765,8 @@ PyObject* pyvle_get_package_vpz_directory(std::string name)
 
     PyObject* r;
 
-    utils::Package pack(name);
+    auto ctx = vle::utils::make_context();
+    utils::Package pack(ctx, name);
 
     r = PyString_FromString(pack.getExpDir().c_str());
 
@@ -1831,7 +1782,8 @@ PyObject* pyvle_get_package_data_directory(std::string name)
 
     PyObject* r;
 
-    utils::Package pack(name);
+    auto ctx = vle::utils::make_context();
+    utils::Package pack(ctx, name);
 
     r = PyString_FromString(pack.getDataDir().c_str());
 
@@ -1847,7 +1799,8 @@ PyObject* pyvle_get_package_output_directory(std::string name)
 
     PyObject* r;
 
-    utils::Package pack(name);
+    auto ctx = vle::utils::make_context();
+    utils::Package pack(ctx, name);
 
     r = PyString_FromString(pack.getOutputDir().c_str());
 
@@ -1857,8 +1810,8 @@ PyObject* pyvle_get_package_output_directory(std::string name)
 PyObject* pyvle_get_package_vpz(std::string name, std::string vpz)
 {
     PyObject* r;
-
-    utils::Package pack(name);
+    auto ctx = vle::utils::make_context();
+    utils::Package pack(ctx, name);
     r = PyString_FromString(pack.getExpFile(vpz).c_str());
 
 
@@ -1921,6 +1874,7 @@ PyObject* pyvle_get_output_location(vle::vpz::Vpz* file,
 PyObject* pyvle_run_combination(vle::vpz::Vpz* file, int comb)
 {
     assert(file);
+    auto ctx = vle::utils::make_context();
 
     vpz::Vpz tmp_file(*file);
 
@@ -2002,8 +1956,9 @@ PyObject* pyvle_run_combination(vle::vpz::Vpz* file, int comb)
             if (not itOrig_o->second.conditionvalues().empty()) {
                 size_t index = conditions[jcom].pos;
                 if (nb == comb) {
-                    value::Value* val = itValueOrig_o->second->get(index);
-                    itValueOrig->second->add(val);
+                    std::unique_ptr<vle::value::Value> val =
+                            itValueOrig_o->second->give(index);
+                    itValueOrig->second->add(std::move(val));
                 }
                 itValueOrig_o++;
                 itValueOrig++;
@@ -2046,8 +2001,7 @@ PyObject* pyvle_run_combination(vle::vpz::Vpz* file, int comb)
     } while (nb < combinationNumber);
 
     try {
-        utils::ModuleManager man;
-        manager::Simulation sim(manager::LOG_NONE,
+        manager::Simulation sim(ctx, manager::LOG_NONE,
                 manager::SIMULATION_NONE,
                 NULL);
         manager::Error error;
@@ -2061,18 +2015,19 @@ PyObject* pyvle_run_combination(vle::vpz::Vpz* file, int comb)
             vpz::Output& output = itb->second;
             if((output.package() == "vle.output") &&
                     (output.plugin() == "storage")){
-                value::Map* configOutput = new value::Map();
+                std::unique_ptr<value::Map> configOutput(new value::Map());
                 configOutput->addString("header","top");
-                output.setData(configOutput);
+                output.setData(std::move(configOutput));
             }
         }
 
-        value::Map* res = sim.run(new vpz::Vpz(tmp_file), man, &error);
+        std::unique_ptr<value::Map> res = sim.run(std::unique_ptr<vpz::Vpz>(
+                new vpz::Vpz(tmp_file)), &error);
 
         if (error.code != 0) {
-            std::string filename = utils::Trace::getLogFilename("pyvle.log");
+            std::string filename = ctx->getLogFile("pyvle").string();
             std::ofstream* logfile = new std::ofstream(filename.c_str());
-            (*logfile) << _("Error in pyvle_run: ")
+            (*logfile) << "Error in pyvle_run: "
                             << error.message
                             << "\n\n" << std::flush;
             logfile->close();
@@ -2117,65 +2072,65 @@ void pyvle_set_seedreplicas(vle::vpz::Vpz* file,
 
 vle::value::Value* pyvle_create_map()
 {
-    return vle::value::Map::create();
+    return vle::value::Map::create().release();
 }
 
 vle::value::Value* pyvle_create_set()
 {
-    return vle::value::Set::create();
+    return vle::value::Set::create().release();
 }
 
 vle::value::Value* pyvle_create_matrix(unsigned int width, unsigned int height)
 {
-    return vle::value::Matrix::create(width, height);
+    return vle::value::Matrix::create(width, height).release();
 }
 
 vle::value::Value* pyvle_create_table(unsigned int width, unsigned int height)
 {
-    return vle::value::Table::create(width, height);
+    return vle::value::Table::create(width, height).release();
 }
 
 vle::value::Value* pyvle_create_tuple(unsigned int size)
 {
-    return vle::value::Tuple::create(size,0);
+    return vle::value::Tuple::create(size,0).release();
 }
 
 vle::value::Value* pyvle_int_to_value(long i)
 {
-    return vle::value::Integer::create(i);
+    return vle::value::Integer::create(i).release();
 }
 
 vle::value::Value* pyvle_real_to_value(float i)
 {
-    return vle::value::Double::create(i);
+    return vle::value::Double::create(i).release();
 }
 
 vle::value::Value* pyvle_str_to_xml(std::string i)
 {
-    return vle::value::Xml::create(i);
+    return vle::value::Xml::create(i).release();
 }
 
 
 vle::value::Value* pyvle_string_to_value(std::string i)
 {
-    return vle::value::String::create(i);
+    return vle::value::String::create(i).release();
 }
 
 vle::value::Value* pyvle_bool_to_value(bool i)
 {
-    return vle::value::Boolean::create(i);
+    return vle::value::Boolean::create(i).release();
 }
 
 void pyvle_add_value_to_map(vle::value::Value* map, std::string key,
         vle::value::Value* val)
 {
-    map->toMap().add(key, val->clone());
+    map->toMap().add(key, val->clone());//TODO pas une fuite sur le clone ?
 }
 
 void pyvle_set_value_to_table(vle::value::Value* table, unsigned int i,
         unsigned int j, double v)
 {
-    table->toTable().value()[i][j] = v;
+    table->toTable()(i,j) = v;
 }
 
 void pyvle_set_value_to_matrix(vle::value::Value* mat, unsigned int i,
@@ -2197,26 +2152,19 @@ void pyvle_add_value_to_set(vle::value::Value* set, vle::value::Value* val)
 void pyvle_compileTestPackages()
 {
     namespace vu = vle::utils;
+    auto ctx = vle::utils::make_context();
 
-    std::string filename = vu::Trace::getLogFilename("pyvle.log");
+
+    std::string filename = ctx->getLogFile("pyvle").string();
     std::ofstream* logfile = new std::ofstream(filename.c_str());
 
-    (*logfile) << _("pyvle_compileTestPackages")
+    (*logfile) << "pyvle_compileTestPackages"
             << "\n\n" << std::flush;
 
     try {
         //vlehome dir is set before calling this method
-        vu::Package pack("vle.output");
-        pack.configure();
-        pack.wait((*logfile), (*logfile));
-        if (pack.isSuccess()) {
-            pack.build();
-            pack.wait((*logfile), (*logfile));
-            if (pack.isSuccess()) {
-                pack.install();
-                pack.wait((*logfile), (*logfile));
-            }
-        }
+        auto ctx = vle::utils::make_context();
+        vu::Package pack(ctx, "test_port");
         pack.select("test_port");
         pack.configure();
         pack.wait((*logfile), (*logfile));
@@ -2229,7 +2177,7 @@ void pyvle_compileTestPackages()
             }
         }
     }  catch(const std::exception& e) {
-        (*logfile) << _("Error while compiling test_port and vle.output : \n")
+        (*logfile) << "Error while compiling test_port and vle.output : \n"
                 <<  e.what() << "\n\n" << std::flush;
     }
     logfile->close();

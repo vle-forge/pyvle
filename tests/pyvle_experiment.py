@@ -68,14 +68,14 @@ class TestExperiment(ut.TestCase):
         with tmp.NamedTemporaryFile() as dumped:
             self.exp.save(dumped.name)
             exp_test = pyvle.Vle(dumped.name)
-            self.assertIsInstance(exp_test.vpz, libpyvle.Vpz)
+            self.assertIsInstance(exp_test, pyvle.Vle)
     
     def testSaveInFileObject(self):
         with tmp.NamedTemporaryFile(delete=False) as dumped:
             self.exp.save(dumped)
         with open(dumped.name, 'r') as f:
             exp_test = pyvle.Vle(f)
-            self.assertIsInstance(exp_test.vpz, libpyvle.Vpz)
+            self.assertIsInstance(exp_test, pyvle.Vle)
         os.remove(dumped.name)
     
     def testSaveInStringBuffer(self):

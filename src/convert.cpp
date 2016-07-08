@@ -29,6 +29,13 @@
 #include <convert.hpp>
 #include <boost/format.hpp>
 #include <cassert>
+#include <vle/value/Tuple.hpp>
+#include <vle/value/Double.hpp>
+#include <vle/value/Matrix.hpp>
+#include <vle/value/Set.hpp>
+#include <vle/value/Integer.hpp>
+#include <vle/value/Table.hpp>
+
 
 PyObject* pyvle_convert_value(const vle::value::Value& value)
 {
@@ -148,17 +155,19 @@ PyObject* pyvle_convert_value(const vle::value::Value& value)
  */
 PyObject* pyvle_convert_view_matrix(const vle::value::Matrix& matrix)
 {
-    vle::value::ConstMatrixView view(matrix.value());
-    vle::value::ConstMatrixView::index i, j;
+    vle::value::Matrix::size_type i, j;
+    vle::value::Matrix::size_type nbcols = matrix.columns();
+    vle::value::Matrix::size_type nbrows = matrix.rows();
 
-    PyObject* out = PyTuple_New(view.shape()[0]);
+    PyObject* out = PyTuple_New(nbcols);
 
-    for (i = 0; i < view.shape()[0]; ++i) {
-        PyObject* column = PyTuple_New(view.shape()[1]);
-
-        for (j = 0; j < view.shape()[1]; ++j) {
-            if (view[i][j]) {
-                PyTuple_SetItem(column, j, pyvle_convert_value(*view[i][j]));
+    for (i = 0; i < nbcols; ++i) {
+        PyObject* column = PyTuple_New(nbrows);
+        for (j = 0; j < nbrows; ++j) {
+            const std::unique_ptr<vle::value::Value>& v = matrix.get(i, j);
+            if (v) {
+                PyTuple_SetItem(column, j,
+                        pyvle_convert_value(*v));
             } else {
                 PyTuple_SetItem(column, j, Py_None);
             }
@@ -180,17 +189,16 @@ PyObject* pyvle_build_data_frame(const vle::value::Matrix& matrix)
 {
     //assumption, first line contains name of the columns
     PyObject* out = PyDict_New();
-    vle::value::ConstMatrixView view(matrix.value());
 
     unsigned int nbcol = matrix.columns();
-    unsigned int nbline = view.shape()[1];
+    unsigned int nbline = matrix.rows();
 
     for(unsigned int c = 0; c < nbcol; c++){
         PyObject* col = PyTuple_New(nbline - 1);
-        vle::value::ConstVectorView t = matrix.column(c);
         for (unsigned int i = 1; i < nbline; ++i) {
-            if (t[i]) {
-                PyTuple_SetItem(col, i-1, pyvle_convert_value(*t[i]));
+            const std::unique_ptr<vle::value::Value>& v = matrix.get(c,i);
+            if (v) {
+                PyTuple_SetItem(col, i-1, pyvle_convert_value(*v));
             } else {
                 PyTuple_SetItem(col, i-1, Py_None);
             }
@@ -232,8 +240,8 @@ PyObject* pyvle_convert_simulation_matrix(const vle::value::Matrix& out)
     PyObject* line;
     PyObject* columns = PyTuple_New(out.columns());
     for (unsigned int j=0; j<out.columns();j++){
-        line = PyTuple_New(out.column(0).size());
-        for (unsigned int i=0; i<out.column(0).size();i++){
+        line = PyTuple_New(out.rows());
+        for (unsigned int i=0; i<out.rows();i++){
             PyObject* pdata = pyvle_convert_matrix(out.get(j,i)->toMap());
             PyTuple_SetItem(line, i, pdata);
         }
@@ -249,8 +257,8 @@ PyObject* pyvle_convert_simulation_dataframe(const vle::value::Matrix& out)
     PyObject* line;
     PyObject* columns = PyTuple_New(out.columns());
     for (unsigned int j=0; j<out.columns();j++){
-        line = PyTuple_New(out.column(0).size());
-        for (unsigned int i=0; i<out.column(0).size();i++){
+        line = PyTuple_New(out.rows());
+        for (unsigned int i=0; i<out.rows();i++){
             PyObject* pdata = pyvle_convert_dataframe(out.get(j,i)->toMap());
             PyTuple_SetItem(line, i, pdata);
         }

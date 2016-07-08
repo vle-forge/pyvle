@@ -183,14 +183,12 @@ void pyvle_view_set_data(vle::vpz::Vpz* file,
 				std::string data);
 void pyvle_views_add_eventview(vle::vpz::Vpz* file,
 				std::string viewname,
+				std::string viewtype,
 				std::string output);
 void pyvle_views_add_timedview(vle::vpz::Vpz* file,
 				std::string viewname,
 				std::string output,
 				double time);
-void pyvle_views_add_finishview(vle::vpz::Vpz* file,
-				std::string viewname,
-				std::string output);
 PyObject* pyvle_list_view_entries(vle::vpz::Vpz* file);
 PyObject* pyvle_get_output_plugin(vle::vpz::Vpz* file,
 				std::string outputname);
@@ -241,7 +239,6 @@ PyObject* pyvle_export_manager(vle::vpz::Vpz* file,
 PyObject* pyvle_nbreplicas(vle::vpz::Vpz* file);
 PyObject* pyvle_combinations(vle::vpz::Vpz* file);
 PyObject* pyvle_experiment_get_name(vle::vpz::Vpz* file);
-PyObject* pyvle_trace_run_error(vle::vpz::Vpz* file);
 PyObject* pyvle_get_installed_packages();
 PyObject* pyvle_get_package_vpz_list(std::string name);
 PyObject* pyvle_get_package_vpz_directory(std::string name);

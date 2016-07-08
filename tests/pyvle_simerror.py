@@ -13,7 +13,7 @@ class TestSimError(ut.TestCase):
     def testSimError(self):
     	r = self.exp.run()
         self.assertEqual(r,
-        	'/!\\ vle error reported:  error at initialisation\n')
+            '\n/!\\ vle error reported: N3vle5utils13InternalErrorE\n error at initialisation')
 
 if __name__ == '__main__':
     ut.main()
