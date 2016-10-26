@@ -159,7 +159,6 @@ BOOST_PYTHON_MODULE(libpyvle)
     bp::def("set_package_mode", pyvle_set_package_mode);
     bp::def("set_normal_mode", pyvle_set_normal_mode);
     bp::def("output_set_plugin", pyvle_set_output_plugin);
-    bp::def("output_get_format", pyvle_get_output_format);
     bp::def("output_get_location", pyvle_get_output_location);
     bp::def("run_combination", pyvle_run_combination);
     bp::def("set_nb_replicas", pyvle_set_nbreplicas);

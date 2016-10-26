@@ -29,6 +29,7 @@
 #include <sstream>
 #include <fstream>
 #include <string>
+#include <chrono>
 #include <convert.hpp>
 #include <pyvle.hpp>
 #include <vle/vle.hpp>
@@ -222,7 +223,7 @@ PyObject* pyvle_run(vpz::Vpz* file)
 
         manager::Error error;
         manager::Simulation sim(ctx, manager::LOG_NONE,
-                manager::SIMULATION_NONE,
+                manager::SIMULATION_NONE, std::chrono::milliseconds(0),
                 NULL);
         //configure output plugins for column names
         vpz::Outputs::iterator itb =
@@ -240,7 +241,7 @@ PyObject* pyvle_run(vpz::Vpz* file)
         }
 
         res = sim.run(std::unique_ptr<vle::vpz::Vpz>(new vle::vpz::Vpz(*file)),
-                &error);
+                "vle.output", &error);
 
         if (error.code != 0) {
             std::string filename = ctx->getLogFile("pyvle").string();
@@ -275,7 +276,7 @@ PyObject* pyvle_run_matrix(vpz::Vpz* file)
     try {
         manager::Error error;
         manager::Simulation sim(ctx, manager::LOG_NONE,
-                manager::SIMULATION_NONE,
+                manager::SIMULATION_NONE, std::chrono::milliseconds(0),
                 NULL);
         //configure output plugins for column names
         vpz::Outputs::iterator itb =
@@ -293,7 +294,7 @@ PyObject* pyvle_run_matrix(vpz::Vpz* file)
         }
 
         res = sim.run(std::unique_ptr<vle::vpz::Vpz>(new vle::vpz::Vpz(*file)),
-                &error);
+                "vle.output", &error);
 
         if (error.code != 0) {
             std::string filename = ctx->getLogFile("pyvle").string();
@@ -347,7 +348,7 @@ PyObject* pyvle_run_manager(vpz::Vpz* file)
         }
 
         res = sim.run(std::unique_ptr<vle::vpz::Vpz>(new vle::vpz::Vpz(*file)),
-                1, 0, 1, &error);
+                "vle.output", 1, 0, 1, &error);
 
         if (error.code != 0) {
             std::string filename = ctx->getLogFile("pyvle").string();
@@ -401,7 +402,7 @@ PyObject* pyvle_run_manager_matrix(vpz::Vpz* file)
         }
 
         res = sim.run(std::unique_ptr<vle::vpz::Vpz>(new vle::vpz::Vpz(*file)),
-                1, 0, 1, &error);
+                "vle.output", 1, 0, 1, &error);
 
         if (error.code != 0) {
             std::string filename = ctx->getLogFile("pyvle").string();
@@ -456,7 +457,7 @@ PyObject* pyvle_run_manager_thread(vpz::Vpz* file, int th)
         }
 
         res = sim.run(std::unique_ptr<vle::vpz::Vpz>(new vle::vpz::Vpz(*file)),
-                th, 0,1, &error);
+                "vle.output", th, 0,1, &error);
 
         if (error.code != 0) {
             std::string filename = ctx->getLogFile("pyvle").string();
@@ -510,7 +511,7 @@ PyObject* pyvle_run_manager_thread_matrix(vpz::Vpz* file, int th)
         }
 
         res = sim.run(std::unique_ptr<vle::vpz::Vpz>(new vle::vpz::Vpz(*file)),
-                th, 0,1, &error);
+                "vle.output", th, 0,1, &error);
 
         if (error.code != 0) {
             std::string filename = ctx->getLogFile("pyvle").string();
@@ -1837,7 +1838,7 @@ void pyvle_set_normal_mode()
 void pyvle_set_output_plugin(vle::vpz::Vpz* file,
         std::string outputname,
         std::string location,
-        std::string format,
+        std::string /*format*/,
         std::string plugin,
         std::string package)
 {
@@ -1845,21 +1846,9 @@ void pyvle_set_output_plugin(vle::vpz::Vpz* file,
 
     vpz::Output& out(file->project().experiment().views().outputs().
             get(outputname));
-    if (format == "local")
-        out.setLocalStream(location, plugin, package);
-    else
-        out.setDistantStream(location, plugin, package);
+    out.setStream(location, plugin, package);
 }
 
-PyObject* pyvle_get_output_format(vle::vpz::Vpz* file,
-        std::string outputname)
-{
-    assert(file);
-
-    vpz::Output& out(file->project().experiment().views().outputs().
-            get(outputname));
-    return PyString_FromString(out.streamformat().c_str());
-}
 
 PyObject* pyvle_get_output_location(vle::vpz::Vpz* file,
         std::string outputname)
@@ -2002,7 +1991,7 @@ PyObject* pyvle_run_combination(vle::vpz::Vpz* file, int comb)
 
     try {
         manager::Simulation sim(ctx, manager::LOG_NONE,
-                manager::SIMULATION_NONE,
+                manager::SIMULATION_NONE, std::chrono::milliseconds(0),
                 NULL);
         manager::Error error;
 
@@ -2022,7 +2011,7 @@ PyObject* pyvle_run_combination(vle::vpz::Vpz* file, int comb)
         }
 
         std::unique_ptr<value::Map> res = sim.run(std::unique_ptr<vpz::Vpz>(
-                new vpz::Vpz(tmp_file)), &error);
+                new vpz::Vpz(tmp_file)), "vle.output", &error);
 
         if (error.code != 0) {
             std::string filename = ctx->getLogFile("pyvle").string();

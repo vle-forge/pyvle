@@ -340,9 +340,6 @@ class Vle:
     def setOutputPlugin(self, output, location, format, plugin, package):
         libpyvle.output_set_plugin(self.vpz, output, location, format, plugin, package)
 
-    def getOutputFormat(self, output):
-        return libpyvle.output_get_format(self.vpz, output)
-
     def getOutputLocation(self, output):
         return libpyvle.output_get_location(self.vpz, output)
 
