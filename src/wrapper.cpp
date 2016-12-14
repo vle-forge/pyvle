@@ -80,12 +80,6 @@ BOOST_PYTHON_MODULE(libpyvle)
     bp::def("experiment_get_begin", pyvle_experiment_get_begin);
     bp::def("experiment_set_duration", pyvle_experiment_set_duration);
     bp::def("experiment_get_duration", pyvle_experiment_get_duration);
-    bp::def("experiment_set_seed", pyvle_experiment_set_seed);
-    bp::def("experiment_get_seed", pyvle_experiment_get_seed);
-    bp::def("experiment_set_linear_combination",
-            pyvle_experiment_set_linear_combination);
-    bp::def("experiment_set_total_combination",
-            pyvle_experiment_set_total_combination);
     bp::def("run", pyvle_run);
     bp::def("run_matrix", pyvle_run_matrix);
     bp::def("run_manager", pyvle_run_manager);
@@ -147,8 +141,6 @@ BOOST_PYTHON_MODULE(libpyvle)
     bp::def("observable_set_permanent", pyvle_observable_set_permanent);
     bp::def("observable_port_attached_views", pyvle_observable_port_attached_views);
     bp::def("dynamic_observables_list", pyvle_dynamic_observables_list);
-    bp::def("nbreplicas", pyvle_nbreplicas);
-    bp::def("combinations", pyvle_combinations);
     bp::def("experiment_get_name", pyvle_experiment_get_name);
     bp::def("get_installed_packages", pyvle_get_installed_packages);
     bp::def("get_package_vpz_list", pyvle_get_package_vpz_list);
@@ -160,10 +152,6 @@ BOOST_PYTHON_MODULE(libpyvle)
     bp::def("set_normal_mode", pyvle_set_normal_mode);
     bp::def("output_set_plugin", pyvle_set_output_plugin);
     bp::def("output_get_location", pyvle_get_output_location);
-    bp::def("run_combination", pyvle_run_combination);
-    bp::def("set_nb_replicas", pyvle_set_nbreplicas);
-    bp::def("get_seed_replicas", pyvle_get_seedreplicas);
-    bp::def("set_seed_replicas", pyvle_set_seedreplicas);
     bp::def("outputs_list", pyvle_outputs_list);
     bp::def("__compileTestPackages", pyvle_compileTestPackages);
 

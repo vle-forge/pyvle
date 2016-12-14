@@ -121,41 +121,6 @@ class Vle:
     def getDuration(self):
         return libpyvle.experiment_get_duration(self.vpz)
 
-# seed of experiments
-    def setSeed(self, value):
-        libpyvle.experiment_set_seed(self.vpz, value)
-
-    def getSeed(self):
-        return libpyvle.experiment_get_seed(self.vpz)
-
-# replicas
-    def setLinearCombination(self, seed, replicas):
-        return libpyvle.experiment_set_linear_combination(
-            self.vpz, seed, replicas)
-
-    def setTotalCombination(self, seed, replicas):
-        return libpyvle.experiment_set_total_combination(
-            self.vpz, seed, replicas)
-
-#################
-## pyvle specific
-    def getReplicaNumber(self):
-        return libpyvle.nbreplicas(self.vpz)
-
-    def setReplicaNumber(self, nb):
-        libpyvle.set_nb_replicas(self.vpz, nb)
-
-    def getReplicaSeed(self):
-        return libpyvle.get_seed_replicas(self.vpz)
-
-    def setReplicaSeed(self, seed):
-        libpyvle.set_seed_replicas(self.vpz, seed)
-
-    def getCombinations(self):
-        return libpyvle.combinations(self.vpz)
-##
-#################
-
 # execution of experiments
     def run(self):
         return libpyvle.run(self.vpz)

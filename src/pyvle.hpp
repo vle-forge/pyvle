@@ -236,8 +236,6 @@ PyObject* pyvle_export_manager(vle::vpz::Vpz* file,
 		std::string location,
 		std::string view,
 		std::string type);
-PyObject* pyvle_nbreplicas(vle::vpz::Vpz* file);
-PyObject* pyvle_combinations(vle::vpz::Vpz* file);
 PyObject* pyvle_experiment_get_name(vle::vpz::Vpz* file);
 PyObject* pyvle_get_installed_packages();
 PyObject* pyvle_get_package_vpz_list(std::string name);
@@ -257,11 +255,6 @@ PyObject* pyvle_get_output_location(vle::vpz::Vpz* file,
                                     std::string outputname);
 PyObject* pyvle_run_combination(vle::vpz::Vpz* file,
                                 int comb);
-void pyvle_set_nbreplicas(vle::vpz::Vpz* file,
-                          int number);
-PyObject* pyvle_get_seedreplicas(vle::vpz::Vpz* file);
-void pyvle_set_seedreplicas(vle::vpz::Vpz* file,
-                            long number);
 
 vle::value::Value* pyvle_create_map();
 vle::value::Value* pyvle_create_set();

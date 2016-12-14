@@ -37,6 +37,8 @@
 #include <vle/manager/Manager.hpp>
 #include <vle/manager/Simulation.hpp>
 #include <vle/value/Value.hpp>
+#include <vle/value/Integer.hpp>
+#include <vle/value/Set.hpp>
 #include <vle/value/Table.hpp>
 #include <vle/value/Tuple.hpp>
 #include <vle/value/Matrix.hpp>
@@ -570,15 +572,18 @@ PyObject* pyvle_condition_show(vle::vpz::Vpz* file,
 
     vle::vpz::Condition& cnd(file->project().experiment().
             conditions().get(conditionname));
-    vle::value::VectorValue& v(cnd.getSetValues(portname).value());
-    int size = v.size();
+    const std::vector<std::shared_ptr<value::Value>> & inplace =
+            cnd.getSetValues(portname);
+    int size = inplace.size();
+
 
     if (size > 1) {
         r = PyList_New(size);
-        for (int i = 0; i < size; ++i)
-            PyList_SetItem(r, i, pyvle_convert_value(*v[i]));
+        for (int i =0; i<size; i++) {
+            PyList_SetItem(r, i, pyvle_convert_value(*inplace[i]));
+        }
     } else {
-        r = pyvle_convert_value(*v[0]);
+        r = pyvle_convert_value(*inplace[0]);
     }
     return r;
 }
@@ -738,9 +743,11 @@ void pyvle_condition_set_port_value(vle::vpz::Vpz* file,
     assert(file);
     vpz::Condition& cnd(file->project().experiment().
             conditions().get(conditionname));
-    vle::value::VectorValue& vector(cnd.getSetValues(portname).value());
 
-    vector.at(i) = value->clone();
+    std::vector<std::shared_ptr<value::Value>>& inplace =
+            cnd.getSetValues(portname);
+
+    inplace[i] = std::shared_ptr<value::Value>(value->clone().release());
 }
 
 void pyvle_condition_set_value(vle::vpz::Vpz* file,
@@ -754,14 +761,19 @@ void pyvle_condition_set_value(vle::vpz::Vpz* file,
 
     vpz::Condition& cnd(file->project().experiment().
             conditions().get(conditionname));
-    vle::value::VectorValue& vector(cnd.getSetValues(portname).value());
+
+    std::vector<std::shared_ptr<value::Value>>& inplace =
+            cnd.getSetValues(portname);
 
     if (type == "integer") {
-        vector[i]=value::Integer::create(std::stoi(value));
+        inplace[i]=std::shared_ptr<value::Value>(
+                new value::Integer(std::stoi(value)));
     } else if(type == "double") {
-        vector[i]=value::Double::create(std::stod(value));
+        inplace[i]= std::shared_ptr<value::Value>(
+                new value::Double(std::stod(value)));
     } else if(type == "string") {
-        vector[i]=value::String::create(value);
+        inplace[i]=std::shared_ptr<value::Value>(
+                new value::String(value));
     } else if(type == "boolean") {
         bool val;
         if(value=="true") {
@@ -769,9 +781,9 @@ void pyvle_condition_set_value(vle::vpz::Vpz* file,
         } else {
             val=false;
         }
-        vector[i]=value::Boolean::create(val);
+        inplace[i]=std::shared_ptr<value::Value>(new value::Boolean(val));
     } else {
-        vector[i]=value::String::create(value);
+        inplace[i]=std::shared_ptr<value::Value>(new value::String(value));
     }
 }
 
@@ -785,12 +797,15 @@ PyObject* pyvle_condition_get_setvalue(vle::vpz::Vpz* file,
 
     vle::vpz::Condition& cnd(file->project().experiment().
             conditions().get(conditionname));
-    vle::value::VectorValue& v(cnd.getSetValues(portname).value());
-    int size = v.size();
+
+    const std::vector<std::shared_ptr<value::Value>>& inplace =
+                cnd.getSetValues(portname);
+
+    int size = inplace.size();
 
     r = PyList_New(size);
     for (int i = 0; i < size; ++i) {
-        PyList_SetItem(r, i, pyvle_convert_value(*v[i]));
+        PyList_SetItem(r, i, pyvle_convert_value(*inplace[i]));
     }
     return r;
 }
@@ -806,9 +821,11 @@ PyObject* pyvle_condition_get_value(vle::vpz::Vpz* file,
 
     vpz::Condition& cnd(file->project().experiment().
             conditions().get(conditionname));
-    vle::value::VectorValue& vector(cnd.getSetValues(portname).value());
 
-    r=pyvle_convert_value(*vector[i]);
+    const std::vector<std::shared_ptr<value::Value>>& inplace =
+            cnd.getSetValues(portname);
+
+    r=pyvle_convert_value(*inplace[i]);
 
     return r;
 }
@@ -823,9 +840,12 @@ PyObject* pyvle_condition_get_value_type(vle::vpz::Vpz* file,
     PyObject* r;
     vpz::Condition& cnd(file->project().experiment().
             conditions().get(conditionname));
-    vle::value::VectorValue& v(cnd.getSetValues(portname).value());
 
-    switch(v[i]->getType()) {
+    const std::vector<std::shared_ptr<value::Value>>& inplace =
+                    cnd.getSetValues(portname);
+
+
+    switch(inplace[i]->getType()) {
     case vle::value::Value::DOUBLE: {
         r = PyString_FromString("double");
         break;
@@ -888,8 +908,9 @@ void pyvle_condition_delete_value(vle::vpz::Vpz* file,
 
     vpz::Condition& cnd(file->project().experiment().
             conditions().get(conditionname));
-    vle::value::VectorValue& vector(cnd.getSetValues(portname).value());
-    vector.erase(vector.begin() + i);
+    std::vector<std::shared_ptr<value::Value>>& inplace =
+                        cnd.getSetValues(portname);
+    inplace.erase(inplace.begin() + i);
 }
 
 PyObject* pyvle_atomic_model_conditions_list(vle::vpz::Vpz* file,
@@ -1572,132 +1593,6 @@ PyObject* pyvle_dynamic_observables_list(vle::vpz::Vpz* file,
     return PyString_FromString("dynamic not found");
 }
 
-PyObject* pyvle_nbreplicas(vle::vpz::Vpz* file)
-{
-    assert(file);
-
-    PyObject* r;
-    // int nb = file->project().experiment().replicas().number();
-    //    r = PyInt_FromLong(nb);
-    //TODO
-    r = PyInt_FromLong(1);
-    return r;
-}
-
-struct cond_t {
-    cond_t() : sz(0), pos(0) { }
-
-    size_t  sz;
-    size_t  pos;
-};
-
-PyObject* pyvle_combinations(vle::vpz::Vpz* file)
-{
-    assert(file);
-
-    PyObject* r;
-
-    std::vector < cond_t > conditions;
-    const vpz::Experiment& exp = file->project().experiment();
-    const vpz::Conditions& cnds = exp.conditions();
-    vpz::ConditionList::const_iterator it;
-
-    for (it = cnds.conditionlist().begin();
-            it != cnds.conditionlist().end(); ++it) {
-        const vpz::Condition& cnd = it->second;
-        vpz::ConditionValues::const_iterator jt;
-
-        if (not cnd.conditionvalues().empty()) {
-            for (jt = cnd.conditionvalues().begin();
-                    jt != cnd.conditionvalues().end(); ++jt) {
-                conditions.push_back(cond_t());
-
-                conditions[conditions.size() - 1].sz = jt->second->size();
-                conditions[conditions.size() - 1].pos = 0;
-            }
-        } else {
-            conditions.push_back(cond_t());
-            conditions[conditions.size() - 1].sz = 1;
-            conditions[conditions.size() - 1].pos = 0;
-        }
-    }
-
-    size_t combinationNumber = 1;
-
-    if (exp.combination() == "linear") {
-        std::vector < cond_t >::const_iterator it;
-        for (it = conditions.begin(); it != conditions.end(); ++it) {
-            if (it->sz != 1) {
-                combinationNumber = it->sz;
-                break;
-            }
-        }
-    } else {
-        std::vector < cond_t >::const_iterator it;
-        for (it = conditions.begin(); it != conditions.end(); ++it) {
-            combinationNumber *= it->sz;
-        }
-    }
-
-    r = PyList_New(combinationNumber);
-
-    size_t nb = 0;
-
-    do {
-
-        PyObject* l = PyList_New(conditions.size());
-
-        PyList_SetItem(r, nb, l);
-
-        vpz::ConditionList::const_iterator itOrig =
-                cnds.conditionlist().begin();
-        vpz::ConditionValues::const_iterator
-        itValueOrig = itOrig->second.conditionvalues().begin();
-
-        for (size_t jcom = 0; jcom < conditions.size(); ++jcom) {
-            if (not itOrig->second.conditionvalues().empty()) {
-                size_t index = conditions[jcom].pos;
-                const std::unique_ptr<vle::value::Value>& val =
-                        itValueOrig->second->get(index);
-
-                PyList_SetItem(l, jcom, PyString_FromString(
-                        val->writeToString().c_str()));
-
-                itValueOrig++;
-                if (itValueOrig == itOrig->second.conditionvalues().end()) {
-                    itOrig++;
-                    itValueOrig = itOrig->second.conditionvalues().begin();
-                }
-            }
-        }
-        if (exp.combination() == "linear") {
-            for(size_t i=0; i < conditions.size(); ++i)
-                if (conditions[i].sz != 1)
-                    conditions[i].pos++;
-        } else {
-            size_t sz = conditions.size() - 1;
-
-            if (conditions[sz].pos != conditions[sz].sz - 1) {
-                conditions[sz].pos++;
-            } else {
-                int i = sz;
-
-                while (i >= 0) {
-                    if (conditions[i].pos == conditions[i].sz - 1) {
-                        conditions[i].pos = 0;
-                        i--;
-                    } else {
-                        conditions[i].pos++;
-                        break;
-                    }
-                }
-            }
-        }
-        ++nb;
-    } while (nb < combinationNumber);
-
-    return r;
-}
 
 PyObject* pyvle_experiment_get_name(vle::vpz::Vpz* file)
 {
@@ -1858,203 +1753,6 @@ PyObject* pyvle_get_output_location(vle::vpz::Vpz* file,
     vpz::Output& out(file->project().experiment().views().outputs().
             get(outputname));
     return PyString_FromString(out.location().c_str());
-}
-
-PyObject* pyvle_run_combination(vle::vpz::Vpz* file, int comb)
-{
-    assert(file);
-    auto ctx = vle::utils::make_context();
-
-    vpz::Vpz tmp_file(*file);
-
-    std::vector < cond_t > conditions;
-    const vpz::Experiment& exp = tmp_file.project().experiment();
-    const vpz::Conditions& cnds = exp.conditions();
-    const vpz::Experiment& orig_exp = file->project().experiment();
-    const vpz::Conditions& orig_cnds = orig_exp.conditions();
-    vpz::ConditionList::const_iterator it;
-
-    for (it = cnds.conditionlist().begin();
-            it != cnds.conditionlist().end(); ++it) {
-        const vpz::Condition& cnd = it->second;
-        vpz::ConditionValues::const_iterator jt;
-
-        if (not cnd.conditionvalues().empty()) {
-            for (jt = cnd.conditionvalues().begin();
-                    jt != cnd.conditionvalues().end(); ++jt) {
-                conditions.push_back(cond_t());
-
-                conditions[conditions.size() - 1].sz = jt->second->size();
-                conditions[conditions.size() - 1].pos = 0;
-            }
-        } else {
-            conditions.push_back(cond_t());
-            conditions[conditions.size() - 1].sz = 1;
-            conditions[conditions.size() - 1].pos = 0;
-        }
-    }
-
-    size_t combinationNumber = 1;
-
-    if (exp.combination() == "linear") {
-        std::vector < cond_t >::const_iterator it;
-        for (it = conditions.begin(); it != conditions.end(); ++it) {
-            if (it->sz != 1) {
-                combinationNumber = it->sz;
-                break;
-            }
-        }
-    } else {
-        std::vector < cond_t >::const_iterator it;
-        for (it = conditions.begin(); it != conditions.end(); ++it) {
-            combinationNumber *= it->sz;
-        }
-    }
-
-    size_t nb = 0;
-
-    vpz::ConditionList::const_iterator itOrig =
-            cnds.conditionlist().begin();
-    vpz::ConditionList::const_iterator itOrig_o =
-            orig_cnds.conditionlist().begin();
-    vpz::ConditionValues::const_iterator
-    itValueOrig = itOrig->second.conditionvalues().begin();
-    vpz::ConditionValues::const_iterator
-    itValueOrig_o = itOrig_o->second.conditionvalues().begin();
-
-    //Emptying tmpfile condvalues
-    for (size_t jcom = 0; jcom < conditions.size(); ++jcom) {
-        if (not itOrig->second.conditionvalues().empty()) {
-            size_t index = conditions[jcom].pos;
-            itValueOrig->second->clear();
-            itValueOrig++;
-            if (itValueOrig == itOrig->second.conditionvalues().end()) {
-                itOrig++;
-                itValueOrig = itOrig->second.conditionvalues().begin();
-            }
-        }
-    }
-
-    do {
-        itOrig = cnds.conditionlist().begin();
-        itValueOrig = itOrig->second.conditionvalues().begin();
-        itOrig_o = orig_cnds.conditionlist().begin();
-        itValueOrig_o = itOrig_o->second.conditionvalues().begin();
-
-        for (size_t jcom = 0; jcom < conditions.size(); ++jcom) {
-            if (not itOrig_o->second.conditionvalues().empty()) {
-                size_t index = conditions[jcom].pos;
-                if (nb == comb) {
-                    std::unique_ptr<vle::value::Value> val =
-                            itValueOrig_o->second->give(index);
-                    itValueOrig->second->add(std::move(val));
-                }
-                itValueOrig_o++;
-                itValueOrig++;
-                if (itValueOrig == itOrig->second.conditionvalues().end()) {
-                    itOrig++;
-                    itValueOrig = itOrig->second.conditionvalues().begin();
-                }
-                if (itValueOrig_o == itOrig_o->second.conditionvalues().end()) {
-                    itOrig_o++;
-                    itValueOrig_o = itOrig_o->second.conditionvalues().begin();
-                }
-            }
-        }
-
-        if (exp.combination() == "linear") {
-            for(size_t i=0; i < conditions.size(); ++i)
-                if (conditions[i].sz != 1)
-                    conditions[i].pos++;
-        } else {
-            size_t sz = conditions.size() - 1;
-
-            if (conditions[sz].pos != conditions[sz].sz - 1) {
-                conditions[sz].pos++;
-            } else {
-                int i = sz;
-
-                while (i >= 0) {
-                    if (conditions[i].pos == conditions[i].sz - 1) {
-                        conditions[i].pos = 0;
-                        i--;
-                    } else {
-                        conditions[i].pos++;
-                        break;
-                    }
-                }
-            }
-
-        }
-        ++nb;
-    } while (nb < combinationNumber);
-
-    try {
-        manager::Simulation sim(ctx, manager::LOG_NONE,
-                manager::SIMULATION_NONE, std::chrono::milliseconds(0),
-                NULL);
-        manager::Error error;
-
-        //configure output plugins for column names
-        vpz::Outputs::iterator itb =
-                file->project().experiment().views().outputs().begin();
-        vpz::Outputs::iterator ite =
-                file->project().experiment().views().outputs().end();
-        for(;itb!=ite;itb++) {
-            vpz::Output& output = itb->second;
-            if((output.package() == "vle.output") &&
-                    (output.plugin() == "storage")){
-                std::unique_ptr<value::Map> configOutput(new value::Map());
-                configOutput->addString("header","top");
-                output.setData(std::move(configOutput));
-            }
-        }
-
-        std::unique_ptr<value::Map> res = sim.run(std::unique_ptr<vpz::Vpz>(
-                new vpz::Vpz(tmp_file)), &error);
-
-        if (error.code != 0) {
-            std::string filename = ctx->getLogFile("pyvle").string();
-            std::ofstream* logfile = new std::ofstream(filename.c_str());
-            (*logfile) << "Error in pyvle_run: "
-                            << error.message
-                            << "\n\n" << std::flush;
-            logfile->close();
-            return PyString_FromString(error.message.c_str());
-        }
-        return pyvle_convert_dataframe(*res);
-    } catch(const std::exception& e) {
-        return NULL;
-    }
-    return NULL;
-}
-
-void pyvle_set_nbreplicas(vle::vpz::Vpz* file,
-        int /*number*/)
-{
-    assert(file);
-
-    //file->project().experiment().replicas().setNumber(number)
-    //TODO
-}
-
-PyObject* pyvle_get_seedreplicas(vle::vpz::Vpz* file)
-{
-    assert(file);
-
-    //long seed = file->project().experiment().replicas().seed();
-    //    return PyInt_FromLong(seed);
-    //TODO
-    return PyInt_FromLong(1);
-}
-
-void pyvle_set_seedreplicas(vle::vpz::Vpz* file,
-        long /*number*/)
-{
-    assert(file);
-
-    //file->project().experiment().replicas().setSeed(number);
-    //TODO
 }
 
 /*  - - - - - - - - - - - - - --ooOoo-- - - - - - - - - - - -  */
