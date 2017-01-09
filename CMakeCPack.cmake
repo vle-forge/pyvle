@@ -12,7 +12,7 @@ SET(CPACK_STRIP_FILES "1")
 SET(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
 SET(CPACK_PACKAGE_VENDOR "VLE Development Team")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Python Package Virtual Laboratory Environment")
-SET(CPACK_PACKAGE_CONTACT "Gauthier Quesnel <quesnel@users.sourceforge.net>")
+SET(CPACK_PACKAGE_CONTACT "Gauthier Quesnel <gauthier.quesnel@inra.fr>")
 SET(CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_SOURCE_DIR}/README.md")
 SET(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/COPYING")
 
@@ -31,7 +31,7 @@ SET(CPACK_SOURCE_IGNORE_FILES "\\\\.swp$;/\\\\.gitignore;/build/;/lib/;/\\\\.git
 
 SET(CPACK_DEBIAN_PACKAGE_NAME ${PROJECT_NAME}-${PYVLE_MAJOR}.${PYVLE_MINOR})
 SET(CPACK_DEBIAN_PACKAGE_VERSION ${PYVLE_MAJOR}.${PYVLE_MINOR}.${PYVLE_END})
-SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "Gauthier Quesnel <quesnel@users.sourceforge.net>")
+SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "Gauthier Quesnel <gauthier.quesnel@inra.fr>")
 SET(CPACK_DEBIAN_PACKAGE_DESCRIPTION "VLE, a framework for multi-modeling, simulation and analysis of complex dynamical systems.")
 SET(CPACK_DEBIAN_PACKAGE_SECTION "libs")
 SET(CPACK_DEBIAN_PACKAGE_PRIORITY "extra")
@@ -40,7 +40,7 @@ SET(CPACK_RPM_PACKAGE_SUMMARY "VLE, a framework for multi-modeling, simulation a
 SET(CPACK_RPM_PACKAGE_NAME ${PROJECT_NAME}-${PYVLE_MAJOR}.${PYVLE_MINOR})
 SET(CPACK_RPM_PACKAGE_VERSION ${PYVLE_MAJOR}.${PYVLE_MINOR}.${PYVLE_END})
 SET(CPACK_RPM_PACKAGE_RELEASE "1")
-SET(CPACK_RPM_PACKAGE_VENDOR "Gauthier Quesnel <quesnel@users.sourceforge.net>")
+SET(CPACK_RPM_PACKAGE_VENDOR "Gauthier Quesnel <gauthier.quesnel@inra.fr>")
 SET(CPACK_RPM_PACKAGE_LICENSE "GNU General Public License (GPL)")
 SET(CPACK_RPM_PACKAGE_DESCRIPTION "VLE, a framework for multi-modeling, simulation and analysis of complex dynamical systems.")
 
