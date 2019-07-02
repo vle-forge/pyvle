@@ -14,14 +14,7 @@ ELSE ("${PYVLE_EXTRA}" STREQUAL "")
     "${PROJECT_NAME}-${PYVLE_MAJOR}.${PYVLE_MINOR}.${PYVLE_PATCH}-${PYVLE_EXTRA}")
 ENDIF ("${PYVLE_EXTRA}" STREQUAL "")
 
-INCLUDE(FindPythonLibs)
-
-EXECUTE_PROCESS(
-  COMMAND
-  python -c "from distutils import sysconfig; print sysconfig.get_python_version()"
-  OUTPUT_VARIABLE PYTHON_VERSION
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-  )
+find_package(PythonLibs)
 
 ##
 # Configure c++11
@@ -49,7 +42,7 @@ endif()
 ##
 
 FIND_PACKAGE(PkgConfig)
-PKG_CHECK_MODULES(VLE vle-2.0)
+PKG_CHECK_MODULES(VLE vle-2.1)
 
 FIND_PACKAGE(Boost 1.35 COMPONENTS python)
 
