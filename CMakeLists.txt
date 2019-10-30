@@ -14,14 +14,34 @@ ELSE ("${PYVLE_EXTRA}" STREQUAL "")
     "${PROJECT_NAME}-${PYVLE_MAJOR}.${PYVLE_MINOR}.${PYVLE_PATCH}-${PYVLE_EXTRA}")
 ENDIF ("${PYVLE_EXTRA}" STREQUAL "")
 
-INCLUDE(FindPythonLibs)
 
-EXECUTE_PROCESS(
-  COMMAND
-  python -c "from distutils import sysconfig; print sysconfig.get_python_version()"
-  OUTPUT_VARIABLE PYTHON_VERSION
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-  )
+set(Python_ADDITIONAL_VERSIONS  "3.6")
+find_package(PythonLibs)
+
+#### set the following
+# PYTHONLIBS_FOUND           - have the Python libs been found
+# PYTHON_LIBRARIES           - path to the python library
+# PYTHON_INCLUDE_PATH        - path to where Python.h is found (deprecated)
+# PYTHON_INCLUDE_DIRS        - path to where Python.h is found
+# PYTHON_DEBUG_LIBRARIES     - path to the debug library (deprecated)
+# PYTHONLIBS_VERSION_STRING  - version of the Python libs found (since CMake 2.8.8)
+
+find_package(PythonInterp)
+
+#### set the following
+# PYTHON_EXECUTABLE           - have the Python libs been found
+
+#message(${PYTHON_LIBRARIES})
+#message(${PYTHON_INCLUDE_PATH})
+#message(${PYTHON_INCLUDE_DIRS})
+#message(${PYTHONLIBS_VERSION_STRING})
+#message(${PYTHON_EXECUTABLE})
+
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${PROJECT_SOURCE_DIR}/cmake")
+find_package(Numpy)
+
+### NOT working with cmake 3.10 ?
+#find_package (Python3 COMPONENTS Interpreter Development Numpy)
 
 ##
 # Configure c++11
@@ -49,9 +69,10 @@ endif()
 ##
 
 FIND_PACKAGE(PkgConfig)
-PKG_CHECK_MODULES(VLE vle-2.0)
+PKG_CHECK_MODULES(VLE vle-2.1)
 
-FIND_PACKAGE(Boost 1.35 COMPONENTS python)
+#set pybind11_DIR to cmake module path id necessary
+find_package(pybind11 REQUIRED)
 
 ##
 # Browse the src subdirectory

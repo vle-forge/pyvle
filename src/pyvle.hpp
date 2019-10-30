@@ -1,282 +1,407 @@
-/*
- * @file src/pyvle.hpp
- *
- * This file is part of VLE, a framework for multi-modeling, simulation
- * and analysis of complex dynamical systems
- * http://www.vle-project.org
- *
- * Copyright (c) 2003-2017 Gauthier Quesnel <gauthier.quesnel@inra.fr>
- * Copyright (c) 2003-2017 ULCO http://www.univ-littoral.fr
- * Copyright (c) 2007-2017 INRA http://www.inra.fr
- *
- * See the AUTHORS or Authors.txt file for copyright owners and contributors
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+#ifndef PYVLE_PYVLE_HPP
+#define PYVLE_PYVLE_HPP
+
+#include "VleBinding.hpp"
+//#include <pybind11/pybind11.h>
+//#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
+//#include <numpy/ndarraytypes.h>
+//#include <Python.h>
+
+#include <vle/value/Table.hpp>
+#include <vle/value/XML.hpp>
+
+#include "pyvle_convert.hpp"
 
 
-#ifndef VLE_PORT_PYVLE_HPP
-#define VLE_PORT_PYVLE_HPP 1
+namespace pyvle {
 
-#include <Python.h>
-#include <vle/vpz/Vpz.hpp>
+void
+__compile_test_port()
+{
+    auto ctx = vle::utils::make_context();
+    std::ostringstream log, err;
+    try {
+        // homedir is set before calling this method
+        // current dir contains tert_port pkg
+        vle::utils::Package pack(ctx, "test_port");
+        pack.configure();
+        pack.wait(log, err);
+        if (pack.isSuccess()) {
+            pack.build();
+            pack.wait(log, err);
+            if (pack.isSuccess()) {
+                pack.install();
+                pack.wait(log, err);
+                if (not pack.isSuccess()) {
+                    std::cout << "Error while installing test_port\n";
+                }
+            } else {
+                std::cout << "Error while building test_port\n";
+            }
+        } else {
+            std::cout << "Error while configuring test_port\n";
+        }
+    } catch (const std::exception& e) {
+        std::cout << "Error while compiling test_port: %s\n", e.what();
+    }
+}
 
-vle::vpz::Vpz* pyvle_open_pkg(const char* pkgname, const char* filename);
-vle::vpz::Vpz* pyvle_from_buffer(const std::string& buffer);
-vle::vpz::Vpz* pyvle_from_buffer_pkg(const char* pkgname,
-                                     const std::string& buffer);
-void pyvle_save(vle::vpz::Vpz* file,
-		std::string filename);
-PyObject* pyvle_save_buffer(vle::vpz::Vpz* file);
-void pyvle_delete(vle::vpz::Vpz* file);
 
-/* name of experiments */
-void pyvle_experiment_set_name(vle::vpz::Vpz* file,
-				   const std::string& name);
+struct Vle
+{
+    Vle() :
+        mbinding()
+    {
+    }
+    Vle(const std::string& filename):
+        mbinding(std::make_shared<VleBinding>(filename))
+    {
+    }
+    Vle(const std::string& filename, const std::string& pkg):
+        mbinding(std::make_shared<VleBinding>(filename, pkg))
+    {
+    }
+    std::shared_ptr<VleBinding> mbinding;
+};
 
-/* begin of experiments */
-void pyvle_experiment_set_begin(vle::vpz::Vpz* file,
-				   double value);
-PyObject* pyvle_experiment_get_begin(vle::vpz::Vpz* file);
+/////////////////
+//static functions
+/////////////////
 
-/* duration of experiments */
-void pyvle_experiment_set_duration(vle::vpz::Vpz* file,
-				   double value);
-PyObject* pyvle_experiment_get_duration(vle::vpz::Vpz* file);
+VleValue
+packages_list()
+{
+    VleValue ret;
+    ret.set(VleBinding::packages_list().release());
+    return ret;
+}
 
-/* seed of experiments */
-void pyvle_experiment_set_seed(vle::vpz::Vpz* file,
-			       double value);
-PyObject* pyvle_experiment_get_seed(vle::vpz::Vpz* file);
+VleValue
+package_content(const std::string& pkgname)
+{
+    VleValue ret;
+    ret.set(VleBinding::package_content(pkgname).release());
+    return ret;
+}
 
-/* replicas */
-void pyvle_experiment_set_linear_combination(vle::vpz::Vpz* file,
-					     int seed, int replicas);
-void pyvle_experiment_set_total_combination(vle::vpz::Vpz* file,
-					    int seed, int replicas);
+/////////////////
+//rvle functions
+/////////////////
 
-/* execution of experiments */
-PyObject* pyvle_run(vle::vpz::Vpz* file);
-PyObject* pyvle_run_matrix(vle::vpz::Vpz* file);
-PyObject* pyvle_run_manager(vle::vpz::Vpz* file);
-PyObject* pyvle_run_manager_matrix(vle::vpz::Vpz* file);
-PyObject* pyvle_run_manager_thread(vle::vpz::Vpz* file, int th);
-PyObject* pyvle_run_manager_thread_matrix(vle::vpz::Vpz* file, int th);
-PyObject* pyvle_run_manager_cluster(vle::vpz::Vpz* file);
-PyObject* pyvle_run_manager_cluster_matrix(vle::vpz::Vpz* file);
+int
+save(Vle vleObj, const std::string& filename)
+{
+    return vleObj.mbinding->save(filename);
+}
 
-/* conditions */
+void
+set_log_level(Vle vleObj, int level)
+{
+    vleObj.mbinding->set_log_level(level);
+}
 
-PyObject* pyvle_condition_size(vle::vpz::Vpz* file);
-PyObject* pyvle_condition_list(vle::vpz::Vpz* file);
-PyObject* pyvle_condition_show(vle::vpz::Vpz* file,
-			       std::string conditionname,
-			       std::string portname);
-void pyvle_condition_create(vle::vpz::Vpz* file,
-                    const std::string name);
-PyObject* pyvle_condition_port_list_size(vle::vpz::Vpz* file,
-					 std::string conditionname);
-PyObject* pyvle_condition_port_list(vle::vpz::Vpz* file,
-				    std::string conditionname);
-void pyvle_condition_port_clear(vle::vpz::Vpz* file,
-				std::string conditionname,
-				std::string portname);
-void pyvle_condition_add_real(vle::vpz::Vpz* file,
-			      std::string conditionname,
-			      std::string portname,
-			      double value);
-void pyvle_condition_add_integer(vle::vpz::Vpz* file,
-				 std::string conditionname,
-				 std::string portname,
-				 long value);
-void pyvle_condition_add_string(vle::vpz::Vpz* file,
-				std::string conditionname,
-				std::string portname,
-				std::string value);
-void pyvle_condition_add_boolean(vle::vpz::Vpz* file,
-				std::string conditionname,
-				std::string portname,
-				std::string value);
-void pyvle_condition_add_value(vle::vpz::Vpz* file,
-				 std::string conditionname,
-				 std::string portname,
-				 vle::value::Value* value);
-void pyvle_condition_set_port_value(vle::vpz::Vpz* file,
-			       std::string conditionname,
-			       std::string portname,
-			       vle::value::Value* value,
-			       int i);
-void pyvle_condition_set_value(vle::vpz::Vpz* file,
-				std::string conditionname,
-				std::string portname,
-				std::string value,
-				std::string type,
-				int i);
-PyObject* pyvle_condition_get_setvalue(vle::vpz::Vpz* file,
-				std::string conditionname,
-				std::string portname);
-PyObject* pyvle_condition_get_value(vle::vpz::Vpz* file,
-				std::string conditionname,
-				std::string portname,
-				int i);
-PyObject* pyvle_condition_get_value_type(vle::vpz::Vpz* file,
-				std::string conditionname,
-				std::string portname,
-				int i);
-void pyvle_condition_delete_value(vle::vpz::Vpz* file,
-				std::string conditionname,
-				std::string portname,
-				int i);
-PyObject* pyvle_atomic_model_conditions_list(vle::vpz::Vpz* file,
-		    std::string name);
-PyObject* pyvle_dynamic_conditions_list(vle::vpz::Vpz* file,
-		std::string name);
+VleValue
+get_atomic_models(Vle vleObj)
+{
+    VleValue ret;
+    ret.set(vleObj.mbinding->get_atomic_models().release());
+    return ret;
+}
 
-PyObject* pyvle_dynamics_list(vle::vpz::Vpz* file);
-PyObject* pyvle_dynamic_get_name(vle::vpz::Vpz* file,
-				std::string dynamicname);
-PyObject* pyvle_dynamic_get_library(vle::vpz::Vpz* file,
-				std::string dynamicname);
-PyObject* pyvle_dynamic_get_language(vle::vpz::Vpz* file,
-				std::string dynamicname);
-void pyvle_dynamic_set_library(vle::vpz::Vpz* file,
-				std::string dynamicname,
-				std::string library);
-void pyvle_dynamic_set_language(vle::vpz::Vpz* file,
-				std::string dynamicname,
-				std::string language);
-PyObject* pyvle_dynamic_get_model_list(vle::vpz::Vpz* file,
-				std::string dynamicname);
-PyObject* pyvle_views_list(vle::vpz::Vpz* file);
-PyObject* pyvle_view_get_name(vle::vpz::Vpz* file,
-				std::string viewname);
-PyObject* pyvle_view_get_type(vle::vpz::Vpz* file,
-				std::string viewname);
-PyObject* pyvle_view_get_timestep(vle::vpz::Vpz* file,
-				std::string viewname);
-PyObject* pyvle_view_get_output(vle::vpz::Vpz* file,
-				std::string viewname);
-PyObject* pyvle_view_get_data(vle::vpz::Vpz* file,
-				std::string viewname);
-void pyvle_view_set_name(vle::vpz::Vpz* file,
-				std::string viewoldname,
-				std::string viewnewname);
-void pyvle_view_set_type(vle::vpz::Vpz* file,
-				std::string viewname,
-				std::string viewtype);
-void pyvle_view_set_timestep(vle::vpz::Vpz* file,
-				std::string viewname,
-				double time);
-void pyvle_view_set_data(vle::vpz::Vpz* file,
-				std::string viewname,
-				std::string data);
-void pyvle_views_add_eventview(vle::vpz::Vpz* file,
-				std::string viewname,
-				std::string viewtype,
-				std::string output);
-void pyvle_views_add_timedview(vle::vpz::Vpz* file,
-				std::string viewname,
-				std::string output,
-				double time);
-PyObject* pyvle_list_view_entries(vle::vpz::Vpz* file);
-PyObject* pyvle_get_output_plugin(vle::vpz::Vpz* file,
-				std::string outputname);
-PyObject* pyvle_observables_list(vle::vpz::Vpz* file);
-PyObject* pyvle_outputs_list(vle::vpz::Vpz* file);
-void pyvle_observable_add(vle::vpz::Vpz* file,
-				std::string obsname);
-void pyvle_observable_del(vle::vpz::Vpz* file,
-				std::string obsname);
-PyObject* pyvle_observable_exists(vle::vpz::Vpz* file,
-				std::string obsname);
-void pyvle_observables_clear(vle::vpz::Vpz* file);
-PyObject* pyvle_observables_empty(vle::vpz::Vpz* file);
-PyObject* pyvle_observable_get_name(vle::vpz::Vpz* file,
-				std::string obsname);
-PyObject* pyvle_observable_ports_list(vle::vpz::Vpz* file,
-				std::string obsname);
-void pyvle_observable_add_port(vle::vpz::Vpz* file,
-				std::string obsname,
-				std::string portname);
-void pyvle_observable_del_port(vle::vpz::Vpz* file,
-				std::string obsname,
-				std::string portname);
-PyObject* pyvle_observable_has_view(vle::vpz::Vpz* file,
-				std::string obsname,
-				std::string viewname);
-PyObject* pyvle_observable_get_port_name(vle::vpz::Vpz* file,
-				std::string obsname,
-				std::string viewname);
-PyObject* pyvle_observable_is_permanent(vle::vpz::Vpz* file,
-				std::string obsname);
-void pyvle_observable_set_permanent(vle::vpz::Vpz* file,
-				std::string obsname,
-				bool ispermanent);
-PyObject* pyvle_observable_port_attached_views(vle::vpz::Vpz* file,
-				std::string obsname,
-				std::string portname);
-PyObject* pyvle_dynamic_observables_list(vle::vpz::Vpz* file,
-				std::string name);
-PyObject* pyvle_export(vle::vpz::Vpz* file,
-		std::string location,
-		std::string view,
-		std::string type);
-PyObject* pyvle_export_manager(vle::vpz::Vpz* file,
-		std::string location,
-		std::string view,
-		std::string type);
-PyObject* pyvle_experiment_get_name(vle::vpz::Vpz* file);
-PyObject* pyvle_get_installed_packages();
-PyObject* pyvle_get_package_vpz_list(std::string name);
-PyObject* pyvle_get_package_vpz_directory(std::string name);
-PyObject* pyvle_get_package_data_directory(std::string name);
-PyObject* pyvle_get_package_output_directory(std::string name);
-PyObject* pyvle_get_package_vpz(std::string name, std::string vpz);
-void pyvle_set_package_mode(std::string name);
-void pyvle_set_normal_mode();
-void pyvle_set_output_plugin(vle::vpz::Vpz* file,
-				  std::string outputname,
-				  std::string location,
-				  std::string format,
-				  std::string plugin,
-				  std::string package);
-PyObject* pyvle_get_output_location(vle::vpz::Vpz* file,
-                                    std::string outputname);
-PyObject* pyvle_run_combination(vle::vpz::Vpz* file,
-                                int comb);
 
-vle::value::Value* pyvle_create_map();
-vle::value::Value* pyvle_create_set();
-vle::value::Value* pyvle_create_tuple(unsigned int size);
-vle::value::Value* pyvle_create_table(unsigned int width, unsigned int height);
-vle::value::Value* pyvle_create_matrix(unsigned int width, unsigned int height);
+VleValue
+get_conditions(Vle vleObj)
+{
+    VleValue ret;
+    ret.set(vleObj.mbinding->get_conditions().release());
+    return ret;
+}
 
-vle::value::Value* pyvle_int_to_value(long i);
-vle::value::Value* pyvle_real_to_value(float i);
-vle::value::Value* pyvle_string_to_value(std::string i);
-vle::value::Value* pyvle_bool_to_value(bool i);
-vle::value::Value* pyvle_str_to_xml(std::string i);
+int
+add_condition(Vle vleObj, const std::string& conditionname)
+{
+    return vleObj.mbinding->add_condition(conditionname);
+}
 
-void pyvle_add_value_to_map(vle::value::Value* map, std::string key,
-                            vle::value::Value* val);
-void pyvle_add_value_to_set(vle::value::Value* set, vle::value::Value* val);
-void pyvle_set_value_to_tuple(vle::value::Value* set, unsigned int i, double v);
-void pyvle_set_value_to_table(vle::value::Value* set, unsigned int i,
-        unsigned int j, double v);
-void pyvle_set_value_to_matrix(vle::value::Value* set, unsigned int i,
-        unsigned int j, vle::value::Value* v);
+int
+del_condition(Vle vleObj, const std::string& conditionname)
+{
+    return vleObj.mbinding->del_condition(conditionname);
+}
 
-void pyvle_compileTestPackages();
+VleValue
+get_attached_conditions(Vle vleObj, const std::string& atomicpath)
+{
+    VleValue ret;
+    ret.set(vleObj.mbinding->get_attached_conditions(atomicpath).release());
+    return ret;
+}
+
+int
+attach_condition(Vle vleObj, const std::string& atomicpath,
+                 const std::string& conditionname)
+{
+    return vleObj.mbinding->attach_condition(atomicpath,conditionname);
+}
+
+int
+detach_condition(Vle vleObj, const std::string& atomicpath,
+                 const std::string& conditionname)
+{
+    return vleObj.mbinding->detach_condition(atomicpath, conditionname);
+}
+
+VleValue
+get_condition_ports(Vle vleObj, const std::string& conditionname)
+{
+    VleValue ret;
+    ret.set(vleObj.mbinding->get_condition_ports(conditionname).release());
+    return ret;
+}
+
+int
+add_condition_port(Vle vleObj, const std::string& conditionname,
+              const std::string& portname)
+{
+    return vleObj.mbinding->add_condition_port(conditionname, portname);
+}
+
+int
+del_condition_port(Vle vleObj,  const std::string& conditionname,
+                 const std::string& portname)
+{
+    return vleObj.mbinding->del_condition_port(conditionname, portname);
+}
+
+VleValue
+get_condition_port_value(Vle vleObj,  const std::string& conditionname,
+                      const std::string& portname)
+{
+    VleValue ret;
+    ret.set(vleObj.mbinding->get_condition_port_value(
+            conditionname, portname).release());
+    return ret;
+}
+
+int
+set_condition_port_value(Vle vleObj,  const std::string& conditionname,
+        const std::string& portname,
+        VleValue val)
+{
+    return vleObj.mbinding->set_condition_port_value(conditionname,
+            portname, std::unique_ptr<vv::Value>(val.get_vle_value()));
+
+}
+
+VleValue
+get_observables(Vle vleObj)
+{
+    VleValue ret;
+    ret.set(vleObj.mbinding->get_observables().release());
+    return ret;
+}
+
+VleValue
+get_observable_ports(Vle vleObj,  const std::string& obsName)
+{
+    VleValue ret;
+    ret.set(vleObj.mbinding->get_observable_ports(obsName).release());
+    return ret;
+}
+
+int
+add_observable_port(Vle vleObj,  const std::string& obsName,
+                    const std::string& portName)
+{
+    return vleObj.mbinding->add_observable_port(obsName, portName);
+}
+
+int
+del_observable_port(Vle vleObj, const std::string& obsName,
+                       const std::string& portName)
+{
+    return vleObj.mbinding->del_observable_port(obsName, portName);
+}
+
+int
+attach_view(Vle vleObj,  const std::string& view, const std::string& obsName,
+            const std::string& portName)
+{
+    return vleObj.mbinding->attach_view(view, obsName, portName);
+}
+
+int
+detach_view(Vle vleObj, const std::string& view, const std::string& obsName,
+            const std::string& portName)
+{
+    return vleObj.mbinding->detach_view(view, obsName, portName);
+}
+
+VleValue
+get_attached_views(Vle vleObj,  const std::string& obsName,
+        const std::string& portName)
+{
+    VleValue ret;
+    ret.set(vleObj.mbinding->get_attached_views(obsName, portName).release());
+    return ret;
+}
+
+VleValue
+get_views(Vle vleObj)
+{
+    VleValue ret;
+    ret.set(vleObj.mbinding->get_views().release());
+    return ret;
+}
+
+int
+add_view(Vle vleObj,  const std::string& view)
+{
+    return vleObj.mbinding->add_view(view);
+}
+
+int
+del_view(Vle vleObj,  const std::string& view)
+{
+    return vleObj.mbinding->del_view(view);
+}
+
+VleValue
+get_view_config(Vle vleObj,  const std::string& viewname)
+{
+    VleValue ret;
+    ret.set(vleObj.mbinding->get_view_config(viewname).release());
+    return ret;
+}
+
+int
+set_view_config(Vle vleObj,  const std::string& viewname,
+                const std::string& config)
+{
+    return vleObj.mbinding->set_view_config(viewname, config);
+}
+
+VleValue
+get_view_plugin(Vle vleObj,  const std::string& viewname)
+{
+    VleValue ret;
+    ret.set(vleObj.mbinding->get_view_plugin(viewname).release());
+    return ret;
+}
+
+int
+set_view_plugin(Vle vleObj,  const std::string& viewname,
+        const std::string& pluginname, const std::string& package)
+{
+    return vleObj.mbinding->set_view_plugin(viewname, pluginname, package);
+}
+
+VleValue
+available_outputs(Vle vleObj)
+{
+    VleValue ret;
+    ret.set(vleObj.mbinding->available_outputs().release());
+    return ret;
+}
+
+VleValue
+run(Vle vleObj)
+{
+    VleValue ret;
+    ret.set(vleObj.mbinding->run().release());
+    return ret;
+}
+
+
+
+////////////////////////
+//rvlePlan.* functions
+////////////////////////
+
+void
+plan_reset(Vle vleObj)
+{
+    vleObj.mbinding->plan_reset();
+}
+
+void
+plan_define(Vle vleObj,  const std::string& cond, const std::string& port,
+        bool addORremove)
+{
+    vleObj.mbinding->plan_define(cond, port, addORremove);
+}
+
+void
+plan_input(Vle vleObj, const std::string& cond, const std::string& port,
+        VleValue val)
+{
+    vleObj.mbinding->plan_input(cond, port,
+            std::unique_ptr<vv::Value>(val.get_vle_value()));
+}
+
+void
+plan_propagate(Vle vleObj,  const std::string& cond, const std::string& port,
+        VleValue val)
+{
+    vleObj.mbinding->plan_propagate(cond, port,
+            std::unique_ptr<vv::Value>(val.get_vle_value()));
+}
+
+void
+plan_replicate(Vle vleObj,  const std::string& cond, const std::string& port,
+        VleValue val)
+{
+    vleObj.mbinding->plan_replicate(cond, port,
+            std::unique_ptr<vv::Value>(val.get_vle_value()));
+}
+
+
+int
+plan_output(Vle vleObj,  const std::string& id, const std::string& path,
+        const std::string& integration,
+        const std::string& aggregation_replicate,
+        const std::string& aggregation_input,
+        VleValue obs_times,
+        VleValue obs_values,
+        double replicate_quantile)
+{
+    return vleObj.mbinding->plan_output(id, path, integration,
+            aggregation_replicate, aggregation_input,
+            std::unique_ptr<vv::Value>(obs_times.get_vle_value()),
+            std::unique_ptr<vv::Value>(obs_values.get_vle_value()),
+            replicate_quantile);
+}
+
+VleValue
+plan_run(Vle vleObj)
+{
+    VleValue ret;
+    ret.set(vleObj.mbinding->plan_run().release());
+    return ret;
+}
+
+void
+plan_config(Vle vleObj,  const std::string& parallel_type,
+        int parallel_nb_slots,
+        bool parallel_spawn,
+        bool parallel_rm_files,
+        bool generate_hostfile,
+        const std::string& working_dir)
+{
+    vleObj.mbinding->plan_config(parallel_type, parallel_nb_slots,
+            parallel_spawn, parallel_rm_files, generate_hostfile, working_dir);
+}
+
+Vle
+plan_embedded(Vle vleObj, int input, int replicate)
+{
+
+    Vle ret;
+    ret.mbinding.reset(vleObj.mbinding->plan_embedded(
+            input, replicate).release());
+    return ret;
+}
+
+}// end namespace pyvle
 
 #endif
