@@ -94,13 +94,21 @@ PYBIND11_MODULE(pyvle, m)
     m.def("get_view_plugin", &pyvle::get_view_plugin);
     m.def("available_outputs", &pyvle::available_outputs);
     m.def("run", &pyvle::run);
+    //manager functions
+    m.def("manager_clear", &pyvle::manager_clear);
+    m.def("manager_get_config", &pyvle::manager_get_config);
+    m.def("manager_set_config", &pyvle::manager_set_config);
     //plan functions
+    m.def("plan_clear", &pyvle::plan_clear);
+    m.def("plan_get", &pyvle::plan_get);
     m.def("plan_define", &pyvle::plan_define);
     m.def("plan_input", &pyvle::plan_input);
     m.def("plan_propagate", &pyvle::plan_propagate);
     m.def("plan_replicate", &pyvle::plan_replicate);
     m.def("plan_output", &pyvle::plan_output);
     m.def("plan_run", &pyvle::plan_run);
-    m.def("plan_config", &pyvle::plan_config);
     m.def("plan_embedded", &pyvle::plan_embedded);
+    //experiment functions
+    m.def("experiment_run", &pyvle::experiment_run);
+
 }

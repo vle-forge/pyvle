@@ -85,7 +85,7 @@ package_content(const std::string& pkgname)
 }
 
 /////////////////
-//rvle functions
+//basic functions
 /////////////////
 
 int
@@ -312,16 +312,50 @@ run(Vle vleObj)
     return ret;
 }
 
-
-
 ////////////////////////
-//rvlePlan.* functions
+//manager functions
 ////////////////////////
 
 void
-plan_reset(Vle vleObj)
+manager_clear(Vle vleObj)
 {
-    vleObj.mbinding->plan_reset();
+    vleObj.mbinding->manager_clear();
+}
+
+VleValue
+manager_get_config(Vle vleObj)
+{
+    VleValue ret;
+    ret.set(vleObj.mbinding->manager_get_config().release());
+    return ret;
+}
+
+void
+manager_set_config(Vle vleObj, const std::string& parallel_option,
+        int nb_slots, int simulation_spawn,  int rm_MPI_files,
+        int generate_MPI_host, const std::string&  working_dir)
+{
+
+    vleObj.mbinding->manager_set_config(parallel_option, nb_slots,
+            simulation_spawn, rm_MPI_files, generate_MPI_host, working_dir);
+}
+
+////////////////////////
+//plan functions
+////////////////////////
+
+void
+plan_clear(Vle vleObj)
+{
+    vleObj.mbinding->plan_clear();
+}
+
+VleValue
+plan_get(Vle vleObj)
+{
+    VleValue ret;
+    ret.set(vleObj.mbinding->plan_get().release());
+    return ret;
 }
 
 void
@@ -380,27 +414,27 @@ plan_run(Vle vleObj)
     return ret;
 }
 
-void
-plan_config(Vle vleObj,  const std::string& parallel_type,
-        int parallel_nb_slots,
-        bool parallel_spawn,
-        bool parallel_rm_files,
-        bool generate_hostfile,
-        const std::string& working_dir)
-{
-    vleObj.mbinding->plan_config(parallel_type, parallel_nb_slots,
-            parallel_spawn, parallel_rm_files, generate_hostfile, working_dir);
-}
-
 Vle
 plan_embedded(Vle vleObj, int input, int replicate)
 {
-
     Vle ret;
     ret.mbinding.reset(vleObj.mbinding->plan_embedded(
             input, replicate).release());
     return ret;
 }
+
+////////////////////////
+//experiment functions
+////////////////////////
+
+VleValue
+experiment_run(Vle vleObjExpe, Vle vleObjMod)
+{
+    VleValue ret;
+    ret.set(vleObjExpe.mbinding->experiment_run(*vleObjMod.mbinding).release());
+    return ret;
+}
+
 
 }// end namespace pyvle
 
