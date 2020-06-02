@@ -158,6 +158,13 @@ struct VleBinding
     }
 
     /*******************/
+    std::unique_ptr<vv::Value>
+    get_log_level()
+    {
+        return vv::Integer::create(mCtx->get_log_priority());
+    }
+
+    /*******************/
     void
     set_log_level(int level)
     {
@@ -726,8 +733,14 @@ struct VleBinding
             }
         }
 
-        vle::manager::Simulation simulator(mCtx,
-                vle::manager::SIMULATION_SPAWN_PROCESS,
+        vle::manager::SimulationOptions simOpt =
+                vle::manager::SIMULATION_SPAWN_PROCESS;
+        if (mManConfig and mManConfig->exist("simulation_spawn")) {
+          if (not mManConfig->getBoolean("simulation_spawn")) {
+              simOpt = vle::manager::SIMULATION_NONE;
+          }
+        }
+        vle::manager::Simulation simulator(mCtx, simOpt,
                 std::chrono::milliseconds(0));
         vle::manager::Error err;
         std::unique_ptr<vv::Map> res = simulator.run(std::move(vpz), &err);
@@ -765,9 +778,15 @@ struct VleBinding
     run()
     {
         std::unique_ptr<vz::Vpz> vpz(new vz::Vpz(*mvpz));
+        vle::manager::SimulationOptions simOpt =
+                vle::manager::SIMULATION_SPAWN_PROCESS;
+        if (mManConfig and mManConfig->exist("simulation_spawn")) {
+          if (not mManConfig->getBoolean("simulation_spawn")) {
+              simOpt = vle::manager::SIMULATION_NONE;
+          }
+        }
         vle::manager::Simulation simulator(mCtx,
-                vle::manager::SIMULATION_SPAWN_PROCESS,
-                std::chrono::milliseconds(0));
+                simOpt, std::chrono::milliseconds(0));
         vle::manager::Error err;
 
         std::unique_ptr<vv::Map> res = simulator.run(std::move(vpz), &err);

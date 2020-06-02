@@ -65,6 +65,7 @@ PYBIND11_MODULE(pyvle, m)
     m.def("package_content", &pyvle::package_content);
     //basic functions
     m.def("save", &pyvle::save);
+    m.def("get_log_level", &pyvle::get_log_level);
     m.def("set_log_level", &pyvle::set_log_level);
     m.def("get_atomic_models", &pyvle::get_atomic_models);
     m.def("get_conditions", &pyvle::get_conditions);

@@ -94,6 +94,14 @@ save(Vle vleObj, const std::string& filename)
     return vleObj.mbinding->save(filename);
 }
 
+VleValue
+get_log_level(Vle vleObj)
+{
+    VleValue ret;
+    ret.set(vleObj.mbinding->get_log_level().release());
+    return ret;
+}
+
 void
 set_log_level(Vle vleObj, int level)
 {
