@@ -57,21 +57,19 @@ different license. Check the headers for the copyright info.
 ## Usage
 
     $ python
-    Python 2.7.3 (default, Sep 26 2012, 21:51:14)
-    [GCC 4.7.2] on linux2
+    Python 3.6.9 (default, Apr 18 2020, 01:56:04)
+    [GCC 8.4.0] on linux
     Type "help", "copyright", "credits" or "license" for more information.
     >>> import pyvle
-    >>> from pyvle import Vle
-    >>> dir(pyvle.Vle)
-    >>> f = Vle("my_vpz","my_package")
+    >>> dir(pyvle)
+    >>> f = pyvle.Vle("my_vpz","my_package")
     >>> print(f)
-    <pyvle.Vle instance at 0x7fe231515e60>
-    >>> f.listConditions()
+    <pyvle.Vle object at 0x7fd025169b20>
+    >>> pyvle.get_conditions(f)
     ['cond', 'cond_A', 'cond_B', 'cond_C', 'cond_D', 'cond_sum' ]
-    >>> f.listConditionPorts('cond_A')
+    >>> pyvle.get_condition_ports(f, 'cond_A')
     ['name', 'value']
-    >>> f.getConditionPortValues('cond_A', 'value')
+    >>> pyvle.get_condition_port_value(f, 'cond_A', 'value')
     0.0
-    >>> f.clearConditionPort('cond_A', 'value')
-    >>> f.addRealCondition('cond_A', 'value', 1)
-    >>> f.getConditionPortVal
+    >>> pyvle.run(f)
+    
