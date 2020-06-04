@@ -436,10 +436,13 @@ plan_embedded(Vle vleObj, int input, int replicate)
 ////////////////////////
 
 VleValue
-experiment_run(Vle vleObjExpe, Vle vleObjMod)
+experiment_run(Vle vleObjExpe, Vle vleObjMod, VleValue experiment_settings)
 {
     VleValue ret;
-    ret.set(vleObjExpe.mbinding->experiment_run(*vleObjMod.mbinding).release());
+    ret.set(vleObjExpe.mbinding->experiment_run(
+            *vleObjMod.mbinding,
+             std::unique_ptr<vv::Value>(
+                     experiment_settings.get_vle_value())).release());
     return ret;
 }
 
