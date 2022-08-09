@@ -1,4 +1,5 @@
-# Python port of VLE
+Virtual Laboratory Environment 2.1
+==================================
 
 A Python binding for the VFL.
 
@@ -7,7 +8,7 @@ See AUTHORS and COPYRIGHT for the list of contributors.
 ## Requirements
 
 * python (>= 2.7 && < 3)
-* vle (>= 2.0)
+* vle (>= 2.1)
 * boost (>= 1.47)
 * cmake (>= 3.0)
 * make (>= 1.8)
